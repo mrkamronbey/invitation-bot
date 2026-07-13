@@ -48,10 +48,14 @@ Yangi taklifnoma = **bazaga bitta yozuv**, deploy emas. Bot va web **bitta Supab
 ```
 
 ### 2.1. Komponentlar
-- **Bot servisi** (`apps/bot`): grammY (TypeScript). FSM asosida savol-javob, shablon tanlash, RSVP xabarlarini yetkazish.
-- **Web ilova** (`apps/web`): Next.js App Router. Dinamik `/[slug]` sahifa, RSVP forma, admin/preview.
-- **Umumiy paket** (`packages/shared`): TypeScript tiplar, Zod sxemalar, Supabase mijozi, konstantalar, matnlar (i18n).
+- **Bot servisi** (`apps/bot`): grammY. Faqat prezentatsiya — Telegram input → use-case chaqiruvi. FSM savol-javob, shablon tanlash, RSVP yetkazish.
+- **Web ilova** (`apps/web`): Next.js App Router + FSD. Dinamik `/[slug]` sahifa, RSVP forma, preview.
+- **Biznes-mantiq paketlari** (`packages/domain`, `application`): entities, value-objects, ports va use-case'lar — **bot va web umumiy ishlatadi** (bir marta yoziladi).
+- **Infrastructure** (`packages/infrastructure`): Supabase/Telegram/Storage adapterlari — portlarni amalga oshiradi.
+- **Umumiy paketlar** (`contracts`, `i18n`, `ui`, `config`): tiplar+Zod, matnlar, dizayn tokenlar, lint/ts config.
 - **Baza**: Supabase (Postgres + Storage + Row Level Security).
+
+> Qatlamlar, bog'liqlik yo'nalishi va DI to'liq **[docs/ARCHITECTURE.md](./ARCHITECTURE.md)** da tavsiflangan.
 
 ### 2.2. Ma'lumot oqimi (E2E)
 1. User botga `/start` → shablon galereyasi (rasm preview) → tanlaydi.
@@ -125,73 +129,49 @@ Indeks: `invitation_id`.
 
 ---
 
-## 4. Monorepo papka strukturasi
+## 4. Monorepo papka strukturasi (Clean Architecture + FSD)
 
-pnpm workspace monorepo — bitta til (TypeScript), umumiy tiplar bo'lishiladi.
+> To'liq arxitektura qonun-qoidalari, qatlamlar va bog'liqlik grafi **[docs/ARCHITECTURE.md](./ARCHITECTURE.md)** da. Bu yerda qisqacha.
+
+**pnpm workspace + Turborepo** monorepo. Biznes-mantiq `packages/` da bir marta yoziladi — bot ham web ham qayta ishlatadi (asosiy DRY g'oyasi). Bog'liqlik faqat ichkariga: `presentation → application → domain`.
 
 ```
 invitation-bot/
-├── package.json                 # workspace root
-├── pnpm-workspace.yaml
-├── tsconfig.base.json
-├── .env.example
-├── docs/
-│   └── TZ.md                    # shu fayl
+├── turbo.json · pnpm-workspace.yaml · package.json
+├── docs/ (TZ.md, ARCHITECTURE.md)
 │
 ├── packages/
-│   └── shared/                  # umumiy kod (bot + web)
-│       ├── src/
-│       │   ├── types.ts         # Invitation, Rsvp, Template tiplari
-│       │   ├── schemas.ts       # Zod validatsiya sxemalari
-│       │   ├── supabase.ts      # Supabase mijoz factory
-│       │   ├── slug.ts          # slug generatsiya (aziz-va-malika)
-│       │   ├── templates.ts     # shablonlar ro'yxati / meta
-│       │   └── i18n/
-│       │       └── uz.ts        # barcha matnlar (o'zbekcha)
-│       └── package.json
+│   ├── domain/            # ⬅ yadro: entities, value-objects, ports (interfeys) — hech narsaga bog'liq emas
+│   ├── application/       # ⬅ use-case'lar: CreateInvitation, SubmitRsvp, ... (domainga tayanadi)
+│   ├── infrastructure/    # ⬅ adapterlar: Supabase repo, Storage, TelegramNotifier (portlarni amalga oshiradi)
+│   ├── contracts/         # ⬅ umumiy tiplar + Zod sxemalar (bot + web + API)
+│   ├── i18n/              # ⬅ barcha matnlar (uz → keyin ru/en)
+│   ├── ui/                # ⬅ umumiy dizayn tokenlar / Tailwind preset
+│   └── config/            # ⬅ eslint-config, tsconfig-base, prettier, tailwind-preset
 │
 ├── apps/
-│   ├── bot/                     # Telegram bot (grammY)
-│   │   ├── src/
-│   │   │   ├── index.ts         # bot start (polling/webhook)
-│   │   │   ├── bot.ts           # Bot instance + middleware
-│   │   │   ├── conversations/   # FSM oqimlar (savol-javob)
-│   │   │   │   └── createInvitation.ts
-│   │   │   ├── handlers/        # /start, /myinvites, callback
-│   │   │   ├── services/        # invitationService, rsvpNotifier
-│   │   │   ├── keyboards/       # inline tugmalar (shablon tanlash)
-│   │   │   └── utils/
-│   │   └── package.json
+│   ├── bot/               # ⬅ grammY — Clean presentation
+│   │   └── src/ (composition.ts DI, flows/ FSM registry, handlers/, presenters/, keyboards/)
 │   │
-│   └── web/                     # Next.js web
-│       ├── src/
-│       │   ├── app/
-│       │   │   ├── [slug]/
-│       │   │   │   ├── page.tsx         # taklifnoma sahifa (SSR)
-│       │   │   │   └── opengraph-image.tsx
-│       │   │   ├── api/rsvp/route.ts    # RSVP POST endpoint
-│       │   │   └── page.tsx             # landing (marketing)
-│       │   ├── components/
-│       │   │   ├── templates/           # har shablon alohida komponent
-│       │   │   │   ├── ClassicTemplate.tsx
-│       │   │   │   ├── ModernTemplate.tsx
-│       │   │   │   ├── MinimalTemplate.tsx
-│       │   │   │   └── FloralTemplate.tsx
-│       │   │   ├── invitation/          # umumiy bloklar
-│       │   │   │   ├── Countdown.tsx
-│       │   │   │   ├── MapBlock.tsx
-│       │   │   │   ├── Gallery.tsx
-│       │   │   │   ├── RsvpForm.tsx
-│       │   │   │   └── MusicToggle.tsx
-│       │   │   └── ui/                  # tugma, input, card
-│       │   ├── lib/                     # data qatlami (getInvitation, createRsvp)
-│       │   └── styles/
-│       ├── next.config.js
-│       ├── tailwind.config.ts
-│       └── package.json
+│   └── web/               # ⬅ Next.js — Feature-Sliced Design (FSD)
+│       └── src/
+│           ├── app/       # routing (yupqa) — [slug]/page.tsx, api/rsvp/route.ts
+│           ├── pages/     # sahifa kompozitsiyasi
+│           ├── widgets/   # Hero, Countdown, Map, Gallery, Rsvp
+│           ├── features/  # submit-rsvp, share-invitation, toggle-music
+│           ├── entities/  # invitation, rsvp, guest (UI + model)
+│           ├── shared/    # ui-kit, lib, api, config
+│           └── templates/ # shablon registry (plagin — Open/Closed)
+│
+└── supabase/migrations/   # versiyalangan SQL
 ```
 
-**Qatlamli arxitektura:** UI komponent → `lib` (data qatlami) → `packages/shared` (tiplar + Supabase). Bot ham `handlers → services → shared`. Biznes-mantiq UI'dan ajratilgan.
+**Umumiylashtirish nuqtalari:**
+- **Use-case'lar** (`application`) — biznes-mantiq bir marta, bot+web ishlatadi.
+- **Shablonlar** — registry (`templates`); yangisi = 1 qator, mavjud kod o'zgarmaydi.
+- **Bot savollari** — qadam registry (`steps`); yangi savol = 1 obyekt, oqim engine o'zgarmaydi.
+- **Umumiy bloklar** (Countdown, Map, Gallery, RsvpForm) — `widgets`; shablonlar ularni kompozitsiya qiladi (takrorlanmaydi).
+- **Qatlam qoidalari ESLint bilan majburlanadi** — masalan `domain` da Supabase import qilib bo'lmaydi.
 
 ---
 
@@ -286,7 +266,9 @@ Har shablon = alohida React komponent, umumiy `InvitationData` propsini oladi. Y
 | Baza | Supabase (Postgres + Storage + RLS) |
 | Validatsiya | Zod |
 | Forma (web) | React Hook Form + Zod |
-| Monorepo | pnpm workspace |
+| Monorepo | pnpm workspace + **Turborepo** (keshli build/lint) |
+| Arxitektura | Clean Architecture + Ports & Adapters; web'da **FSD** |
+| Qatlam nazorati | ESLint boundary qoidalari (`no-restricted-imports` / boundaries) |
 | Lint/format | ESLint + Prettier |
 | Deploy (web) | Vercel |
 | Deploy (bot) | Railway (yoki Render / VPS — doimiy jarayon) |
