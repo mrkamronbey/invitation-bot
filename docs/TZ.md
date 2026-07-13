@@ -112,7 +112,8 @@ Yangi taklifnoma = **bazaga bitta yozuv**, deploy emas. Bot va web **bitta Supab
 | `dress_code` | `text` null | |
 | `cover_image_url` | `text` null | asosiy rasm (Storage) |
 | `gallery` | `jsonb` default `'[]'` | qo'shimcha rasmlar URL massivi |
-| `music_url` | `text` null | fon musiqasi (ixtiyoriy) |
+| `music_url` | `text` null | fon musiqasi URL. Default trek (`/audio/track-1.mp3`) yoki user yuklagan Storage URL. `null` = musiqasiz |
+| `music_source` | `text` default `'none'` | `none` / `default` / `custom` — UI va tahlil uchun |
 | `status` | `text` default `'draft'` | `draft` / `published` |
 | `locale` | `text` default `'uz'` | |
 | `created_at` | `timestamptz` default `now()` | |
@@ -216,6 +217,11 @@ grammY `@grammyjs/conversations` bilan.
   [8] "🖼 Rasm(lar) yuboring"   → photo (Storage'ga yuklanadi)
   [9] "Qisqa matn / story?"    → matn (ixtiyoriy, skip mumkin)
   [10] "Dress code?"           → matn (ixtiyoriy)
+  [11] "🎵 Fon musiqasi?"       → 3 tayyor trekдан tanlash (inline preview)
+                                 | 🎼 O'zim yuklayman (audio file) | ⏭ Kerak emas
+                                 → default: music_source='default', music_url=trek
+                                 → custom:  audio Storage'ga → music_source='custom'
+                                 → skip:    music_source='none'
         │
         ▼
   [Tasdiqlash] — bot yig'ilgan ma'lumotni ko'rsatadi → [✅ Tayyor | ✏️ Tahrirlash]
@@ -253,7 +259,7 @@ Bloklar (shablon ichida joylashtiriladi):
 - **Galereya** (`Gallery`): rasmlar, lightbox.
 - **Dress code**.
 - **RSVP forma** (`RsvpForm`): ism, keladi/kelmaydi, necha kishi, izoh.
-- **Music toggle** (ixtiyoriy fon musiqasi).
+- **Music toggle** (`MusicToggle`): fon musiqasini yoq/o'chir. 3 tayyor trekдан biri yoki user yuklagan audio (`music_source`). Avtomatik ijro brauzer siyosatiga mos (user ishorasiдан keyin).
 - Footer / ulashish.
 
 ### 6.2. `/` — landing (marketing)
@@ -376,7 +382,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 2. ~~**Xarita:**~~ ✅ **Yandex Maps** tanlandi (O'zbekistonда aniqroq).
 3. **Bot hosting:** Railway (tavsiya) yoki boshqa (Render/VPS)?
 4. **Slug:** avtomatik (`aziz-va-malika`) — bir xil bo'lsa `-2` qo'shiladi. To'g'rimi?
-5. **Musiqa:** MVP'ga kiritamizmi yoki keyinga qoldiramizmi?
+5. ~~**Musiqa:**~~ ✅ **MVP ga kiradi.** 3 ta tayyor (default) trek + user o'zi audio yuklashi mumkin (`music_source`: `default`/`custom`/`none`). Web'da `MusicToggle` bilan yoq/o'chir.
 
 > **Qaror:** To'lov (**Click/Payme**) — MVP uchun **majburiy emas**, keyingi (monetizatsiya) bosqichga qoldirildi.
 
