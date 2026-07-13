@@ -20,7 +20,20 @@ Kuyov-kelin **Telegram bot** orqali savol-javob tarzida taklifnoma yaratadi (ism
 | 🖼 Rasmni to'g'ridan-to'g'ri tashlaydi | To'liq responsive (telefonda ochiladi) |
 | 🔔 RSVP xabarini darhol oladi | Ulashishga tayyor havola |
 
-### 1.3. Muhim arxitektura qoidasi
+### 1.3. Farqlanish (raqobatdan ustunlik)
+> To'liq bozor tahlili **[docs/MARKET.md](./MARKET.md)** da. Qisqacha: model isbotlangan (Rossiyada 10+ servis), O'zbekiston bozori deyarli bo'sh. Bizning pozitsiya:
+>
+> **"O'zbekcha, Telegramда 2 daqiqада — chiroyli to'y taklifnomasi."**
+
+| # | Farq | Izoh |
+|---|---|---|
+| 1 | **Telegram-native yaratish** | Raqobatchilar web-forma orqali. Biz botда savol-javob — texnik bo'lmagan kelin-kuyovga oson. **Asosiy farq.** |
+| 2 | **To'liq lokalizatsiya** | O'zbek tili (keyin ru/en), **Yandex Maps** (mahalliy aniq), milliy uslub shablonlar |
+| 3 | **Tezlik va soddalik** | 📍 lokatsiya pin, 🖼 rasm tashlash, tayyor havola |
+| 4 | **Freemium** | Bepul asosiy taklifnoma; premium keyin (branding olib tashlash, premium shablon, ko'proq foto/musiqa) |
+| 5 | **Mahalliy to'lov** *(keyin, ixtiyoriy)* | **Click / Payme** — MVP uchun MAJBURIY EMAS, monetizatsiya bosqichida qo'shiladi |
+
+### 1.4. Muhim arxitektura qoidasi
 **Har taklifnoma uchun ALOHIDA deploy YO'Q.** Bitta deploy qilingan web ilova bazadan `slug` bo'yicha ma'lumotni dinamik render qiladi:
 
 ```
@@ -350,18 +363,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - [ ] Landing sahifa.
 
 ### Bosqich 5 (keyin) — Monetizatsiya & ko'p til
-- [ ] Bepul asosiy + premium shablon / o'z domen / branding olib tashlash.
-- [ ] ru / en tillari.
+- [ ] Freemium: bepul asosiy + premium shablon / o'z sub-domen / branding olib tashlash.
+- [ ] **Click / Payme** to'lov integratsiyasi — *ixtiyoriy, MVP uchun majburiy emas*.
+- [ ] ru / en tillari (i18n allaqachon tayyor).
+- [ ] Milliy uslub shablonlar (naqsh + zamonaviy).
 - [ ] Analytics (taklifnoma necha marta ochildi).
 
 ---
 
 ## 11. Ochiq savollar (siz hal qilasiz)
 1. **Domen:** `taklif.uz` yoki boshqami? (MVP'da vaqtincha Vercel subdomen bo'lishi mumkin.)
-2. **Xarita:** Yandex Maps (O'zbekistonда aniqroq) yoki Google Maps?
+2. ~~**Xarita:**~~ ✅ **Yandex Maps** tanlandi (O'zbekistonда aniqroq).
 3. **Bot hosting:** Railway (tavsiya) yoki boshqa (Render/VPS)?
 4. **Slug:** avtomatik (`aziz-va-malika`) — bir xil bo'lsa `-2` qo'shiladi. To'g'rimi?
 5. **Musiqa:** MVP'ga kiritamizmi yoki keyinga qoldiramizmi?
+
+> **Qaror:** To'lov (**Click/Payme**) — MVP uchun **majburiy emas**, keyingi (monetizatsiya) bosqichga qoldirildi.
 
 ---
 
