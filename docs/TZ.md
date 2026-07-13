@@ -378,9 +378,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ---
 
 ## 11. Ochiq savollar (siz hal qilasiz)
-1. **Domen:** `taklif.uz` yoki boshqami? (MVP'da vaqtincha Vercel subdomen bo'lishi mumkin.)
+1. ~~**Domen:**~~ ✅ Hozircha **Vercel subdomen** bilan boshlanadi; `taklif.uz` keyin ulanadi.
 2. ~~**Xarita:**~~ ✅ **Yandex Maps** tanlandi (O'zbekistonда aniqroq).
-3. **Bot hosting:** Railway (tavsiya) yoki boshqa (Render/VPS)?
+3. ~~**Bot hosting:**~~ ✅ **Railway** tanlandi.
 4. **Slug:** avtomatik (`aziz-va-malika`) — bir xil bo'lsa `-2` qo'shiladi. To'g'rimi?
 5. ~~**Musiqa:**~~ ✅ **MVP ga kiradi.** 3 ta tayyor (default) trek + user o'zi audio yuklashi mumkin (`music_source`: `default`/`custom`/`none`). Web'da `MusicToggle` bilan yoq/o'chir.
 
