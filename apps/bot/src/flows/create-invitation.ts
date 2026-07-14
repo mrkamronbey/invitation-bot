@@ -1,17 +1,40 @@
-import type { CreateInvitationInput } from '@invitation/contracts';
+import { type CreateInvitationInput, TEMPLATE_CATALOG } from '@invitation/contracts';
 import { getMessages } from '@invitation/i18n';
 import { container } from '../composition';
-import { readyKeyboard, skipKeyboard } from '../keyboards/menu';
+import { confirmKeyboard, flowKeyboard, locationKeyboard, readyKeyboard } from '../keyboards/menu';
 import type { BotContext, BotConversation } from '../context';
 
 const t = getMessages('uz');
 const m = t.bot;
+const L = m.labels;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const TOTAL = 10;
 const label = (n: number): string => m.step(n, TOTAL);
 
-// Telegram fayl (rasm/audio) yuklab, Supabase Storage'ga joylaydi.
+/** Bekor qilish signali — helperdan tashlaniladi, oqim boshida ushlanadi. */
+class CancelError extends Error {}
+
+interface Collected {
+  groomName: string;
+  brideName: string;
+  eventDate: string;
+  eventTime?: string;
+  venueName?: string;
+  location?: { lat: number; lng: number };
+  coverImageUrl?: string;
+  story?: string;
+  dressCode?: string;
+  music: { url: string | undefined; source: 'none' | 'custom' };
+}
+
+async function cancelIfRequested(ctx: BotContext, text: string): Promise<void> {
+  if (text === m.cancelButton) {
+    await ctx.reply(m.cancelled, { reply_markup: { remove_keyboard: true } });
+    throw new CancelError();
+  }
+}
+
 async function uploadFile(
   conversation: BotConversation,
   ctx: BotContext,
@@ -44,9 +67,11 @@ async function askRequired(
   n: number,
   prompt: string,
 ): Promise<string> {
-  await ctx.reply(`${label(n)} · ${prompt}`);
+  await ctx.reply(`${label(n)} · ${prompt}`, { reply_markup: flowKeyboard(false) });
   const res = await conversation.waitFor(':text');
-  return (res.message?.text ?? '').trim();
+  const txt = (res.message?.text ?? '').trim();
+  await cancelIfRequested(ctx, txt);
+  return txt;
 }
 
 async function askOptionalText(
@@ -55,23 +80,20 @@ async function askOptionalText(
   n: number,
   prompt: string,
 ): Promise<string | undefined> {
-  await ctx.reply(`${label(n)} · ${prompt}`, { reply_markup: skipKeyboard() });
-  const res = await conversation.waitUntil(
-    (c) => c.message?.text !== undefined || c.callbackQuery?.data === 'skip',
-  );
-  if (res.callbackQuery) {
-    await res.answerCallbackQuery();
-    return undefined;
-  }
+  await ctx.reply(`${label(n)} · ${prompt}`, { reply_markup: flowKeyboard(true) });
+  const res = await conversation.waitFor(':text');
   const txt = (res.message?.text ?? '').trim();
-  return txt.length > 0 ? txt : undefined;
+  await cancelIfRequested(ctx, txt);
+  if (txt === m.skipButton || txt.length === 0) return undefined;
+  return txt;
 }
 
 async function askDate(conversation: BotConversation, ctx: BotContext, n: number): Promise<string> {
-  await ctx.reply(`${label(n)} · ${m.askDate}`);
+  await ctx.reply(`${label(n)} · ${m.askDate}`, { reply_markup: flowKeyboard(false) });
   for (;;) {
     const res = await conversation.waitFor(':text');
     const txt = (res.message?.text ?? '').trim();
+    await cancelIfRequested(ctx, txt);
     if (DATE_RE.test(txt)) return txt;
     await ctx.reply(m.invalidDate);
   }
@@ -82,18 +104,14 @@ async function askTime(
   ctx: BotContext,
   n: number,
 ): Promise<string | undefined> {
-  await ctx.reply(`${label(n)} · ${m.askTime}`, { reply_markup: skipKeyboard() });
+  await ctx.reply(`${label(n)} · ${m.askTime}`, { reply_markup: flowKeyboard(true) });
   for (;;) {
-    const res = await conversation.waitUntil(
-      (c) => c.message?.text !== undefined || c.callbackQuery?.data === 'skip',
-    );
-    if (res.callbackQuery) {
-      await res.answerCallbackQuery();
-      return undefined;
-    }
+    const res = await conversation.waitFor(':text');
     const txt = (res.message?.text ?? '').trim();
+    await cancelIfRequested(ctx, txt);
+    if (txt === m.skipButton) return undefined;
     if (TIME_RE.test(txt)) return txt;
-    await ctx.reply(m.invalidTime, { reply_markup: skipKeyboard() });
+    await ctx.reply(m.invalidTime);
   }
 }
 
@@ -102,16 +120,12 @@ async function askLocation(
   ctx: BotContext,
   n: number,
 ): Promise<{ lat: number; lng: number } | undefined> {
-  await ctx.reply(`${label(n)} · ${m.askLocation}`, { reply_markup: skipKeyboard() });
-  const res = await conversation.waitUntil(
-    (c) => c.message?.location !== undefined || c.callbackQuery?.data === 'skip',
-  );
-  if (res.callbackQuery) {
-    await res.answerCallbackQuery();
-    return undefined;
-  }
+  await ctx.reply(`${label(n)} · ${m.askLocation}`, { reply_markup: locationKeyboard() });
+  const res = await conversation.wait();
   const loc = res.message?.location;
-  return loc ? { lat: loc.latitude, lng: loc.longitude } : undefined;
+  if (loc) return { lat: loc.latitude, lng: loc.longitude };
+  await cancelIfRequested(ctx, (res.message?.text ?? '').trim());
+  return undefined;
 }
 
 async function askCoverPhoto(
@@ -119,18 +133,13 @@ async function askCoverPhoto(
   ctx: BotContext,
   n: number,
 ): Promise<string | undefined> {
-  await ctx.reply(`${label(n)} · ${m.askCover}`, { reply_markup: skipKeyboard() });
-  const res = await conversation.waitUntil(
-    (c) => (c.message?.photo?.length ?? 0) > 0 || c.callbackQuery?.data === 'skip',
-  );
-  if (res.callbackQuery) {
-    await res.answerCallbackQuery();
-    return undefined;
-  }
+  await ctx.reply(`${label(n)} · ${m.askCover}`, { reply_markup: flowKeyboard(true) });
+  const res = await conversation.wait();
   const photos = res.message?.photo;
   const largest = photos?.[photos.length - 1];
-  if (!largest) return undefined;
-  return uploadFile(conversation, ctx, largest.file_id, 'covers', 'image/jpeg', 'jpg');
+  if (largest) return uploadFile(conversation, ctx, largest.file_id, 'covers', 'image/jpeg', 'jpg');
+  await cancelIfRequested(ctx, (res.message?.text ?? '').trim());
+  return undefined;
 }
 
 async function askMusic(
@@ -138,24 +147,50 @@ async function askMusic(
   ctx: BotContext,
   n: number,
 ): Promise<{ url: string | undefined; source: 'none' | 'custom' }> {
-  await ctx.reply(`${label(n)} · ${m.askMusic}`, { reply_markup: skipKeyboard() });
-  const res = await conversation.waitUntil(
-    (c) =>
-      c.message?.audio !== undefined ||
-      c.message?.voice !== undefined ||
-      c.callbackQuery?.data === 'skip',
-  );
-  if (res.callbackQuery) {
-    await res.answerCallbackQuery();
-    return { url: undefined, source: 'none' };
-  }
+  await ctx.reply(`${label(n)} · ${m.askMusic}`, { reply_markup: flowKeyboard(true) });
+  const res = await conversation.wait();
   const audio = res.message?.audio ?? res.message?.voice;
-  if (!audio) return { url: undefined, source: 'none' };
-  const url = await uploadFile(conversation, ctx, audio.file_id, 'music', 'audio/mpeg', 'mp3');
-  return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+  if (audio) {
+    const url = await uploadFile(conversation, ctx, audio.file_id, 'music', 'audio/mpeg', 'mp3');
+    return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+  }
+  await cancelIfRequested(ctx, (res.message?.text ?? '').trim());
+  return { url: undefined, source: 'none' };
 }
 
-/** Taklifnoma yaratish FSM: qadamli savol-javob → CreateInvitationUseCase → havola. */
+async function collectFields(conversation: BotConversation, ctx: BotContext): Promise<Collected> {
+  return {
+    groomName: await askRequired(conversation, ctx, 1, m.askGroom),
+    brideName: await askRequired(conversation, ctx, 2, m.askBride),
+    eventDate: await askDate(conversation, ctx, 3),
+    eventTime: await askTime(conversation, ctx, 4),
+    venueName: await askOptionalText(conversation, ctx, 5, m.askVenue),
+    location: await askLocation(conversation, ctx, 6),
+    coverImageUrl: await askCoverPhoto(conversation, ctx, 7),
+    story: await askOptionalText(conversation, ctx, 8, m.askStory),
+    dressCode: await askOptionalText(conversation, ctx, 9, m.askDressCode),
+    music: await askMusic(conversation, ctx, 10),
+  };
+}
+
+function reviewText(templateId: string, d: Collected): string {
+  const tplName = TEMPLATE_CATALOG.find((x) => x.id === templateId)?.name ?? templateId;
+  return [
+    m.reviewTitle,
+    '',
+    `🎨 ${L.template}: ${tplName}`,
+    `💍 ${L.couple}: ${d.groomName} & ${d.brideName}`,
+    `📅 ${L.date}: ${d.eventDate}${d.eventTime ? ` · ${d.eventTime}` : ''}`,
+    `🏛 ${L.venue}: ${d.venueName ?? L.none}`,
+    `📍 ${L.location}: ${d.location ? L.yes : L.none}`,
+    `🖼 ${L.photo}: ${d.coverImageUrl ? L.yes : L.none}`,
+    `📝 ${L.story}: ${d.story ?? L.none}`,
+    `👗 ${L.dress}: ${d.dressCode ?? L.none}`,
+    `🎵 ${L.music}: ${d.music.source === 'custom' ? L.yes : L.none}`,
+  ].join('\n');
+}
+
+/** Taklifnoma yaratish FSM: qadamli savol-javob → tasdiqlash → use-case → havola. */
 export async function createInvitationFlow(
   conversation: BotConversation,
   ctx: BotContext,
@@ -167,33 +202,41 @@ export async function createInvitationFlow(
     return;
   }
 
-  const groomName = await askRequired(conversation, ctx, 1, m.askGroom);
-  const brideName = await askRequired(conversation, ctx, 2, m.askBride);
-  const eventDate = await askDate(conversation, ctx, 3);
-  const eventTime = await askTime(conversation, ctx, 4);
-  const venueName = await askOptionalText(conversation, ctx, 5, m.askVenue);
-  const location = await askLocation(conversation, ctx, 6);
-  const coverImageUrl = await askCoverPhoto(conversation, ctx, 7);
-  const story = await askOptionalText(conversation, ctx, 8, m.askStory);
-  const dressCode = await askOptionalText(conversation, ctx, 9, m.askDressCode);
-  const music = await askMusic(conversation, ctx, 10);
+  let data: Collected;
+  try {
+    for (;;) {
+      data = await collectFields(conversation, ctx);
+      await ctx.reply(reviewText(templateId, data), {
+        parse_mode: 'Markdown',
+        reply_markup: confirmKeyboard(),
+      });
+      const res = await conversation.waitUntil(
+        (c) => c.callbackQuery?.data === 'confirm' || c.callbackQuery?.data === 'restart',
+      );
+      await res.answerCallbackQuery();
+      if (res.callbackQuery?.data === 'confirm') break;
+    }
+  } catch (e) {
+    if (e instanceof CancelError) return;
+    throw e;
+  }
 
-  await ctx.reply(m.creating);
+  await ctx.reply(m.creating, { reply_markup: { remove_keyboard: true } });
 
   const input: CreateInvitationInput = {
     ownerId,
     templateId: templateId as CreateInvitationInput['templateId'],
-    groomName,
-    brideName,
-    eventDate,
-    eventTime,
-    venueName,
-    location,
-    story,
-    dressCode,
-    coverImageUrl,
-    musicUrl: music.url,
-    musicSource: music.source,
+    groomName: data.groomName,
+    brideName: data.brideName,
+    eventDate: data.eventDate,
+    eventTime: data.eventTime,
+    venueName: data.venueName,
+    location: data.location,
+    story: data.story,
+    dressCode: data.dressCode,
+    coverImageUrl: data.coverImageUrl,
+    musicUrl: data.music.url,
+    musicSource: data.music.source,
   };
 
   const result = await conversation.external(() => container.createInvitation.execute(input));
