@@ -1,6 +1,6 @@
 import type { Bot } from 'grammy';
 import { TEMPLATE_CATALOG } from '@invitation/contracts';
-import { type Locale, getMessages, ru, uz } from '@invitation/i18n';
+import { type Locale, getMessages, normalizeLocale, ru, uz } from '@invitation/i18n';
 import { container } from '../composition';
 import {
   contactKeyboard,
@@ -84,13 +84,21 @@ async function applyLanguage(ctx: BotContext, lang: Locale): Promise<void> {
 
 export function registerStart(bot: Bot<BotContext>): void {
   bot.command('start', async (ctx) => {
+    // Qaytgan userni oldindan aniqlaymiz (profilida tili bo'lishi mumkin).
+    const existing = ctx.from ? await container.users.findByTelegramId(ctx.from.id) : null;
     await ensureUser(ctx);
-    const m = botText(ctx);
+
+    // Til: sessiya → profil (qaytgan user) → yangi user'dan so'raymiz.
     if (!ctx.session.lang) {
-      await ctx.reply(m.chooseLanguage, { reply_markup: languageKeyboard(m) });
-      return;
+      if (existing) {
+        ctx.session.lang = normalizeLocale(existing.languageCode);
+      } else {
+        const m = botText(ctx);
+        await ctx.reply(m.chooseLanguage, { reply_markup: languageKeyboard(m) });
+        return;
+      }
     }
-    await showWelcomeAndMenu(ctx, m);
+    await showWelcomeAndMenu(ctx, botText(ctx));
   });
 
   // Til tanlandi → AVVAL (birinchi marta) telefon so'raymiz, so'ng welcome + menyu.
