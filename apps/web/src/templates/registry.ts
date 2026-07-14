@@ -1,5 +1,7 @@
 import type { TemplateMeta } from './types';
 import { classicTemplate } from './classic';
+import { modernTemplate } from './modern';
+import { minimalTemplate } from './minimal';
 
 /**
  * Shablon registry (plagin — Open/Closed). Yangi shablon = shu yerga bitta yozuv,
@@ -7,6 +9,8 @@ import { classicTemplate } from './classic';
  */
 export const templates: Record<string, TemplateMeta> = {
   classic: classicTemplate,
+  modern: modernTemplate,
+  minimal: minimalTemplate,
 };
 
 export function getTemplate(id: string): TemplateMeta {

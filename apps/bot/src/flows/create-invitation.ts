@@ -73,6 +73,36 @@ async function askCoverPhoto(
   });
 }
 
+async function askMusic(
+  conversation: BotConversation,
+  ctx: BotContext,
+): Promise<{ url: string | undefined; source: 'none' | 'custom' }> {
+  await ctx.reply(m.bot.askMusic);
+  const res = await conversation.wait();
+  const audio = res.message?.audio ?? res.message?.voice;
+  if (!audio) return { url: undefined, source: 'none' };
+  const fileId = audio.file_id;
+
+  const url = await conversation.external(async () => {
+    const file = await ctx.api.getFile(fileId);
+    if (!file.file_path) return undefined;
+    const resp = await fetch(
+      `https://api.telegram.org/file/bot${container.env.botToken}/${file.file_path}`,
+    );
+    const bytes = new Uint8Array(await resp.arrayBuffer());
+    const path = `music/${container.ids.generate()}.mp3`;
+    const stored = await container.storage.upload({
+      bucket: 'invitations',
+      path,
+      bytes,
+      contentType: 'audio/mpeg',
+    });
+    return stored.url;
+  });
+
+  return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+}
+
 /** Taklifnoma yaratish FSM: savol-javob → CreateInvitationUseCase → havola. */
 export async function createInvitationFlow(
   conversation: BotConversation,
@@ -94,6 +124,7 @@ export async function createInvitationFlow(
   const coverImageUrl = await askCoverPhoto(conversation, ctx);
   const story = await askOptional(conversation, ctx, m.bot.askStory);
   const dressCode = await askOptional(conversation, ctx, m.bot.askDressCode);
+  const music = await askMusic(conversation, ctx);
 
   const input: CreateInvitationInput = {
     ownerId,
@@ -107,7 +138,8 @@ export async function createInvitationFlow(
     story,
     dressCode,
     coverImageUrl,
-    musicSource: 'none',
+    musicUrl: music.url,
+    musicSource: music.source,
   };
 
   const result = await conversation.external(() => container.createInvitation.execute(input));

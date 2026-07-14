@@ -12,4 +12,6 @@ export interface TemplateCatalogItem {
  */
 export const TEMPLATE_CATALOG: readonly TemplateCatalogItem[] = [
   { id: 'classic', name: 'Klassik' },
+  { id: 'modern', name: 'Zamonaviy' },
+  { id: 'minimal', name: 'Minimal' },
 ];
