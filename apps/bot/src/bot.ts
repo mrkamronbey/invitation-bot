@@ -9,12 +9,18 @@ import { mainReplyKeyboard } from './keyboards/menu';
 import { registerStart } from './handlers/start';
 import { registerMyInvites } from './handlers/myinvites';
 import { registerManage } from './handlers/manage';
+import { SupabaseSessionStorage } from './storage/supabase-session-storage';
 
 /** Bot instance'ni yig'adi: session → conversations → handlerlar → xato chegarasi. */
 export function createBot(): Bot<BotContext> {
   const bot = new Bot<BotContext>(container.env.botToken);
 
-  bot.use(session({ initial: (): SessionData => ({}) }));
+  bot.use(
+    session({
+      initial: (): SessionData => ({}),
+      storage: new SupabaseSessionStorage<SessionData>(container.db),
+    }),
+  );
   bot.use(conversations());
   bot.use(createConversation(createInvitationFlow, 'create-invitation'));
   bot.use(createConversation(editInvitationFlow, 'edit-invitation'));

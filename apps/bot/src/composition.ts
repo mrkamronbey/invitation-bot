@@ -33,6 +33,7 @@ function buildContainer() {
 
   return {
     env,
+    db,
     users,
     storage,
     ids,
