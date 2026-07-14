@@ -25,9 +25,15 @@ const LATER_LABELS = [uz.bot.laterButton, ru.bot.laterButton];
 
 type Msg = ReturnType<typeof botText>;
 
-/** Welcome banner + matn (yangi/qaytgan userga mos) + inline CTA yuboradi. */
-async function sendWelcomeBanner(ctx: BotContext, m: Msg, invitesCount: number): Promise<void> {
-  const caption = invitesCount > 0 ? m.welcomeBack(invitesCount) : m.welcome;
+async function invitesCountOf(userId: string): Promise<number> {
+  return (await container.listOwnerInvitations.execute(userId)).length;
+}
+
+/** Welcome banner + matn (yangi/qaytgan userga mos) + inline CTA + pastki menyu. */
+async function showWelcomeAndMenu(ctx: BotContext, m: Msg): Promise<void> {
+  const user = await ensureUser(ctx);
+  const count = user ? await invitesCountOf(user.id) : 0;
+  const caption = count > 0 ? m.welcomeBack(count) : m.welcome;
   try {
     await ctx.replyWithPhoto(container.env.bannerUrl, {
       caption,
@@ -37,6 +43,7 @@ async function sendWelcomeBanner(ctx: BotContext, m: Msg, invitesCount: number):
   } catch {
     await ctx.reply(caption, { parse_mode: 'Markdown', reply_markup: welcomeCtaKeyboard(m) });
   }
+  await ctx.reply(m.menuHint, { reply_markup: mainReplyKeyboard(m) });
 }
 
 /** Namuna (demo) taklifnomani ko'rsatadi. */
@@ -75,41 +82,32 @@ async function applyLanguage(ctx: BotContext, lang: Locale): Promise<void> {
   }
 }
 
-async function invitesCountOf(userId: string): Promise<number> {
-  return (await container.listOwnerInvitations.execute(userId)).length;
-}
-
 export function registerStart(bot: Bot<BotContext>): void {
   bot.command('start', async (ctx) => {
-    const user = await ensureUser(ctx);
+    await ensureUser(ctx);
     const m = botText(ctx);
     if (!ctx.session.lang) {
       await ctx.reply(m.chooseLanguage, { reply_markup: languageKeyboard(m) });
       return;
     }
-    const count = user ? await invitesCountOf(user.id) : 0;
-    await sendWelcomeBanner(ctx, m, count);
-    await ctx.reply(m.menuHint, { reply_markup: mainReplyKeyboard(m) });
+    await showWelcomeAndMenu(ctx, m);
   });
 
-  // Til tanlash (birinchi /start yoki "🌐 Til" tugmasi)
+  // Til tanlandi → AVVAL (birinchi marta) telefon so'raymiz, so'ng welcome + menyu.
   bot.callbackQuery(/^lang:(uz|ru)$/, async (ctx) => {
     const lang = (ctx.match?.[1] ?? 'uz') as Locale;
     await applyLanguage(ctx, lang);
     await ctx.answerCallbackQuery();
     const m = getMessages(lang).bot;
     const user = await ensureUser(ctx);
-    const count = user ? await invitesCountOf(user.id) : 0;
-    await sendWelcomeBanner(ctx, m, count);
-    // Onboarding: telefonni bir marta (ixtiyoriy) so'raymiz, aks holda menyuni ko'rsatamiz.
     if (user && !user.phone) {
       await ctx.reply(m.askPhone, { reply_markup: contactKeyboard(m) });
-    } else {
-      await ctx.reply(m.menuHint, { reply_markup: mainReplyKeyboard(m) });
+      return;
     }
+    await showWelcomeAndMenu(ctx, m);
   });
 
-  // Telefon kontakti ulashildi (ixtiyoriy) — o'z raqamini saqlaymiz.
+  // Telefon kontakti ulashildi (ixtiyoriy) → saqlaymiz, so'ng welcome + menyu.
   bot.on(':contact', async (ctx) => {
     const m = botText(ctx);
     const contact = ctx.message?.contact;
@@ -120,16 +118,13 @@ export function registerStart(bot: Bot<BotContext>): void {
         phone: contact.phone_number,
         lastName: contact.last_name ?? user.lastName,
       });
-      await ctx.reply(m.phoneSaved, { reply_markup: mainReplyKeyboard(m) });
-    } else {
-      await ctx.reply('👍', { reply_markup: mainReplyKeyboard(m) });
+      await ctx.reply(m.phoneSaved, { reply_markup: { remove_keyboard: true } });
     }
+    await showWelcomeAndMenu(ctx, m);
   });
 
-  // "Keyinroq" — telefonni o'tkazib yuboramiz.
-  bot.hears(LATER_LABELS, (ctx) =>
-    ctx.reply(botText(ctx).menuHint, { reply_markup: mainReplyKeyboard(botText(ctx)) }),
-  );
+  // "Keyinroq" — telefonni o'tkazamiz, welcome + menyuга o'tamiz.
+  bot.hears(LATER_LABELS, (ctx) => showWelcomeAndMenu(ctx, botText(ctx)));
 
   bot.command('new', (ctx) => sendTemplateChooser(ctx));
   bot.command('demo', (ctx) => sendDemo(ctx));
