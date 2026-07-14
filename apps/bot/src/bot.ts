@@ -17,6 +17,15 @@ export function createBot(): Bot<BotContext> {
   registerStart(bot);
   registerMyInvites(bot);
 
+  // Telegram menyu buyruqlari (input yonidagi "/" tugma)
+  void bot.api.setMyCommands([
+    { command: 'start', description: 'Bosh menyu' },
+    { command: 'new', description: 'Yangi taklifnoma' },
+    { command: 'myinvites', description: 'Mening taklifnomalarim' },
+    { command: 'help', description: 'Yordam' },
+    { command: 'cancel', description: 'Bekor qilish' },
+  ]);
+
   bot.catch((err) => {
     console.error('Bot xatosi:', err.error);
   });
