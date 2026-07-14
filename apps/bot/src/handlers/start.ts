@@ -2,7 +2,7 @@ import type { Bot } from 'grammy';
 import { TEMPLATE_CATALOG } from '@invitation/contracts';
 import { type Locale, getMessages, ru, uz } from '@invitation/i18n';
 import { container } from '../composition';
-import { languageKeyboard, mainReplyKeyboard } from '../keyboards/menu';
+import { contactKeyboard, languageKeyboard, mainReplyKeyboard } from '../keyboards/menu';
 import { templatesKeyboard } from '../keyboards/templates';
 import { botText, localeOf } from '../i18n';
 import { ensureUser } from '../services/ensure-user';
@@ -14,6 +14,7 @@ const CREATE_LABELS = [uz.bot.menuCreate, ru.bot.menuCreate];
 const MY_LABELS = [uz.bot.menuMyInvites, ru.bot.menuMyInvites];
 const HELP_LABELS = [uz.bot.menuHelp, ru.bot.menuHelp];
 const LANG_LABELS = [uz.bot.menuLanguage, ru.bot.menuLanguage];
+const LATER_LABELS = [uz.bot.laterButton, ru.bot.laterButton];
 
 /** Shablonlarni rasm (preview) bilan ko'rsatadi + tanlash tugmalari. */
 async function sendTemplateChooser(ctx: BotContext): Promise<void> {
@@ -59,8 +60,35 @@ export function registerStart(bot: Bot<BotContext>): void {
     await applyLanguage(ctx, lang);
     await ctx.answerCallbackQuery();
     const m = getMessages(lang).bot;
+    const user = await ensureUser(ctx);
     await ctx.reply(m.welcome, { parse_mode: 'Markdown', reply_markup: mainReplyKeyboard(m) });
+    // Onboarding: telefonni bir marta (ixtiyoriy) so'raymiz.
+    if (user && !user.phone) {
+      await ctx.reply(m.askPhone, { reply_markup: contactKeyboard(m) });
+    }
   });
+
+  // Telefon kontakti ulashildi (ixtiyoriy) — o'z raqamini saqlaymiz.
+  bot.on(':contact', async (ctx) => {
+    const m = botText(ctx);
+    const contact = ctx.message?.contact;
+    const user = await ensureUser(ctx);
+    if (user && contact && (!contact.user_id || contact.user_id === ctx.from?.id)) {
+      await container.users.upsert({
+        ...user,
+        phone: contact.phone_number,
+        lastName: contact.last_name ?? user.lastName,
+      });
+      await ctx.reply(m.phoneSaved, { reply_markup: mainReplyKeyboard(m) });
+    } else {
+      await ctx.reply('👍', { reply_markup: mainReplyKeyboard(m) });
+    }
+  });
+
+  // "Keyinroq" — telefonni o'tkazib yuboramiz.
+  bot.hears(LATER_LABELS, (ctx) =>
+    ctx.reply('👍', { reply_markup: mainReplyKeyboard(botText(ctx)) }),
+  );
 
   bot.command('new', (ctx) => sendTemplateChooser(ctx));
   bot.command('help', (ctx) => ctx.reply(botText(ctx).help, { parse_mode: 'Markdown' }));

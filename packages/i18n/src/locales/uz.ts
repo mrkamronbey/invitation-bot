@@ -31,6 +31,15 @@ export const uz = {
     menuMyInvites: '📋 Mening taklifnomalarim',
     menuHelp: '❓ Yordam',
     menuLanguage: '🌐 Til',
+    askPhone: [
+      '📱 Raqamingizni ulashasizmi?',
+      '',
+      'Bu taklifnomalaringizni saqlab qolish va kelajakda',
+      'boshqarish uchun kerak bo‘ladi (ixtiyoriy).',
+    ].join('\n'),
+    sharePhoneButton: '📱 Raqamni ulashish',
+    laterButton: '⏭ Keyinroq',
+    phoneSaved: '✅ Rahmat! Raqamingiz saqlandi.',
     help: [
       '*Qanday ishlaydi?*',
       '',

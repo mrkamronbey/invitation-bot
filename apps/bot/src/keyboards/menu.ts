@@ -21,6 +21,16 @@ export function languageKeyboard(m: M): InlineKeyboard {
   return new InlineKeyboard().text(m.langUz, 'lang:uz').text(m.langRu, 'lang:ru');
 }
 
+/** Telefon so'rovi — bir bosishda "kontaktni ulashish" + "keyinroq" (reply). */
+export function contactKeyboard(m: M): Keyboard {
+  return new Keyboard()
+    .requestContact(m.sharePhoneButton)
+    .row()
+    .text(m.laterButton)
+    .resized()
+    .oneTime();
+}
+
 interface FlowOpts {
   readonly optional?: boolean;
   readonly canBack?: boolean;

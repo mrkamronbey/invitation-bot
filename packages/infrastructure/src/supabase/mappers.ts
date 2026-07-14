@@ -49,6 +49,8 @@ export interface UserRow {
   telegram_id: number;
   username: string | null;
   first_name: string;
+  last_name: string | null;
+  phone: string | null;
   language_code: string;
 }
 
@@ -107,6 +109,8 @@ export function rowToUser(row: UserRow): User {
     telegramId: row.telegram_id,
     username: row.username ?? undefined,
     firstName: row.first_name,
+    lastName: row.last_name ?? undefined,
+    phone: row.phone ?? undefined,
     languageCode: row.language_code,
   };
 }
@@ -157,6 +161,8 @@ export function userToRow(user: User): UserRow {
     telegram_id: user.telegramId,
     username: user.username ?? null,
     first_name: user.firstName,
+    last_name: user.lastName ?? null,
+    phone: user.phone ?? null,
     language_code: user.languageCode,
   };
 }

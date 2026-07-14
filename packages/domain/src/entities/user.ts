@@ -4,5 +4,7 @@ export interface User {
   readonly telegramId: number;
   readonly username?: string;
   readonly firstName: string;
+  readonly lastName?: string;
+  readonly phone?: string;
   readonly languageCode: string;
 }
