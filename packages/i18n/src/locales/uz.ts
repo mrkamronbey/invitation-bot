@@ -122,7 +122,7 @@ export const uz = {
     gateTitle: [
       '✅ *Asosiy ma’lumotlar tayyor!*',
       '',
-      'Qo‘shimcha ma’lumot (vaqt, manzil, rasm, musiqa...) qo‘shasizmi?',
+      'Qo‘shimcha ma’lumot (rasm, hikoya, kiyim uslubi, musiqa) qo‘shasizmi?',
       'Ular taklifnomani chiroyliroq qiladi — lekin ixtiyoriy.',
     ].join('\n'),
     gateYes: '➕ Ha, qo‘shaman',
