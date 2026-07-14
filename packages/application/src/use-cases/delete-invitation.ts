@@ -1,10 +1,4 @@
-import {
-  type InvitationRepository,
-  type Result,
-  DomainError,
-  err,
-  ok,
-} from '@invitation/domain';
+import { type InvitationRepository, type Result, DomainError, err, ok } from '@invitation/domain';
 
 export interface DeleteInvitationDeps {
   readonly invitations: InvitationRepository;

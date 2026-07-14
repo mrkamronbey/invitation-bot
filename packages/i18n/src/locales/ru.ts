@@ -122,8 +122,7 @@ export const ru: Messages = {
     deleteYes: '🗑 Да, удалить',
     deleteNo: '↩️ Отмена',
     deleted: '🗑 Приглашение удалено.',
-    statsTitle: (groom: string, bride: string): string =>
-      `📊 *${groom} & ${bride}* — статистика`,
+    statsTitle: (groom: string, bride: string): string => `📊 *${groom} & ${bride}* — статистика`,
     statsSummary: (s: {
       responses: number;
       attending: number;

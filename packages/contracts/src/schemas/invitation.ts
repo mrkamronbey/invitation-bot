@@ -51,3 +51,7 @@ export type TemplateIdDto = z.infer<typeof templateIdSchema>;
 export type MusicSourceDto = z.infer<typeof musicSourceSchema>;
 export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;
 export type UpdateInvitationPatch = z.infer<typeof updateInvitationSchema>;
+
+/** Berilgan matn haqiqiy shablon ID'si ekanini tekshiradi (bot tanlovlari uchun). */
+export const isTemplateIdDto = (value: string): value is TemplateIdDto =>
+  templateIdSchema.safeParse(value).success;
