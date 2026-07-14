@@ -131,6 +131,9 @@ importers:
       '@invitation/domain':
         specifier: workspace:*
         version: link:../domain
+      '@invitation/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@supabase/supabase-js':
         specifier: ^2.47.10
         version: 2.110.3

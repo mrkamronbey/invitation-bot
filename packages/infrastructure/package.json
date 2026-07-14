@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@invitation/domain": "workspace:*",
+    "@invitation/i18n": "workspace:*",
     "@supabase/supabase-js": "^2.47.10"
   }
 }

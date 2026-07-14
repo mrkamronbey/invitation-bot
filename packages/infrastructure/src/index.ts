@@ -4,4 +4,5 @@ export * from './repositories/supabase-invitation-repository';
 export * from './repositories/supabase-rsvp-repository';
 export * from './repositories/supabase-user-repository';
 export * from './storage/supabase-storage';
+export * from './telegram/telegram-notifier';
 export * from './services/system-services';

@@ -8,15 +8,17 @@ import {
   SupabaseRsvpRepository,
   SupabaseUserRepository,
   SystemClock,
+  TelegramNotifier,
   createSupabaseClient,
 } from '@invitation/infrastructure';
 
-/** Bosqich 1: Telegram xabari Bosqich 2 da ulanadi — hozircha no-op. */
-const noopNotifier: Notifier = {
-  async notifyRsvp() {
-    /* Bosqich 2: TelegramNotifier */
-  },
-};
+/** BOT_TOKEN bo'lsa egaga Telegram xabari yuboriladi, aks holda no-op. */
+function buildNotifier(): Notifier {
+  const botToken = process.env.BOT_TOKEN;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  if (botToken) return new TelegramNotifier(botToken, siteUrl);
+  return { async notifyRsvp() {} };
+}
 
 function serviceEnv(): { url: string; key: string } | null {
   const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -43,7 +45,7 @@ export async function POST(request: Request): Promise<Response> {
     invitations: new SupabaseInvitationRepository(db),
     rsvps: new SupabaseRsvpRepository(db),
     users: new SupabaseUserRepository(db),
-    notifier: noopNotifier,
+    notifier: buildNotifier(),
     ids: new CryptoIdGenerator(),
     clock: new SystemClock(),
   });
