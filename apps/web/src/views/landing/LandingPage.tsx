@@ -22,7 +22,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Reveal } from '@/shared/ui/Reveal';
-import { Flourish, Monogram } from '@/shared/ui/ornaments';
+import { Corners, Flourish, Monogram } from '@/shared/ui/ornaments';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
 const DEMO_URL = '/aziz-va-malika';
@@ -154,7 +154,7 @@ function TelegramButton({
 
 export function LandingPage(): ReactNode {
   return (
-    <main className="bg-cream text-ink">
+    <main className="bg-cream pattern-soft text-ink">
       {/* Nav */}
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <span className="text-lg font-bold tracking-tight">
@@ -250,7 +250,7 @@ export function LandingPage(): ReactNode {
           </Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {BOT_FEATURES.map((f, i) => (
-              <Reveal key={f.title} delay={i * 0.05}>
+              <Reveal key={f.title} delay={i * 0.05} variant="scale">
                 <div className="h-full rounded-2xl border border-blush bg-cream/70 p-6">
                   <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/10 text-gold">
                     <f.icon className="h-5 w-5" strokeWidth={1.75} />
@@ -275,7 +275,7 @@ export function LandingPage(): ReactNode {
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {WEB_FEATURES.map((f, i) => (
-            <Reveal key={f.title} delay={i * 0.05}>
+            <Reveal key={f.title} delay={i * 0.05} variant="scale">
               <div className="flex h-full items-start gap-4 rounded-2xl border border-blush bg-white/60 p-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold">
                   <f.icon className="h-5 w-5" strokeWidth={1.75} />
@@ -303,7 +303,7 @@ export function LandingPage(): ReactNode {
           </Reveal>
           <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {TEMPLATES.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.08}>
+              <Reveal key={t.name} delay={i * 0.08} variant="scale">
                 <div className="overflow-hidden rounded-2xl border border-blush bg-cream">
                   <img
                     src={t.img}
@@ -323,18 +323,21 @@ export function LandingPage(): ReactNode {
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <Reveal>
-          <Flourish className="mx-auto mb-6 w-40" />
-          <h2 className="font-display text-4xl leading-tight sm:text-5xl">
-            To‘yingizni <span className="text-gold">chiroyli boshlang</span>
-          </h2>
-          <p className="mx-auto mt-5 max-w-lg text-lg text-ink/70">
-            Hoziroq botni oching va bir necha daqiqada tayyor, ulashishga tayyor taklifnomangizni
-            oling.
-          </p>
-          <div className="mt-9">
-            <TelegramButton label="Telegramda boshlash" />
+      <section className="mx-auto max-w-3xl px-6 py-24">
+        <Reveal variant="scale">
+          <div className="relative rounded-3xl border border-blush bg-white/50 px-6 py-16 text-center shadow-sm">
+            <Corners className="text-gold/40" />
+            <Flourish className="mx-auto mb-6 w-40" />
+            <h2 className="font-display text-4xl leading-tight sm:text-5xl">
+              To‘yingizni <span className="text-gold">chiroyli boshlang</span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-lg text-lg text-ink/70">
+              Hoziroq botni oching va bir necha daqiqada tayyor, ulashishga tayyor taklifnomangizni
+              oling.
+            </p>
+            <div className="mt-9">
+              <TelegramButton label="Telegramda boshlash" />
+            </div>
           </div>
         </Reveal>
       </section>

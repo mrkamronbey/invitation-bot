@@ -54,3 +54,29 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Nozik naqsh foni — och (krem) qatlamlar uchun */
+.pattern-soft {
+  background-image:
+    radial-gradient(rgba(169, 129, 79, 0.1) 1px, transparent 1.4px),
+    radial-gradient(rgba(169, 129, 79, 0.06) 1px, transparent 1.4px);
+  background-size:
+    28px 28px,
+    28px 28px;
+  background-position:
+    0 0,
+    14px 14px;
+}
+
+/* Nozik naqsh foni — to'q (night) qatlamlar uchun */
+.pattern-soft-dark {
+  background-image:
+    radial-gradient(rgba(201, 162, 110, 0.12) 1px, transparent 1.4px),
+    radial-gradient(rgba(201, 162, 110, 0.07) 1px, transparent 1.4px);
+  background-size:
+    28px 28px,
+    28px 28px;
+  background-position:
+    0 0,
+    14px 14px;
+}

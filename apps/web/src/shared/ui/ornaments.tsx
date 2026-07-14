@@ -54,6 +54,37 @@ export function Monogram({
   );
 }
 
+/** Burchak naqshi — ramka burchaklariga qo'yiladi. */
+export function CornerFlourish({ className }: { className?: string }): ReactNode {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      className={cn('h-10 w-10 text-gold', className)}
+      fill="none"
+      aria-hidden="true"
+    >
+      <g stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        <path d="M6 6h22" />
+        <path d="M6 6v22" />
+        <path d="M6 6c16 1 25 10 26 26" opacity="0.6" />
+      </g>
+      <circle cx="6" cy="6" r="1.8" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Nisbiy (relative) o'ram burchaklariga 4 ta naqsh joylaydi. */
+export function Corners({ className }: { className?: string }): ReactNode {
+  return (
+    <>
+      <CornerFlourish className={cn('absolute left-3 top-3', className)} />
+      <CornerFlourish className={cn('absolute right-3 top-3 -scale-x-100', className)} />
+      <CornerFlourish className={cn('absolute bottom-3 left-3 -scale-y-100', className)} />
+      <CornerFlourish className={cn('absolute bottom-3 right-3 -scale-100', className)} />
+    </>
+  );
+}
+
 /** Kichik naqsh nuqtasi (bo'limlar orasidagi ajratgich uchun). */
 export function DotDivider({ className }: { className?: string }): ReactNode {
   return (
