@@ -8,9 +8,12 @@ const config: Config = {
         // Nafis to'y palitrasi (yaxshi kontrast bilan)
         cream: '#faf7f2', // asosiy fon
         ink: '#28211b', // matn (to'qroq — o'qilishi yaxshi)
-        gold: '#a9814f', // urg'u (chuqurroq oltin — kontrast uchun)
+        gold: '#b08d57', // urg'u (nozik oltin ramka)
         blush: '#e6d3bf', // chegara/yumshoq
         night: '#1c1814', // to'q fon (Modern shablon)
+        sage: '#8ea67f', // eukalipt bargi (yashil)
+        'sage-dark': '#6f8663', // to'q barg
+        rose: '#efe3d8', // atirgul rangi (krem-pushti)
       },
       fontFamily: {
         // Gilroy — default (tana, UI). Fayl bo'lmasa tizim shriftiga tushadi.

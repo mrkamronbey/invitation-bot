@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Reveal } from '@/shared/ui/Reveal';
 import { Corners, Flourish, Monogram } from '@/shared/ui/ornaments';
+import { FloralFrame } from '@/shared/ui/floral';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
 const DEMO_URL = '/aziz-va-malika';
@@ -164,7 +165,8 @@ export function LandingPage(): ReactNode {
       </nav>
 
       {/* Hero */}
-      <section className="mx-auto max-w-4xl px-6 pb-16 pt-10 text-center">
+      <section className="relative mx-auto max-w-5xl px-6 pb-16 pt-10 text-center">
+        <FloralFrame className="hidden opacity-80 lg:block" />
         <Reveal>
           <div className="animate-draw-in animate-float mx-auto mb-8 w-fit">
             <Monogram left="Aziz" right="Malika" />

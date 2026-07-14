@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import type { TemplateProps } from '../types';
 import { InvitationBody } from '@/widgets/invitation-body/InvitationBody';
-import { Corners, Flourish, Monogram } from '@/shared/ui/ornaments';
+import { Flourish, Monogram } from '@/shared/ui/ornaments';
+import { FloralFrame } from '@/shared/ui/floral';
 import { formatEventDate, formatEventTime } from '@/shared/lib/format';
 
 /** Zamonaviy shablon — to'q fon, nafis serif, oltin naqsh urg'usi. */
@@ -24,7 +25,7 @@ export function ModernTemplate({ invitation }: TemplateProps): ReactNode {
           />
         ) : null}
         <span className="pointer-events-none absolute inset-4 border border-gold/20 sm:inset-6" />
-        <Corners className="text-gold/50" />
+        <FloralFrame />
 
         <div className="relative flex flex-col items-center animate-fade-up">
           <div className="animate-draw-in animate-float">
