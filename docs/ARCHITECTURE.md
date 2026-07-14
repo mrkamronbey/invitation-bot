@@ -7,17 +7,17 @@
 
 ## 1. Asosiy tamoyillar
 
-| Tamoyil | Amalda nima degani |
-|---|---|
-| **Clean Architecture** | Biznes-qoidalar frameworkдан mustaqil. `domain` hech narsaга bog'liq emas. |
-| **Ports & Adapters (Hexagonal)** | Tashqi dunyo (Supabase, Telegram, Storage) — almashtiriladigan adapterlar. Domain faqat *interfeys* (port) biladi. |
-| **Dependency Rule** | Bog'liqlik faqat **ichкариga** yo'nalади: `presentation → application → domain`. Domain tashqariga qaramaydi. |
-| **FSD (Feature-Sliced Design)** | Web UI qatlamli: `app → pages → widgets → features → entities → shared`. Yuqoridan pastga import. |
-| **DRY / umumiylashtirish** | Bir xil mantiq (slug, validatsiya, use-case) `packages/` да bir marta. Bot va web import qiladi. |
-| **Open/Closed** | Shablonlar, savol qadamlari, RSVP kanallari — **registry** orqали qo'shiladi, mavjud kod o'zgarmaydi. |
-| **Result-based error handling** | Kutilgan xatolar `Result<T, E>` orqали, `throw` faqat kutilmagan holatlarда. |
+| Tamoyil                          | Amalda nima degani                                                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Clean Architecture**           | Biznes-qoidalar frameworkдан mustaqil. `domain` hech narsaга bog'liq emas.                                         |
+| **Ports & Adapters (Hexagonal)** | Tashqi dunyo (Supabase, Telegram, Storage) — almashtiriladigan adapterlar. Domain faqat _interfeys_ (port) biladi. |
+| **Dependency Rule**              | Bog'liqlik faqat **ichкариga** yo'nalади: `presentation → application → domain`. Domain tashqariga qaramaydi.      |
+| **FSD (Feature-Sliced Design)**  | Web UI qatlamli: `app → pages → widgets → features → entities → shared`. Yuqoridan pastga import.                  |
+| **DRY / umumiylashtirish**       | Bir xil mantiq (slug, validatsiya, use-case) `packages/` да bir marta. Bot va web import qiladi.                   |
+| **Open/Closed**                  | Shablonlar, savol qadamlari, RSVP kanallari — **registry** orqали qo'shiladi, mavjud kod o'zgarmaydi.              |
+| **Result-based error handling**  | Kutilgan xatolar `Result<T, E>` orqали, `throw` faqat kutilmagan holatlarда.                                       |
 
-**Oltin qoida:** agar kodни *ikkала* joyда (bot + web) ishlatsa bo'lsa — u `packages/` да. Agar u faqat UI'га tegишли bo'lsa — `apps/web` да. Agar faqat Telegramга — `apps/bot` да.
+**Oltin qoida:** agar kodни _ikkала_ joyда (bot + web) ishlatsa bo'lsa — u `packages/` да. Agar u faqat UI'га tegишли bo'lsa — `apps/web` да. Agar faqat Telegramга — `apps/bot` да.
 
 ---
 
@@ -55,7 +55,7 @@
 
 **Bog'liqlik yo'nalishi (eng muhim qoida):**
 `infrastructure → domain ← application ← presentation`
-Domain markazда, hech kimга qaramaydi. Infrastructure domain *portlarини* amalга oshiradi (dependency inversion).
+Domain markazда, hech kimга qaramaydi. Infrastructure domain _portlarини_ amalга oshiradi (dependency inversion).
 
 ### 2.1. Har qatlam nima qiladi
 
@@ -65,20 +65,21 @@ Domain markazда, hech kimга qaramaydi. Infrastructure domain *portlarини*
 - **Presentation** — Next.js sahifалari va grammY handler'лари. Ular faqat use-case'ни chaqiради va natijани ko'rsатади. **Biznes-mantiq bu yerда YO'Q.**
 
 ### 2.2. Composition Root (DI)
+
 Har ilova (`apps/web`, `apps/bot`) o'з **composition root**ида bog'lamни quради: qайси infrastructure adapter qайси portга ulanадi. Use-case'lar konstruktор orqали port oladi (constructor injection). Global singleton yo'q — testда soxta (mock) port berish oson.
 
 ```ts
 // apps/bot/src/composition.ts (soddalashtирилган)
-const supabase = createSupabaseClient(env)
-const invitationRepo = new SupabaseInvitationRepo(supabase)
-const storage = new SupabaseStorage(supabase)
-const notifier = new TelegramNotifier(botApi)
+const supabase = createSupabaseClient(env);
+const invitationRepo = new SupabaseInvitationRepo(supabase);
+const storage = new SupabaseStorage(supabase);
+const notifier = new TelegramNotifier(botApi);
 
 export const useCases = {
   createInvitation: new CreateInvitationUseCase(invitationRepo, storage),
-  submitRsvp:       new SubmitRsvpUseCase(rsvpRepo, invitationRepo, notifier),
+  submitRsvp: new SubmitRsvpUseCase(rsvpRepo, invitationRepo, notifier),
   // ...
-}
+};
 ```
 
 ---
@@ -147,11 +148,13 @@ invitation-bot/
 ```
 
 ### Bog'liqlik grafi (kim kimni import qiladi)
+
 ```
 domain      ← application ← { infrastructure, apps/web, apps/bot }
 contracts   ← { application, infrastructure, apps/web, apps/bot }
 i18n, ui, config ← apps/*
 ```
+
 `domain` hech kimni import qilmaydi. `apps` faqat `application` (+ contracts/i18n/ui) ни ko'radi; infrastructure faqat composition root'да ulanади. **ESLint `no-restricted-imports` bilan bu qoida majburlanади** — masalan `domain` ичида `@supabase/*` import qilib bo'lmaydi.
 
 ---
@@ -179,15 +182,21 @@ apps/bot/src/
 
 ```ts
 type Step<K extends keyof InvitationDraft> = {
-  key: K
-  ask: (ctx) => Promise<void>                 // savolни ko'rsатиш
-  parse: (ctx) => Result<InvitationDraft[K]>  // javobни tekshirish (Zod)
-  optional?: boolean
-  skippable?: boolean
-}
+  key: K;
+  ask: (ctx) => Promise<void>; // savolни ko'rsатиш
+  parse: (ctx) => Result<InvitationDraft[K]>; // javobни tekshirish (Zod)
+  optional?: boolean;
+  skippable?: boolean;
+};
 
-const steps: Step<any>[] = [groomNameStep, brideNameStep, eventDateStep,
-                            locationStep, coverImageStep, storyStep /* ... */]
+const steps: Step<any>[] = [
+  groomNameStep,
+  brideNameStep,
+  eventDateStep,
+  locationStep,
+  coverImageStep,
+  storyStep /* ... */,
+];
 // umumiy engine steps ни ketma-ket yuritадi — hech qanday if/else zanjiri yo'q
 ```
 
@@ -198,6 +207,7 @@ const steps: Step<any>[] = [groomNameStep, brideNameStep, eventDateStep,
 Next.js App Router **routing** uchun (`app/`), lekin butun UI mantiqи **FSD** bo'yича `src/` да. `app/` faqat FSD `pages` ни ulaydi.
 
 ### FSD qatlamlari (yuqоридан pastga — import faqat pastга)
+
 ```
 app       → global: providers, styles, routing kompozitsiyasi
   ▼
@@ -211,9 +221,11 @@ entities  → biznes obyekt UI+model (invitation, rsvp, guest)
   ▼
 shared    → ui-kit, lib, api mijoz, config — biznesга bog'liq emas
 ```
+
 **Qoida:** har qatlam faqat **o'zидан pastдаги** qatlamни import qiladi. `features` `widgets`ни import qila olmayди. Bu — ESLint bilan majburlanади (`eslint-plugin-boundaries` / `steiger`).
 
 ### Papka
+
 ```
 apps/web/src/
 ├── app/                          # Next.js routing (yupqa)
@@ -262,34 +274,41 @@ Yangi shablon qo'shish **mavjud kodни o'zgартирмайди** (Open/Closed)
 
 ```ts
 // packages/contracts — umumiy props
-type InvitationView = {           // domain entity'дан tayyorlangan "view model"
-  groomName: string; brideName: string
-  eventDate: Date; venue?: Venue; geo?: GeoPoint
-  coverImageUrl?: string; gallery: string[]
-  story?: string; dressCode?: string; musicUrl?: string
-}
+type InvitationView = {
+  // domain entity'дан tayyorlangan "view model"
+  groomName: string;
+  brideName: string;
+  eventDate: Date;
+  venue?: Venue;
+  geo?: GeoPoint;
+  coverImageUrl?: string;
+  gallery: string[];
+  story?: string;
+  dressCode?: string;
+  musicUrl?: string;
+};
 
 // apps/web/src/templates/types.ts
-type TemplateComponent = (props: { data: InvitationView }) => JSX.Element
+type TemplateComponent = (props: { data: InvitationView }) => JSX.Element;
 type TemplateMeta = {
-  id: string                      // 'classic' | 'modern' | 'minimal' | 'floral'
-  name: string                    // botда ko'rsатиладиган nom
-  previewImage: string
-  component: TemplateComponent
-}
+  id: string; // 'classic' | 'modern' | 'minimal' | 'floral'
+  name: string; // botда ko'rsатиладиган nom
+  previewImage: string;
+  component: TemplateComponent;
+};
 
 // registry — YAGONA qo'shиладиган joy
 export const templates: Record<string, TemplateMeta> = {
   classic: classicTemplate,
-  modern:  modernTemplate,
+  modern: modernTemplate,
   // yangи shablон → shu yerга 1 qатор
-}
-export const getTemplate = (id: string) => templates[id] ?? templates.classic
+};
+export const getTemplate = (id: string) => templates[id] ?? templates.classic;
 ```
 
 - **Web** `[slug]` да: `getTemplate(inv.templateId).component` ni render qiladi.
 - **Bot** shablon tanlashда: `Object.values(templates)` дан tugma+preview quради.
-- Umumiy bloklar (`Countdown`, `Map`, `Gallery`, `RsvpForm`) — `widgets` да, shablonlar ularни **kompоzitsiya** qiladi (kod takrorlanmайди). Har shablon faqat *layout va uslub* да farq qiladi.
+- Umumiy bloklar (`Countdown`, `Map`, `Gallery`, `RsvpForm`) — `widgets` да, shablonlar ularни **kompоzitsiya** qiladi (kod takrorlanmайди). Har shablon faqat _layout va uslub_ да farq qiladi.
 
 ---
 
@@ -315,10 +334,9 @@ Owner Telegramда xabar: "Aziz kelaman dedi (2 kishi)"
 ## 8. Xatoларни boshqarish (Result pattern)
 
 ```ts
-type Result<T, E = AppError> =
-  | { ok: true; value: T }
-  | { ok: false; error: E }
+type Result<T, E = AppError> = { ok: true; value: T } | { ok: false; error: E };
 ```
+
 - Use-case'lар kutилган xatони (`SlugTaken`, `InvitationNotFound`, `InvalidDate`) `Result` orqали qaytаради — `throw` emas.
 - Presentation qатлам natijани ko'rsатади: bot → tushunarli xabar, web → 404/xato holati.
 - Kutилмаган xatolar (DB uzилиши) → global error boundary (bot middleware / Next.js `error.tsx`) + log.
@@ -327,18 +345,18 @@ type Result<T, E = AppError> =
 
 ## 9. System design mulohazalari
 
-| Mavzu | Yechim |
-|---|---|
-| **Baza** | **Postgres** (Supabase — managed). Domain uni bilmaydi, faqat `InvitationRepository` port. Keyin o'z Postgres'ga ko'chsa — adapter almashadi, mantiq o'zgarmaydi. |
-| **O'qish tezligi** | `[slug]` sahifа SSR + ISR/cache (taklifnoma kam o'zгаради). Vercel edge cache. |
-| **Redis / kesh** | **MVP'да YO'Q** (YAGNI — CDN cache yetарли). Kerак bo'lганда `CachePort` qo'шиб ulanади, biznes-mantiq o'zгармайди. |
-| **Rasm** | Supabase Storage + Next `<Image>` optimizatsiya. Yuklашда bir marta. |
-| **Bot masshtаbi** | v1 polling (Railway). O'sса — webhook + queue (RSVP xabarларини navbatга). |
-| **Idempotentlik** | RSVP takroriy yuborilса — `(invitation_id, guest fingerprint)` bo'yича nazorat. |
-| **Xavfsizlik** | Supabase RLS: `published` ni anon o'qийди; yozиш faqat service-role (bot). RSVP anon insert, o'qиш yo'q. Sirlар `.env`. |
-| **Kuzatuv** | Structured logging (pino), use-case darajасидаги xato log'lари. |
-| **Sinov** | domain/application — sof unit test (mock port). infrastructure — integration. web — komponent test. |
-| **Kengayиш** | Yangi funksiya = yangi `feature` slice yoki yangi `use-case`; yadро o'zгармайди. |
+| Mavzu              | Yechim                                                                                                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Baza**           | **Postgres** (Supabase — managed). Domain uni bilmaydi, faqat `InvitationRepository` port. Keyin o'z Postgres'ga ko'chsa — adapter almashadi, mantiq o'zgarmaydi. |
+| **O'qish tezligi** | `[slug]` sahifа SSR + ISR/cache (taklifnoma kam o'zгаради). Vercel edge cache.                                                                                    |
+| **Redis / kesh**   | **MVP'да YO'Q** (YAGNI — CDN cache yetарли). Kerак bo'lганда `CachePort` qo'шиб ulanади, biznes-mantiq o'zгармайди.                                               |
+| **Rasm**           | Supabase Storage + Next `<Image>` optimizatsiya. Yuklашда bir marta.                                                                                              |
+| **Bot masshtаbi**  | v1 polling (Railway). O'sса — webhook + queue (RSVP xabarларини navbatга).                                                                                        |
+| **Idempotentlik**  | RSVP takroriy yuborilса — `(invitation_id, guest fingerprint)` bo'yича nazorat.                                                                                   |
+| **Xavfsizlik**     | Supabase RLS: `published` ni anon o'qийди; yozиш faqat service-role (bot). RSVP anon insert, o'qиш yo'q. Sirlар `.env`.                                           |
+| **Kuzatuv**        | Structured logging (pino), use-case darajасидаги xato log'lари.                                                                                                   |
+| **Sinov**          | domain/application — sof unit test (mock port). infrastructure — integration. web — komponent test.                                                               |
+| **Kengayиш**       | Yangi funksiya = yangi `feature` slice yoki yangi `use-case`; yadро o'zгармайди.                                                                                  |
 
 ---
 
@@ -352,4 +370,4 @@ type Result<T, E = AppError> =
 
 ---
 
-*Xulosa: domain markazда va toza; use-case'lар biznes-mantiqни bir marta ushlайди; bot va web — faqat prezentatsiya; shablonlар va qадаmлар registry orqали kengаyади. Bu — kengayuvchан, testlanadigан, takrorланмайдиган kod.*
+_Xulosa: domain markazда va toza; use-case'lар biznes-mantiqни bir marta ushlайди; bot va web — faqat prezentatsiya; shablonlар va qадаmлар registry orqали kengаyади. Bu — kengayuvchан, testlanadigан, takrorланмайдиган kod._

@@ -10,30 +10,34 @@
 ## 1. Mahsulot konsepsiyasi
 
 ### 1.1. G'oya
+
 Kuyov-kelin **Telegram bot** orqali savol-javob tarzida taklifnoma yaratadi (ism, sana, lokatsiya, rasm, shablon). Tizim ma'lumotni bazaga yozadi va **noyob havola** (`taklif.uz/aziz-va-malika`) qaytaradi. Bu havola chiroyli, animatsiyali **web taklifnoma**ni ochadi. Mehmonlar web'da **RSVP** (kelaman / kelmayman + necha kishi) qiladi — bu esa botda egaga xabar sifatida keladi.
 
 ### 1.2. Nega bot + web?
-| Bot (kiritish) | Web (natija) |
-|---|---|
-| User allaqachon Telegramda — forma to'ldirishdan oson | Chiroyli dizayn, animatsiya — frontend hunar |
-| 📍 Lokatsiyani "pin" qilib yuboradi (qo'lda yozmasdan) | Countdown, xarita, galereya, musiqa |
-| 🖼 Rasmni to'g'ridan-to'g'ri tashlaydi | To'liq responsive (telefonda ochiladi) |
-| 🔔 RSVP xabarini darhol oladi | Ulashishga tayyor havola |
+
+| Bot (kiritish)                                         | Web (natija)                                 |
+| ------------------------------------------------------ | -------------------------------------------- |
+| User allaqachon Telegramda — forma to'ldirishdan oson  | Chiroyli dizayn, animatsiya — frontend hunar |
+| 📍 Lokatsiyani "pin" qilib yuboradi (qo'lda yozmasdan) | Countdown, xarita, galereya, musiqa          |
+| 🖼 Rasmni to'g'ridan-to'g'ri tashlaydi                  | To'liq responsive (telefonda ochiladi)       |
+| 🔔 RSVP xabarini darhol oladi                          | Ulashishga tayyor havola                     |
 
 ### 1.3. Farqlanish (raqobatdan ustunlik)
+
 > To'liq bozor tahlili **[docs/MARKET.md](./MARKET.md)** da. Qisqacha: model isbotlangan (Rossiyada 10+ servis), O'zbekiston bozori deyarli bo'sh. Bizning pozitsiya:
 >
 > **"O'zbekcha, Telegramда 2 daqiqада — chiroyli to'y taklifnomasi."**
 
-| # | Farq | Izoh |
-|---|---|---|
-| 1 | **Telegram-native yaratish** | Raqobatchilar web-forma orqali. Biz botда savol-javob — texnik bo'lmagan kelin-kuyovga oson. **Asosiy farq.** |
-| 2 | **To'liq lokalizatsiya** | O'zbek tili (keyin ru/en), **Yandex Maps** (mahalliy aniq), milliy uslub shablonlar |
-| 3 | **Tezlik va soddalik** | 📍 lokatsiya pin, 🖼 rasm tashlash, tayyor havola |
-| 4 | **Freemium** | Bepul asosiy taklifnoma; premium (branding olib tashlash, premium shablon, ko'proq foto/musiqa) |
-| 5 | **Telegram-native to'lov** | Premium uchun **Telegram Stars (⭐ XTR)** — botга o'rnatilган, provayder kerak emas. Click/Payme keyin (so'mда yechиш uchun) |
+| #   | Farq                         | Izoh                                                                                                                         |
+| --- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Telegram-native yaratish** | Raqobatchilar web-forma orqali. Biz botда savol-javob — texnik bo'lmagan kelin-kuyovga oson. **Asosiy farq.**                |
+| 2   | **To'liq lokalizatsiya**     | O'zbek tili (keyin ru/en), **Yandex Maps** (mahalliy aniq), milliy uslub shablonlar                                          |
+| 3   | **Tezlik va soddalik**       | 📍 lokatsiya pin, 🖼 rasm tashlash, tayyor havola                                                                             |
+| 4   | **Freemium**                 | Bepul asosiy taklifnoma; premium (branding olib tashlash, premium shablon, ko'proq foto/musiqa)                              |
+| 5   | **Telegram-native to'lov**   | Premium uchun **Telegram Stars (⭐ XTR)** — botга o'rnatilган, provayder kerak emas. Click/Payme keyin (so'mда yechиш uchun) |
 
 ### 1.4. Muhim arxitektura qoidasi
+
 **Har taklifnoma uchun ALOHIDA deploy YO'Q.** Bitta deploy qilingan web ilova bazadan `slug` bo'yicha ma'lumotni dinamik render qiladi:
 
 ```
@@ -48,12 +52,14 @@ Yangi taklifnoma = **bazaga bitta yozuv**, deploy emas. Bot va web **bitta Supab
 Premium funksiyalar uchun to'lov **Telegram Stars (XTR)** orqали — Telegram Bot API'ga **o'rnatilган**, tashqи provayder (Click/Payme/Stripe) **kerak emas**.
 
 **Model (freemium):**
-| Reja | Narx | Nima |
-|---|---|---|
-| **Bepbul** | 0 | 1 ta asosiy taklifnoma, standart shablon, "Powered by" branding |
+
+| Reja        | Narx     | Nima                                                                                       |
+| ----------- | -------- | ------------------------------------------------------------------------------------------ |
+| **Bepbul**  | 0        | 1 ta asosiy taklifnoma, standart shablon, "Powered by" branding                            |
 | **Premium** | ⭐ Stars | Premium/milliy shablon, branding olib tashlash, ko'proq foto, custom musiqa, o'z sub-domen |
 
 **Texnik jihat:**
+
 - To'lov: `sendInvoice` (`currency: "XTR"`, `provider_token` bo'sh) → `pre_checkout_query` tasdiqlash → `successful_payment` hodisasi → premium yoqiladi (`invitations.is_premium = true`).
 - **Refund:** `refundStarPayment` orqали qaytarиш imkoni.
 - **Pul oqimi:** Starlar **bot balansига** tushади (egasi — biz). Fragment orqали **TON**ga yechилади (~21 kun holding) yoki Telegram Ads'га sarflanади. Shaxsiy profilга "gift" emas — bot balansи.
@@ -81,6 +87,7 @@ Premium funksiyalar uchun to'lov **Telegram Stars (XTR)** orqали — Telegram
 ```
 
 ### 2.1. Komponentlar
+
 - **Bot servisi** (`apps/bot`): grammY. Faqat prezentatsiya — Telegram input → use-case chaqiruvi. FSM savol-javob, shablon tanlash, RSVP yetkazish.
 - **Web ilova** (`apps/web`): Next.js App Router + FSD. Dinamik `/[slug]` sahifa, RSVP forma, preview.
 - **Biznes-mantiq paketlari** (`packages/domain`, `application`): entities, value-objects, ports va use-case'lar — **bot va web umumiy ishlatadi** (bir marta yoziladi).
@@ -91,72 +98,77 @@ Premium funksiyalar uchun to'lov **Telegram Stars (XTR)** orqали — Telegram
 > Qatlamlar, bog'liqlik yo'nalishi va DI to'liq **[docs/ARCHITECTURE.md](./ARCHITECTURE.md)** da tavsiflangan.
 
 ### 2.2. Ma'lumot oqimi (E2E)
+
 1. User botga `/start` → shablon galereyasi (rasm preview) → tanlaydi.
 2. Bot FSM savollari: ismlar → sana/vaqt → 📍lokatsiya → 🖼rasm(lar) → story → dress code.
 3. Bot `invitations` jadvaliga yozuv qo'shadi, `slug` generatsiya qiladi.
 4. Bot havola qaytaradi: `taklif.uz/aziz-va-malika`.
 5. Mehmon havolani ochadi → SSR sahifa bazadan render qiladi.
 6. Mehmon RSVP qiladi → `rsvps` jadvaliga yoziladi.
-7. Bot (webhook yoki polling) RSVP'ni sezadi → egaga xabar: *"Aziz kelaman dedi (2 kishi)"*.
+7. Bot (webhook yoki polling) RSVP'ni sezadi → egaga xabar: _"Aziz kelaman dedi (2 kishi)"_.
 
 ---
 
 ## 3. Ma'lumotlar bazasi sxemasi (Supabase / Postgres)
 
 ### 3.1. `users` — bot foydalanuvchilari (kuyov-kelin)
-| Ustun | Tip | Izoh |
-|---|---|---|
-| `id` | `uuid` PK | default `gen_random_uuid()` |
-| `telegram_id` | `bigint` unique | Telegram user id |
-| `username` | `text` null | @username |
-| `first_name` | `text` | |
-| `language_code` | `text` default `'uz'` | uz/ru/en |
-| `created_at` | `timestamptz` default `now()` | |
+
+| Ustun           | Tip                           | Izoh                        |
+| --------------- | ----------------------------- | --------------------------- |
+| `id`            | `uuid` PK                     | default `gen_random_uuid()` |
+| `telegram_id`   | `bigint` unique               | Telegram user id            |
+| `username`      | `text` null                   | @username                   |
+| `first_name`    | `text`                        |                             |
+| `language_code` | `text` default `'uz'`         | uz/ru/en                    |
+| `created_at`    | `timestamptz` default `now()` |                             |
 
 ### 3.2. `invitations` — taklifnomalar
-| Ustun | Tip | Izoh |
-|---|---|---|
-| `id` | `uuid` PK | |
-| `owner_id` | `uuid` FK → users.id | egasi |
-| `slug` | `text` unique | URL qismi, masalan `aziz-va-malika` |
-| `template_id` | `text` | `classic` / `modern` / `minimal` / `floral` |
-| `groom_name` | `text` | kuyov ismi |
-| `bride_name` | `text` | kelin ismi |
-| `event_date` | `date` | to'y kuni |
-| `event_time` | `time` null | vaqt |
-| `venue_name` | `text` null | to'yxona nomi |
-| `venue_address` | `text` null | manzil matni |
-| `location_lat` | `numeric` null | Telegram pin lat |
-| `location_lng` | `numeric` null | Telegram pin lng |
-| `story` | `text` null | qisqa matn / hikoya |
-| `dress_code` | `text` null | |
-| `cover_image_url` | `text` null | asosiy rasm (Storage) |
-| `gallery` | `jsonb` default `'[]'` | qo'shimcha rasmlar URL massivi |
-| `music_url` | `text` null | fon musiqasi URL. Default trek (`/audio/track-1.mp3`) yoki user yuklagan Storage URL. `null` = musiqasiz |
-| `music_source` | `text` default `'none'` | `none` / `default` / `custom` — UI va tahlil uchun |
-| `status` | `text` default `'draft'` | `draft` / `published` |
-| `is_premium` | `boolean` default `false` | Telegram Stars to'lovдан keyin `true` (premium funksiyalar) |
-| `locale` | `text` default `'uz'` | |
-| `created_at` | `timestamptz` default `now()` | |
-| `updated_at` | `timestamptz` default `now()` | |
+
+| Ustun             | Tip                           | Izoh                                                                                                     |
+| ----------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`              | `uuid` PK                     |                                                                                                          |
+| `owner_id`        | `uuid` FK → users.id          | egasi                                                                                                    |
+| `slug`            | `text` unique                 | URL qismi, masalan `aziz-va-malika`                                                                      |
+| `template_id`     | `text`                        | `classic` / `modern` / `minimal` / `floral`                                                              |
+| `groom_name`      | `text`                        | kuyov ismi                                                                                               |
+| `bride_name`      | `text`                        | kelin ismi                                                                                               |
+| `event_date`      | `date`                        | to'y kuni                                                                                                |
+| `event_time`      | `time` null                   | vaqt                                                                                                     |
+| `venue_name`      | `text` null                   | to'yxona nomi                                                                                            |
+| `venue_address`   | `text` null                   | manzil matni                                                                                             |
+| `location_lat`    | `numeric` null                | Telegram pin lat                                                                                         |
+| `location_lng`    | `numeric` null                | Telegram pin lng                                                                                         |
+| `story`           | `text` null                   | qisqa matn / hikoya                                                                                      |
+| `dress_code`      | `text` null                   |                                                                                                          |
+| `cover_image_url` | `text` null                   | asosiy rasm (Storage)                                                                                    |
+| `gallery`         | `jsonb` default `'[]'`        | qo'shimcha rasmlar URL massivi                                                                           |
+| `music_url`       | `text` null                   | fon musiqasi URL. Default trek (`/audio/track-1.mp3`) yoki user yuklagan Storage URL. `null` = musiqasiz |
+| `music_source`    | `text` default `'none'`       | `none` / `default` / `custom` — UI va tahlil uchun                                                       |
+| `status`          | `text` default `'draft'`      | `draft` / `published`                                                                                    |
+| `is_premium`      | `boolean` default `false`     | Telegram Stars to'lovдан keyin `true` (premium funksiyalar)                                              |
+| `locale`          | `text` default `'uz'`         |                                                                                                          |
+| `created_at`      | `timestamptz` default `now()` |                                                                                                          |
+| `updated_at`      | `timestamptz` default `now()` |                                                                                                          |
 
 Indekslar: `slug` (unique), `owner_id`.
 
 ### 3.3. `rsvps` — mehmon javoblari
-| Ustun | Tip | Izoh |
-|---|---|---|
-| `id` | `uuid` PK | |
-| `invitation_id` | `uuid` FK → invitations.id | |
-| `guest_name` | `text` | mehmon ismi |
-| `attending` | `boolean` | keladi / kelmaydi |
-| `guests_count` | `int` default `1` | necha kishi |
-| `message` | `text` null | tabrik/izoh |
-| `notified_owner` | `boolean` default `false` | botga xabar yuborildimi |
-| `created_at` | `timestamptz` default `now()` | |
+
+| Ustun            | Tip                           | Izoh                    |
+| ---------------- | ----------------------------- | ----------------------- |
+| `id`             | `uuid` PK                     |                         |
+| `invitation_id`  | `uuid` FK → invitations.id    |                         |
+| `guest_name`     | `text`                        | mehmon ismi             |
+| `attending`      | `boolean`                     | keladi / kelmaydi       |
+| `guests_count`   | `int` default `1`             | necha kishi             |
+| `message`        | `text` null                   | tabrik/izoh             |
+| `notified_owner` | `boolean` default `false`     | botga xabar yuborildimi |
+| `created_at`     | `timestamptz` default `now()` |                         |
 
 Indeks: `invitation_id`.
 
 ### 3.4. RLS (Row Level Security) prinsipi
+
 - `invitations`: `published` bo'lganlarini hamma **o'qiy oladi** (anon read). Yozish/tahrirlash faqat service role (bot) yoki egasi orqali.
 - `rsvps`: anon **insert** ruxsat (mehmon RSVP qiladi), lekin o'qish faqat service role / egasi.
 - Bot **service role key** bilan ishlaydi (server tomonda, sir).
@@ -202,6 +214,7 @@ invitation-bot/
 ```
 
 **Umumiylashtirish nuqtalari:**
+
 - **Use-case'lar** (`application`) — biznes-mantiq bir marta, bot+web ishlatadi.
 - **Shablonlar** — registry (`templates`); yangisi = 1 qator, mavjud kod o'zgarmaydi.
 - **Bot savollari** — qadam registry (`steps`); yangi savol = 1 obyekt, oqim engine o'zgarmaydi.
@@ -215,11 +228,13 @@ invitation-bot/
 grammY `@grammyjs/conversations` bilan.
 
 ### 5.1. Buyruqlar
+
 - `/start` — kutib olish + "Taklifnoma yaratish" tugmasi.
 - `/myinvites` — mening taklifnomalarim (havola + RSVP soni).
 - `/help` — yordam.
 
 ### 5.2. Yaratish oqimi (bosqichma-bosqich)
+
 ```
 /start
   └─▶ "Assalomu alaykum! To'y taklifnomasi yaratamizmi?" [🎉 Boshlash]
@@ -254,12 +269,14 @@ grammY `@grammyjs/conversations` bilan.
 ```
 
 ### 5.3. Validatsiya (Zod)
+
 - Ism: bo'sh emas, ≤ 40 belgi.
 - Sana: `YYYY-MM-DD` yoki kalendar, bugundan keyin.
 - Lokatsiya: Telegram `message.location` dan lat/lng.
 - Rasm: `getFile` → Supabase Storage'ga yuklab, public URL.
 
 ### 5.4. RSVP xabarnomasi
+
 - Variant A (tavsiya): Web RSVP `POST /api/rsvp` → bot HTTP endpoint / Supabase trigger orqali botga signal → bot egaga xabar.
 - Variant B (oddiy MVP): bot vaqti-vaqti bilan (yoki Supabase Realtime subscription) `rsvps` dagi `notified_owner=false` larni tekshiradi → egaga yuboradi → `notified_owner=true`.
 - **MVP uchun**: Supabase Realtime yoki web'dan botga to'g'ridan-to'g'ri Telegram `sendMessage` (service tokendan). Eng sodda: web RSVP endpoint ichida `owner.telegram_id` ga bot API orqali xabar yuborish.
@@ -269,9 +286,11 @@ grammY `@grammyjs/conversations` bilan.
 ## 6. Web sahifalar va komponentlar
 
 ### 6.1. `/[slug]` — taklifnoma sahifa (asosiy)
+
 SSR: `getInvitation(slug)` → `template_id` ga qarab mos shablon komponenti render qilinadi.
 
 Bloklar (shablon ichida joylashtiriladi):
+
 - **Hero**: kuyov + kelin ismi, cover rasm, animatsiyali kirish (Framer Motion).
 - **Countdown**: to'yga qolgan kun/soat/daqiqa.
 - **Sana & Vaqt**: chiroyli formatda.
@@ -284,34 +303,37 @@ Bloklar (shablon ichida joylashtiriladi):
 - Footer / ulashish.
 
 ### 6.2. `/` — landing (marketing)
+
 Mahsulotni tanishtirish, "Telegram botda yaratish" tugmasi (bot havolasi), namuna taklifnomalar.
 
 ### 6.3. `POST /api/rsvp`
+
 Body: `{ invitationId, guestName, attending, guestsCount, message }` → Zod validatsiya → `rsvps` insert → egaga bot xabari → `200`.
 
 ### 6.4. Shablonlar (plagin kabi)
+
 Har shablon = alohida React komponent, umumiy `InvitationData` propsini oladi. Yangi shablon qo'shish = `templates/` ga yangi fayl + `packages/shared/templates.ts` ga registratsiya. UI kontrakt bir xil (DRY).
 
 ---
 
 ## 7. Texnologiyalar (stack)
 
-| Qatlam | Vosita |
-|---|---|
-| Til | TypeScript (strict) — bot + web + shared |
-| Bot | grammY + `@grammyjs/conversations` |
-| Web framework | Next.js (App Router) |
-| Styling | Tailwind CSS |
-| Animatsiya | Framer Motion |
-| Baza | Supabase (Postgres + Storage + RLS) |
-| Validatsiya | Zod |
-| Forma (web) | React Hook Form + Zod |
-| Monorepo | pnpm workspace + **Turborepo** (keshli build/lint) |
-| Arxitektura | Clean Architecture + Ports & Adapters; web'da **FSD** |
+| Qatlam          | Vosita                                                           |
+| --------------- | ---------------------------------------------------------------- |
+| Til             | TypeScript (strict) — bot + web + shared                         |
+| Bot             | grammY + `@grammyjs/conversations`                               |
+| Web framework   | Next.js (App Router)                                             |
+| Styling         | Tailwind CSS                                                     |
+| Animatsiya      | Framer Motion                                                    |
+| Baza            | Supabase (Postgres + Storage + RLS)                              |
+| Validatsiya     | Zod                                                              |
+| Forma (web)     | React Hook Form + Zod                                            |
+| Monorepo        | pnpm workspace + **Turborepo** (keshli build/lint)               |
+| Arxitektura     | Clean Architecture + Ports & Adapters; web'da **FSD**            |
 | Qatlam nazorati | ESLint boundary qoidalari (`no-restricted-imports` / boundaries) |
-| Lint/format | ESLint + Prettier |
-| Deploy (web) | Vercel |
-| Deploy (bot) | Railway (yoki Render / VPS — doimiy jarayon) |
+| Lint/format     | ESLint + Prettier                                                |
+| Deploy (web)    | Vercel                                                           |
+| Deploy (bot)    | Railway (yoki Render / VPS — doimiy jarayon)                     |
 
 > **Eslatma:** Bot doimiy ishlaydigan jarayon (polling) yoki webhook talab qiladi. Vercel serverless botni doimiy tutolmaydi — shuning uchun bot **Railway**da, web **Vercel**da. Ikkalasi bir Supabase bazani bo'lishadi.
 
@@ -320,6 +342,7 @@ Har shablon = alohida React komponent, umumiy `InvitationData` propsini oladi. Y
 ## 8. Deploy va muhit (environment)
 
 ### 8.1. `.env` o'zgaruvchilari
+
 ```
 # Supabase (bot + web umumiy)
 SUPABASE_URL=
@@ -336,6 +359,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
 ### 8.2. Deploy oqimi
+
 - **Web** → Vercel (GitHub'ga push → avtomatik deploy). `apps/web` root.
 - **Bot** → Railway (`apps/bot`, `pnpm --filter bot start`). Doimiy worker.
 - **Baza** → Supabase (migratsiyalar `supabase/migrations` yoki SQL fayl orqali).
@@ -343,6 +367,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ---
 
 ## 9. Kod sifati talablari
+
 - TypeScript **strict**, `any` taqiqlanadi (asosli holatlardan tashqari).
 - ESLint + Prettier — CI'da tekshiriladi.
 - Zod bilan tashqi ma'lumot chegarada validatsiya (bot input, RSVP).
@@ -356,6 +381,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ## 10. Roadmap (bosqichма-bosqich MVP)
 
 ### Bosqich 0 — Poydevor (setup)
+
 - [ ] pnpm workspace, `packages/shared`, `apps/bot`, `apps/web` skeleti.
 - [ ] TypeScript strict, ESLint, Prettier sozlash.
 - [ ] Supabase loyiha + jadvallar (SQL migratsiya) + RLS.
@@ -363,6 +389,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - **Natija:** `pnpm install`, `pnpm lint`, `pnpm typecheck` ishlaydi.
 
 ### Bosqich 1 — Bitta shablon + bitta namuna (birinchi tirik natija) ⭐
+
 - [ ] `ClassicTemplate` — chiroyli, animatsiyali, responsive.
 - [ ] `/[slug]` sahifa — bazadan namuna taklifnomani render qiladi.
 - [ ] Bazaga qo'lda 1 namuna yozuv (`aziz-va-malika`).
@@ -370,6 +397,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - **Natija:** Tirik, ulashsa bo'ladigan bitta chiroyli taklifnoma.
 
 ### Bosqich 2 — Bot yaratish oqimi
+
 - [ ] grammY bot skeleti, `/start`, shablon tanlash.
 - [ ] FSM: ismlar → sana → 📍lokatsiya → 🖼rasm → story.
 - [ ] `invitations` insert + slug generatsiya + havola qaytarish.
@@ -377,6 +405,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - **Natija:** Botда yangi taklifnoma yaratib, havola olsa bo'ladi.
 
 ### Bosqich 3 — RSVP oqimi
+
 - [ ] Web `RsvpForm` + `POST /api/rsvp`.
 - [ ] `rsvps` insert.
 - [ ] Bot egaga RSVP xabari.
@@ -384,12 +413,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - **Natija:** To'liq aylanma: yaratish → ulashish → RSVP → xabar.
 
 ### Bosqich 4 — Boyitish
+
 - [ ] 3-4 shablon (zamonaviy, minimal, gullar).
 - [ ] Countdown, Xarita, Galereya, Music toggle.
 - [ ] OpenGraph preview (Telegramда chiroyli ko'rinish).
 - [ ] Landing sahifa.
 
 ### Bosqich 5 (keyin) — Monetizatsiya & ko'p til
+
 - [ ] Freemium: bepul asosiy + premium shablon / o'z sub-domen / branding olib tashlash.
 - [ ] **Telegram Stars (⭐)** to'lov — `PaymentPort` + `TelegramStarsAdapter` (`sendInvoice` XTR → `successful_payment` → `is_premium`). Refund (`refundStarPayment`).
 - [ ] **Click / Payme** — keyin, so'mда to'g'ridan-to'g'ri yechиш kerak bo'lganда (`ClickAdapter`/`PaymeAdapter`, use-case o'zгармайди).
@@ -400,6 +431,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ---
 
 ## 11. Ochiq savollar (siz hal qilasiz)
+
 1. ~~**Domen:**~~ ✅ Hozircha **Vercel subdomen** bilan boshlanadi; `taklif.uz` keyin ulanadi.
 2. ~~**Xarita:**~~ ✅ **Yandex Maps** tanlandi (O'zbekistonда aniqroq).
 3. ~~**Bot hosting:**~~ ✅ **Railway** tanlandi.
@@ -410,4 +442,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ---
 
-*TZ tasdiqlangach, Bosqich 0 dan boshlaymiz. Har bosqichда: kod → tekshirish (lint/build/type) → git commit.*
+_TZ tasdiqlangach, Bosqich 0 dan boshlaymiz. Har bosqichда: kod → tekshirish (lint/build/type) → git commit._
