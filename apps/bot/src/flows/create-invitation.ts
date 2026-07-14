@@ -11,6 +11,7 @@ import {
   mainReplyKeyboard,
   timeChoicesKeyboard,
 } from '../keyboards/menu';
+import { buildCalendar } from '../keyboards/calendar';
 import { localeOf } from '../i18n';
 import { parseDate, parseNames, parseTime } from '../services/parse';
 import { uploadTelegramFile } from './shared';
@@ -98,28 +99,64 @@ async function askNames(
   }
 }
 
-async function askDate(
+/** Sana — inline tugmali kalendar (bosib tanlash) yoki yozib (zaxira). */
+async function askDatePicker(
   conversation: BotConversation,
   ctx: BotContext,
   m: Msg,
   n: number,
   canBack: boolean,
 ): Promise<typeof BACK | string> {
-  await ctx.reply(`${head(m.phaseMain, n, REQ_TOTAL)}\n${m.askDate}`, {
-    reply_markup: flowKeyboard(m, { canBack }),
+  const todayIso = await conversation.external(() => new Date().toISOString().slice(0, 10));
+  let year = Number(todayIso.slice(0, 4));
+  let month0 = Number(todayIso.slice(5, 7)) - 1;
+  const sent = await ctx.reply(`${head(m.phaseMain, n, REQ_TOTAL)}\n${m.askDate}`, {
+    reply_markup: buildCalendar(m, year, month0, todayIso, canBack),
   });
+  const chatId = ctx.chat?.id;
+
   for (;;) {
-    const res = await conversation.waitFor(':text');
-    const txt = (res.message?.text ?? '').trim();
+    const upd = await conversation.wait();
+    const data = upd.callbackQuery?.data;
+    if (data) {
+      await upd.answerCallbackQuery();
+      if (data === 'cal:noop') continue;
+      if (data === 'cal:back') return BACK;
+      if (data === 'cal:cancel') {
+        await ctx.reply(m.cancelled, { reply_markup: { remove_keyboard: true } });
+        throw new CancelError();
+      }
+      if (data.startsWith('cal:nav:')) {
+        const parts = data.slice(8).split('-');
+        year = Number(parts[0]);
+        month0 = Number(parts[1]) - 1;
+        if (chatId) {
+          await ctx.api.editMessageReplyMarkup(chatId, sent.message_id, {
+            reply_markup: buildCalendar(m, year, month0, todayIso, canBack),
+          });
+        }
+        continue;
+      }
+      if (data.startsWith('cal:day:')) {
+        const iso = data.slice(8);
+        await ctx.reply(m.dateConfirmed(m.dateWords(iso)));
+        return iso;
+      }
+      continue;
+    }
+
+    // Zaxira: matn bilan yozish (2026.09.15 / 15.09.2026 ...)
+    const txt = (upd.message?.text ?? '').trim();
     const ctrl = await readControl(ctx, m, txt);
     if (ctrl === BACK) return BACK;
-    if (ctrl !== null) continue;
-    const iso = parseDate(txt);
-    if (iso) {
-      await ctx.reply(m.dateConfirmed(m.dateWords(iso)));
-      return iso;
+    if (ctrl === null && txt.length > 0) {
+      const iso = parseDate(txt);
+      if (iso) {
+        await ctx.reply(m.dateConfirmed(m.dateWords(iso)));
+        return iso;
+      }
+      await ctx.reply(m.invalidDate);
     }
-    await ctx.reply(m.invalidDate);
   }
 }
 
@@ -208,7 +245,7 @@ async function collectRequired(
         break;
       }
       case 1: {
-        const r = await askDate(conversation, ctx, m, 2, canBack);
+        const r = await askDatePicker(conversation, ctx, m, 2, canBack);
         if (r === BACK) i--;
         else {
           d.eventDate = r;

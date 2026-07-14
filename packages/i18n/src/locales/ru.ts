@@ -15,6 +15,21 @@ const RU_MONTHS = [
   'декабря',
 ];
 
+const RU_MONTHS_NOM = [
+  'Январь',
+  'Февраль',
+  'Март',
+  'Апрель',
+  'Май',
+  'Июнь',
+  'Июль',
+  'Август',
+  'Сентябрь',
+  'Октябрь',
+  'Ноябрь',
+  'Декабрь',
+];
+
 /** Все русские тексты. Структура повторяет uz.ts (тот же тип Messages). */
 export const ru: Messages = {
   common: {
@@ -135,6 +150,11 @@ export const ru: Messages = {
     dateWords: (iso: string): string => {
       const [y, mo, d] = iso.split('-');
       return `${Number(d)} ${RU_MONTHS[Number(mo) - 1]} ${y} г.`;
+    },
+    calWeekdays: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+    calMonth: (year: number, month0: number): string => {
+      const n = RU_MONTHS_NOM[month0] ?? '';
+      return `${n} ${year}`;
     },
     cancelled: 'Отменено. Нажмите /start, чтобы начать.',
     creating: '⏳ Ваше приглашение готовится...',

@@ -31,9 +31,10 @@ function isValidYmd(y: number, mo: number, d: number): boolean {
 export function parseDate(raw: string): string | null {
   const s = raw.trim();
 
-  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s);
-  if (iso) {
-    const [y, mo, d] = [Number(iso[1]), Number(iso[2]), Number(iso[3])];
+  // YYYY-MM-DD / YYYY.MM.DD / YYYY/MM/DD
+  const ymd = /^(\d{4})[./-](\d{1,2})[./-](\d{1,2})$/.exec(s);
+  if (ymd) {
+    const [y, mo, d] = [Number(ymd[1]), Number(ymd[2]), Number(ymd[3])];
     return isValidYmd(y, mo, d) ? `${y}-${pad(mo)}-${pad(d)}` : null;
   }
 

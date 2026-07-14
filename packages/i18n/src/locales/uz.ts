@@ -138,6 +138,11 @@ export const uz = {
       const [y, mo, d] = iso.split('-');
       return `${Number(d)}-${UZ_MONTHS[Number(mo) - 1]}, ${y}-yil`;
     },
+    calWeekdays: ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'],
+    calMonth: (year: number, month0: number): string => {
+      const n = UZ_MONTHS[month0] ?? '';
+      return `${n.charAt(0).toUpperCase()}${n.slice(1)} ${year}`;
+    },
     cancelled: 'Bekor qilindi. Boshlash uchun /start bosing.',
     creating: '⏳ Taklifnomangiz tayyorlanmoqda...',
     errorGeneric: '❌ Kutilmagan xatolik yuz berdi.\nQaytadan boshlash uchun /start bosing.',
