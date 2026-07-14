@@ -2,7 +2,13 @@ import type { Bot } from 'grammy';
 import { TEMPLATE_CATALOG } from '@invitation/contracts';
 import { type Locale, getMessages, ru, uz } from '@invitation/i18n';
 import { container } from '../composition';
-import { contactKeyboard, languageKeyboard, mainReplyKeyboard } from '../keyboards/menu';
+import {
+  contactKeyboard,
+  demoKeyboard,
+  languageKeyboard,
+  mainReplyKeyboard,
+  welcomeCtaKeyboard,
+} from '../keyboards/menu';
 import { templatesKeyboard } from '../keyboards/templates';
 import { botText, localeOf } from '../i18n';
 import { ensureUser } from '../services/ensure-user';
@@ -12,9 +18,35 @@ import type { BotContext } from '../context';
 // Menyu tugmalari matni ikki tilda — reply tugmani ikkala tilda ham tanish uchun.
 const CREATE_LABELS = [uz.bot.menuCreate, ru.bot.menuCreate];
 const MY_LABELS = [uz.bot.menuMyInvites, ru.bot.menuMyInvites];
+const DEMO_LABELS = [uz.bot.menuDemo, ru.bot.menuDemo];
 const HELP_LABELS = [uz.bot.menuHelp, ru.bot.menuHelp];
 const LANG_LABELS = [uz.bot.menuLanguage, ru.bot.menuLanguage];
 const LATER_LABELS = [uz.bot.laterButton, ru.bot.laterButton];
+
+type Msg = ReturnType<typeof botText>;
+
+/** Welcome banner + matn (yangi/qaytgan userga mos) + inline CTA yuboradi. */
+async function sendWelcomeBanner(ctx: BotContext, m: Msg, invitesCount: number): Promise<void> {
+  const caption = invitesCount > 0 ? m.welcomeBack(invitesCount) : m.welcome;
+  try {
+    await ctx.replyWithPhoto(container.env.bannerUrl, {
+      caption,
+      parse_mode: 'Markdown',
+      reply_markup: welcomeCtaKeyboard(m),
+    });
+  } catch {
+    await ctx.reply(caption, { parse_mode: 'Markdown', reply_markup: welcomeCtaKeyboard(m) });
+  }
+}
+
+/** Namuna (demo) taklifnomani ko'rsatadi. */
+async function sendDemo(ctx: BotContext): Promise<void> {
+  const m = botText(ctx);
+  await ctx.reply(m.demoIntro, {
+    parse_mode: 'Markdown',
+    reply_markup: demoKeyboard(m, container.env.demoUrl),
+  });
+}
 
 /** Shablonlarni rasm (preview) bilan ko'rsatadi + tanlash tugmalari. */
 async function sendTemplateChooser(ctx: BotContext): Promise<void> {
@@ -43,15 +75,21 @@ async function applyLanguage(ctx: BotContext, lang: Locale): Promise<void> {
   }
 }
 
+async function invitesCountOf(userId: string): Promise<number> {
+  return (await container.listOwnerInvitations.execute(userId)).length;
+}
+
 export function registerStart(bot: Bot<BotContext>): void {
   bot.command('start', async (ctx) => {
-    await ensureUser(ctx);
+    const user = await ensureUser(ctx);
     const m = botText(ctx);
     if (!ctx.session.lang) {
       await ctx.reply(m.chooseLanguage, { reply_markup: languageKeyboard(m) });
       return;
     }
-    await ctx.reply(m.welcome, { parse_mode: 'Markdown', reply_markup: mainReplyKeyboard(m) });
+    const count = user ? await invitesCountOf(user.id) : 0;
+    await sendWelcomeBanner(ctx, m, count);
+    await ctx.reply(m.menuHint, { reply_markup: mainReplyKeyboard(m) });
   });
 
   // Til tanlash (birinchi /start yoki "🌐 Til" tugmasi)
@@ -61,10 +99,13 @@ export function registerStart(bot: Bot<BotContext>): void {
     await ctx.answerCallbackQuery();
     const m = getMessages(lang).bot;
     const user = await ensureUser(ctx);
-    await ctx.reply(m.welcome, { parse_mode: 'Markdown', reply_markup: mainReplyKeyboard(m) });
-    // Onboarding: telefonni bir marta (ixtiyoriy) so'raymiz.
+    const count = user ? await invitesCountOf(user.id) : 0;
+    await sendWelcomeBanner(ctx, m, count);
+    // Onboarding: telefonni bir marta (ixtiyoriy) so'raymiz, aks holda menyuni ko'rsatamiz.
     if (user && !user.phone) {
       await ctx.reply(m.askPhone, { reply_markup: contactKeyboard(m) });
+    } else {
+      await ctx.reply(m.menuHint, { reply_markup: mainReplyKeyboard(m) });
     }
   });
 
@@ -87,10 +128,11 @@ export function registerStart(bot: Bot<BotContext>): void {
 
   // "Keyinroq" — telefonni o'tkazib yuboramiz.
   bot.hears(LATER_LABELS, (ctx) =>
-    ctx.reply('👍', { reply_markup: mainReplyKeyboard(botText(ctx)) }),
+    ctx.reply(botText(ctx).menuHint, { reply_markup: mainReplyKeyboard(botText(ctx)) }),
   );
 
   bot.command('new', (ctx) => sendTemplateChooser(ctx));
+  bot.command('demo', (ctx) => sendDemo(ctx));
   bot.command('help', (ctx) => ctx.reply(botText(ctx).help, { parse_mode: 'Markdown' }));
   bot.command('cancel', async (ctx) => {
     await ctx.conversation.exit('create-invitation');
@@ -102,13 +144,20 @@ export function registerStart(bot: Bot<BotContext>): void {
   // Reply menyu tugmalari (matn sifatida keladi) — ikki tilda
   bot.hears(CREATE_LABELS, (ctx) => sendTemplateChooser(ctx));
   bot.hears(MY_LABELS, (ctx) => sendMyInvites(ctx));
+  bot.hears(DEMO_LABELS, (ctx) => sendDemo(ctx));
   bot.hears(HELP_LABELS, (ctx) => ctx.reply(botText(ctx).help, { parse_mode: 'Markdown' }));
   bot.hears(LANG_LABELS, (ctx) => {
     const m = botText(ctx);
     return ctx.reply(m.chooseLanguage, { reply_markup: languageKeyboard(m) });
   });
 
-  // Inline "Yana yaratish" tugmasi
+  // Inline "Namuna ko'rish" tugmasi
+  bot.callbackQuery('demo', async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await sendDemo(ctx);
+  });
+
+  // Inline "Yaratish / Yana yaratish" tugmasi
   bot.callbackQuery('menu:new', async (ctx) => {
     await ctx.answerCallbackQuery();
     await sendTemplateChooser(ctx);

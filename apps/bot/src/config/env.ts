@@ -3,7 +3,12 @@ export interface BotEnv {
   readonly supabaseUrl: string;
   readonly supabaseServiceKey: string;
   readonly siteUrl: string;
+  readonly bannerUrl: string;
+  readonly demoUrl: string;
 }
+
+const DEFAULT_BANNER =
+  'https://czeuszszsdprclplmyee.supabase.co/storage/v1/object/public/invitations/branding/welcome-banner.png';
 
 /** Muhit o'zgaruvchilarini o'qiydi va tekshiradi (chegarada). */
 export function loadEnv(): BotEnv {
@@ -17,5 +22,8 @@ export function loadEnv(): BotEnv {
     throw new Error('SUPABASE_URL va SUPABASE_SERVICE_ROLE_KEY kerak.');
   }
 
-  return { botToken, supabaseUrl, supabaseServiceKey, siteUrl };
+  const bannerUrl = process.env.WELCOME_BANNER_URL ?? DEFAULT_BANNER;
+  const demoUrl = process.env.DEMO_INVITATION_URL ?? `${siteUrl}/aziz-va-malika`;
+
+  return { botToken, supabaseUrl, supabaseServiceKey, siteUrl, bannerUrl, demoUrl };
 }

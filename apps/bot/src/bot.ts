@@ -34,6 +34,7 @@ export function createBot(): Bot<BotContext> {
     { command: 'start', description: 'Bosh menyu / Главное меню' },
     { command: 'new', description: 'Yangi taklifnoma / Новое приглашение' },
     { command: 'myinvites', description: 'Taklifnomalarim / Мои приглашения' },
+    { command: 'demo', description: 'Namuna / Пример' },
     { command: 'help', description: 'Yordam / Помощь' },
     { command: 'cancel', description: 'Bekor qilish / Отмена' },
   ]);

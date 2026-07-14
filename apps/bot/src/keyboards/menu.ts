@@ -9,11 +9,25 @@ export function mainReplyKeyboard(m: M): Keyboard {
     .text(m.menuCreate)
     .row()
     .text(m.menuMyInvites)
+    .text(m.menuDemo)
     .row()
     .text(m.menuHelp)
     .text(m.menuLanguage)
     .resized()
     .persistent();
+}
+
+/** Welcome ostidagi asosiy chaqiruv (inline): Namuna / Yaratish. */
+export function welcomeCtaKeyboard(m: M): InlineKeyboard {
+  return new InlineKeyboard().text(m.ctaDemo, 'demo').row().text(m.ctaCreate, 'menu:new');
+}
+
+/** Namuna xabari (inline): jonli namunani ochish / o'zimnikini yaratish. */
+export function demoKeyboard(m: M, demoUrl: string): InlineKeyboard {
+  return new InlineKeyboard()
+    .url(m.demoOpenButton, demoUrl)
+    .row()
+    .text(m.demoCreateButton, 'menu:new');
 }
 
 /** Til tanlash — inline. */
