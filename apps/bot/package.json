@@ -16,9 +16,7 @@
     "@invitation/domain": "workspace:*",
     "@invitation/i18n": "workspace:*",
     "@invitation/infrastructure": "workspace:*",
-    "grammy": "^1.30.0"
-  },
-  "devDependencies": {
+    "grammy": "^1.30.0",
     "tsx": "^4.19.2"
   }
 }
