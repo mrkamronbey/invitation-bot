@@ -10,20 +10,17 @@ export function ClassicTemplate({ invitation }: TemplateProps): ReactNode {
   const dateLine = [formatEventDate(invitation.eventDate), formatEventTime(invitation.eventTime)]
     .filter(Boolean)
     .join(' · ');
+  const cover = invitation.coverImageUrl ?? '/images/floral-cover.jpg';
 
   return (
     <main className="min-h-screen bg-cream text-ink">
       <header
         className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
-        style={
-          invitation.coverImageUrl
-            ? {
-                backgroundImage: `linear-gradient(rgba(28,24,20,0.5), rgba(28,24,20,0.62)), url(${invitation.coverImageUrl})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }
-            : undefined
-        }
+        style={{
+          backgroundImage: `linear-gradient(rgba(28,24,20,0.5), rgba(28,24,20,0.62)), url(${cover})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
         {/* Naqshli ramka */}
         <span className="pointer-events-none absolute inset-4 rounded-[2px] border border-white/20 sm:inset-6" />

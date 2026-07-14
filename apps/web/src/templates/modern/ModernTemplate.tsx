@@ -10,20 +10,19 @@ export function ModernTemplate({ invitation }: TemplateProps): ReactNode {
   const dateLine = [formatEventDate(invitation.eventDate), formatEventTime(invitation.eventTime)]
     .filter(Boolean)
     .join(' · ');
+  const cover = invitation.coverImageUrl ?? '/images/floral-cover.jpg';
 
   return (
     <main className="min-h-screen bg-night text-cream">
       <header className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-        {invitation.coverImageUrl ? (
-          <div
-            className="absolute inset-0 opacity-25"
-            style={{
-              backgroundImage: `url(${invitation.coverImageUrl})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-        ) : null}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `url(${cover})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
         <span className="pointer-events-none absolute inset-4 border border-gold/20 sm:inset-6" />
         <FloralFrame />
 
