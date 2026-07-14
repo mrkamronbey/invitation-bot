@@ -65,8 +65,9 @@ const layerBoundaries = [
         {
           patterns: [
             {
-              group: ['@invitation/application*'],
-              message: "infrastructure application ni import qilmaydi (bog'liqlik ichkariga).",
+              group: ['@invitation/application*', '@invitation/i18n*'],
+              message:
+                'infrastructure application/i18n ni import qilmaydi — tarjima presentation qatlamida (matn tashqaridan inject qilinadi).',
             },
           ],
         },

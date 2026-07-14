@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import { rsvpInputSchema } from '@invitation/contracts';
 import type { Notifier } from '@invitation/domain';
+import { getMessages } from '@invitation/i18n';
 import { SubmitRsvpUseCase } from '@invitation/application';
 import {
   CryptoIdGenerator,
+  type RsvpMessageFormatter,
   SupabaseInvitationRepository,
   SupabaseRsvpRepository,
   SupabaseUserRepository,
@@ -12,11 +14,20 @@ import {
   createSupabaseClient,
 } from '@invitation/infrastructure';
 
+/** RSVP xabari matni — tarjima (i18n) shu yerda, presentation qatlamida. */
+const formatRsvp =
+  (siteUrl: string): RsvpMessageFormatter =>
+  (owner, rsvp, slug) => {
+    const m = getMessages(owner.locale).bot;
+    const notice = m.rsvpNotice(rsvp.guestName, rsvp.attending, rsvp.guestsCount);
+    return `${notice}\n${siteUrl}/${slug}`;
+  };
+
 /** BOT_TOKEN bo'lsa egaga Telegram xabari yuboriladi, aks holda no-op. */
 function buildNotifier(): Notifier {
   const botToken = process.env.BOT_TOKEN;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  if (botToken) return new TelegramNotifier(botToken, siteUrl);
+  if (botToken) return new TelegramNotifier(botToken, formatRsvp(siteUrl));
   return { async notifyRsvp() {} };
 }
 
