@@ -22,6 +22,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Reveal } from '@/shared/ui/Reveal';
+import { Flourish, Monogram } from '@/shared/ui/ornaments';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
 const DEMO_URL = '/aziz-va-malika';
@@ -163,14 +164,19 @@ export function LandingPage(): ReactNode {
       </nav>
 
       {/* Hero */}
-      <section className="mx-auto max-w-4xl px-6 pb-16 pt-12 text-center sm:pt-20">
+      <section className="mx-auto max-w-4xl px-6 pb-16 pt-10 text-center">
         <Reveal>
+          <div className="animate-draw-in animate-float mx-auto mb-8 w-fit">
+            <Monogram left="Aziz" right="Malika" />
+          </div>
           <p className="mb-5 inline-block rounded-full border border-blush bg-white/50 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-gold">
             To‘y taklifnomasi · O‘zbekiston
           </p>
-          <h1 className="mx-auto max-w-3xl text-4xl font-bold leading-[1.1] sm:text-6xl">
-            Chiroyli to‘y taklifnomasi — <span className="text-gold">Telegramda 2 daqiqada</span>
+          <h1 className="mx-auto max-w-3xl font-display text-5xl font-medium leading-[1.05] sm:text-7xl">
+            Chiroyli to‘y taklifnomasi
+            <span className="mt-2 block text-gold">Telegramda 2 daqiqada</span>
           </h1>
+          <Flourish className="mx-auto mt-6 w-48" />
           <p className="mx-auto mt-6 max-w-xl text-lg text-ink/70">
             Bot orqali savol-javob qilasiz, tizim chiroyli, animatsiyali web taklifnoma yaratadi va
             noyob havola beradi. Mehmonlar bir bosishda “kelaman” deydi.
@@ -238,7 +244,7 @@ export function LandingPage(): ReactNode {
           <Reveal>
             <div className="flex flex-col items-center text-center">
               <Bot className="mb-3 h-8 w-8 text-gold" strokeWidth={1.75} />
-              <h2 className="text-2xl font-semibold sm:text-3xl">Bot imkoniyatlari</h2>
+              <h2 className="font-display text-4xl sm:text-5xl">Bot imkoniyatlari</h2>
               <p className="mt-3 text-ink/60">Botda taklifnomangizni to‘liq sozlaysiz.</p>
             </div>
           </Reveal>
@@ -289,7 +295,7 @@ export function LandingPage(): ReactNode {
         <div className="mx-auto max-w-5xl px-6 py-20">
           <Reveal>
             <div className="text-center">
-              <h2 className="text-2xl font-semibold sm:text-3xl">Shablonlar</h2>
+              <h2 className="font-display text-4xl sm:text-5xl">Shablonlar</h2>
               <p className="mt-3 text-ink/60">
                 Botda birini tanlaysiz — keyin ham o‘zgartira olasiz.
               </p>
@@ -319,7 +325,8 @@ export function LandingPage(): ReactNode {
       {/* CTA */}
       <section className="mx-auto max-w-3xl px-6 py-24 text-center">
         <Reveal>
-          <h2 className="text-3xl font-bold leading-tight sm:text-4xl">
+          <Flourish className="mx-auto mb-6 w-40" />
+          <h2 className="font-display text-4xl leading-tight sm:text-5xl">
             To‘yingizni <span className="text-gold">chiroyli boshlang</span>
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-lg text-ink/70">

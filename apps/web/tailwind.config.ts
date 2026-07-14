@@ -13,19 +13,35 @@ const config: Config = {
         night: '#1c1814', // to'q fon (Modern shablon)
       },
       fontFamily: {
-        // Gilroy — default. Fayl bo'lmasa tizim shriftiga tushadi.
+        // Gilroy — default (tana, UI). Fayl bo'lmasa tizim shriftiga tushadi.
         sans: ['Gilroy', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-        // Sarlavhalar uchun ixtiyoriy nafis serif
-        serif: ['Georgia', 'Cambria', 'Times New Roman', 'serif'],
+        // Cormorant Garamond — nafis serif (ismlar, katta sarlavhalar).
+        display: ['var(--font-display)', 'Cormorant Garamond', 'Georgia', 'serif'],
+        serif: ['var(--font-display)', 'Georgia', 'serif'],
       },
       keyframes: {
         'fade-up': {
           '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        'draw-in': {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.8s ease-out both',
+        'fade-in': 'fade-in 1.2s ease-out both',
+        float: 'float 4s ease-in-out infinite',
+        'draw-in': 'draw-in 1s ease-out both',
       },
     },
   },

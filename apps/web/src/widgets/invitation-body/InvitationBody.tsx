@@ -36,7 +36,9 @@ export function InvitationBody({ invitation }: InvitationBodyProps): ReactNode {
       {invitation.story ? (
         <Section>
           <Reveal>
-            <p className="text-center text-lg leading-relaxed opacity-80">{invitation.story}</p>
+            <p className="text-center font-display text-2xl italic leading-relaxed opacity-90 sm:text-3xl">
+              “{invitation.story}”
+            </p>
           </Reveal>
         </Section>
       ) : null}
