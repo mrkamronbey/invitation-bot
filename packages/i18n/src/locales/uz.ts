@@ -10,6 +10,9 @@ export const uz = {
     error: "Xatolik yuz berdi. Birozdan so'ng qayta urinib ko'ring.",
   },
   bot: {
+    chooseLanguage: 'Tilni tanlang / Выберите язык:',
+    langUz: "🇺🇿 O'zbekcha",
+    langRu: '🇷🇺 Русский',
     welcome: [
       'Assalomu alaykum! 🌸',
       '',
@@ -27,6 +30,7 @@ export const uz = {
     menuCreate: '🎉 Taklifnoma yaratish',
     menuMyInvites: '📋 Mening taklifnomalarim',
     menuHelp: '❓ Yordam',
+    menuLanguage: '🌐 Til',
     help: [
       '*Qanday ishlaydi?*',
       '',
@@ -34,6 +38,8 @@ export const uz = {
       '2️⃣ Shablon tanlang',
       '3️⃣ Savollarga javob bering (ixtiyoriylarni ⏭ tugmasi bilan o‘tkazib yuborasiz)',
       '4️⃣ Tayyor havolani oling va ulashing',
+      '',
+      'Taklifnomani keyin *tahrirlash*, *statistika* (kim keladi) va *o‘chirish* — “📋 Mening taklifnomalarim” bo‘limida.',
       '',
       '*Buyruqlar:*',
       '/start — bosh menyu',
@@ -45,7 +51,7 @@ export const uz = {
     step: (n: number, total: number): string => `${n}/${total}`,
     askGroom: 'Kuyov ismi?',
     askBride: 'Kelin ismi?',
-    askDate: "To'y sanasi?\n(masalan: 2026-09-15)",
+    askDate: "To'y sanasi?\n(masalan: 15.09.2026 yoki 2026-09-15)",
     askTime: 'Nechada boshlanadi?\n(masalan: 17:00)',
     askVenue: "To'yxona nomi?",
     askLocation: "📍 To'yxona lokatsiyasini yuboring\n(pastdagi 📎 → Lokatsiya → joyni tanlang)",
@@ -55,8 +61,10 @@ export const uz = {
     askMusic: '🎵 Fon musiqasi kerakmi?\nAudio yuboring yoki o‘tkazib yuboring.',
     skipButton: '⏭ O‘tkazib yuborish',
     cancelButton: '❌ Bekor qilish',
+    backButton: '◀️ Orqaga',
     cancelled: 'Bekor qilindi. Boshlash uchun /start bosing.',
     creating: '⏳ Taklifnomangiz tayyorlanmoqda...',
+    errorGeneric: '❌ Kutilmagan xatolik yuz berdi.\nQaytadan boshlash uchun /start bosing.',
     reviewTitle: '📋 *Ma’lumotlarni tekshiring:*',
     reviewConfirm: '✅ Ha, yaratish',
     reviewRestart: '🔄 Boshidan',
@@ -74,8 +82,8 @@ export const uz = {
       yes: '✓',
       none: '—',
     },
-    invalidDate: "❗️ Sana YYYY-MM-DD formatida bo'lishi kerak. Qayta kiriting.",
-    invalidTime: "❗️ Vaqt HH:mm formatida bo'lishi kerak. Qayta kiriting.",
+    invalidDate: '❗️ Sanani tushunolmadim. Masalan: 15.09.2026 yoki 2026-09-15',
+    invalidTime: "❗️ Vaqt HH:mm formatida bo'lishi kerak. Masalan: 17:00",
     ready: (url: string): string =>
       `✅ *Taklifnomangiz tayyor!*\n\nHavolangiz:\n${url}\n\nUni mehmonlarga ulashing 💌`,
     openButton: '🔗 Ochish',
@@ -85,6 +93,51 @@ export const uz = {
       attending ? `🔔 ${name} keladi (${count} kishi).` : `🔔 ${name} kela olmaydi.`,
     myInvitesTitle: '📋 *Sizning taklifnomalaringiz:*',
     myInvitesEmpty: "Sizda hali taklifnoma yo'q.\n“🎉 Taklifnoma yaratish” ni bosing.",
+    // ── Boshqaruv (tahrir / statistika / o'chirish) ──
+    manageOpen: '🔗 Ochish',
+    manageEdit: '✏️ Tahrirlash',
+    manageStats: '📊 Statistika',
+    manageDelete: '🗑 O‘chirish',
+    editTitle: 'Nimani o‘zgartiramiz?',
+    editPrompt: 'Yangi qiymatni yuboring:',
+    editSaved: '✅ Saqlandi.',
+    editMore: '✏️ Yana tahrirlash',
+    editDone: '✅ Tayyor',
+    editField: {
+      template: '🎨 Shablon',
+      groom: '💍 Kuyov ismi',
+      bride: '💍 Kelin ismi',
+      date: '📅 Sana',
+      time: '🕐 Vaqt',
+      venue: '🏛 To‘yxona',
+      location: '📍 Lokatsiya',
+      photo: '🖼 Rasm',
+      story: '📝 Matn',
+      dress: '👗 Kiyim uslubi',
+      music: '🎵 Musiqa',
+    },
+    deleteConfirm: (groom: string, bride: string): string =>
+      `🗑 *${groom} & ${bride}* taklifnomasi o‘chirilsinmi?\nBu amalni qaytarib bo‘lmaydi.`,
+    deleteYes: '🗑 Ha, o‘chirish',
+    deleteNo: '↩️ Bekor qilish',
+    deleted: '🗑 Taklifnoma o‘chirildi.',
+    // ── Statistika ──
+    statsTitle: (groom: string, bride: string): string => `📊 *${groom} & ${bride}* — statistika`,
+    statsSummary: (s: {
+      responses: number;
+      attending: number;
+      declining: number;
+      guests: number;
+    }): string =>
+      [
+        `💬 Javoblar: ${s.responses}`,
+        `✅ Keladi: ${s.attending}`,
+        `❌ Kela olmaydi: ${s.declining}`,
+        `👥 Jami mehmon: ${s.guests}`,
+      ].join('\n'),
+    statsEmpty: 'Hali javoblar yo‘q.',
+    statsGuestYes: (name: string, count: number): string => `✅ ${name} — ${count} kishi`,
+    statsGuestNo: (name: string): string => `❌ ${name}`,
   },
   web: {
     countdownLabel: "To'yga qoldi",
@@ -103,4 +156,4 @@ export const uz = {
     dressCode: 'Kiyim uslubi',
     notFound: 'Taklifnoma topilmadi.',
   },
-} as const;
+};
