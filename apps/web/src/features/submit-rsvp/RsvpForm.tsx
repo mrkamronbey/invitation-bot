@@ -42,7 +42,7 @@ export function RsvpForm({ slug, locale }: RsvpFormProps): ReactNode {
   }
 
   if (status === 'done') {
-    return <p className="text-center font-serif text-lg text-gold">{m.rsvpThanks}</p>;
+    return <p className="text-center font-sans text-lg text-gold">{m.rsvpThanks}</p>;
   }
 
   const inputClass =

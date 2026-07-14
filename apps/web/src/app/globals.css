@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────
+   Gilroy — default shrift.
+   Fayllarni shu yerga tashlang: apps/web/public/fonts/
+   (Gilroy-Regular.woff2, Gilroy-Medium.woff2, Gilroy-SemiBold.woff2,
+    Gilroy-Bold.woff2). Fayl bo'lmasa, tizim shriftiga tushadi (build buzilmaydi).
+   ───────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
 }
@@ -15,4 +50,7 @@ body {
 body {
   background-color: theme('colors.cream');
   color: theme('colors.ink');
+  font-family: theme('fontFamily.sans');
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

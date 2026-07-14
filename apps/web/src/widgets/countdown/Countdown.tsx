@@ -54,7 +54,7 @@ export function Countdown({ eventDate, eventTime, locale }: CountdownProps): Rea
           key={label}
           className="flex min-w-[64px] flex-col items-center rounded-lg border border-blush bg-white/60 px-3 py-4 shadow-sm"
         >
-          <span className="font-serif text-3xl text-ink tabular-nums">
+          <span className="font-sans text-3xl text-ink tabular-nums">
             {mounted ? String(value).padStart(2, '0') : '--'}
           </span>
           <span className="mt-1 text-xs uppercase tracking-wider text-gold">{label}</span>

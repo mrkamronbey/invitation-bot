@@ -10,7 +10,7 @@ export function ModernTemplate({ invitation }: TemplateProps): ReactNode {
     .join(' · ');
 
   return (
-    <main className="min-h-screen bg-ink text-cream">
+    <main className="min-h-screen bg-night text-cream">
       <header className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
         {invitation.coverImageUrl ? (
           <div

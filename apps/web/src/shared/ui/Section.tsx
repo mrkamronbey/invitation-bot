@@ -12,7 +12,7 @@ export function Section({ children, className, title }: SectionProps): ReactNode
   return (
     <section className={cn('mx-auto w-full max-w-xl px-6 py-12', className)}>
       {title ? (
-        <h2 className="mb-8 text-center font-serif text-2xl tracking-wide text-gold">{title}</h2>
+        <h2 className="mb-8 text-center font-sans text-2xl tracking-wide text-gold">{title}</h2>
       ) : null}
       {children}
     </section>

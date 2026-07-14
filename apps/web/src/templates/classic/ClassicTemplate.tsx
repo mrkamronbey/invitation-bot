@@ -10,7 +10,7 @@ export function ClassicTemplate({ invitation }: TemplateProps): ReactNode {
     .join(' · ');
 
   return (
-    <main className="min-h-screen bg-cream font-serif text-ink">
+    <main className="min-h-screen bg-cream font-sans text-ink">
       <header
         className="relative flex min-h-screen flex-col items-center justify-center px-6 text-center"
         style={
@@ -25,7 +25,7 @@ export function ClassicTemplate({ invitation }: TemplateProps): ReactNode {
       >
         <div className="animate-fade-up text-white">
           <p className="mb-4 text-sm uppercase tracking-[0.3em] text-white/80">Taklifnoma</p>
-          <h1 className="font-serif text-5xl leading-tight sm:text-6xl">
+          <h1 className="font-sans text-5xl leading-tight sm:text-6xl">
             {invitation.groomName}
             <span className="mx-3 text-gold">&amp;</span>
             {invitation.brideName}

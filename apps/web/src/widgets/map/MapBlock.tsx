@@ -15,7 +15,7 @@ export function MapBlock({ venue, locale }: MapBlockProps): ReactNode {
   return (
     <div className="overflow-hidden rounded-xl border border-blush bg-white/60 shadow-sm">
       <div className="p-5 text-center">
-        {venue.name ? <p className="font-serif text-xl text-ink">{venue.name}</p> : null}
+        {venue.name ? <p className="font-sans text-xl text-ink">{venue.name}</p> : null}
         {venue.address ? <p className="mt-1 text-sm text-ink/70">{venue.address}</p> : null}
       </div>
 
