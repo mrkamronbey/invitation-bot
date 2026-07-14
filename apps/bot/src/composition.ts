@@ -1,7 +1,14 @@
-import { CreateInvitationUseCase, ListOwnerInvitationsUseCase } from '@invitation/application';
+import {
+  CreateInvitationUseCase,
+  DeleteInvitationUseCase,
+  GetInvitationStatsUseCase,
+  ListOwnerInvitationsUseCase,
+  UpdateInvitationUseCase,
+} from '@invitation/application';
 import {
   CryptoIdGenerator,
   SupabaseInvitationRepository,
+  SupabaseRsvpRepository,
   SupabaseStorage,
   SupabaseUserRepository,
   SystemClock,
@@ -18,6 +25,7 @@ function buildContainer() {
   const db = createSupabaseClient({ url: env.supabaseUrl, key: env.supabaseServiceKey });
 
   const invitations = new SupabaseInvitationRepository(db);
+  const rsvps = new SupabaseRsvpRepository(db);
   const users = new SupabaseUserRepository(db);
   const storage = new SupabaseStorage(db);
   const ids = new CryptoIdGenerator();
@@ -30,6 +38,9 @@ function buildContainer() {
     ids,
     createInvitation: new CreateInvitationUseCase({ invitations, ids, clock }),
     listOwnerInvitations: new ListOwnerInvitationsUseCase({ invitations }),
+    updateInvitation: new UpdateInvitationUseCase({ invitations, clock }),
+    deleteInvitation: new DeleteInvitationUseCase({ invitations }),
+    getInvitationStats: new GetInvitationStatsUseCase({ invitations, rsvps }),
   };
 }
 

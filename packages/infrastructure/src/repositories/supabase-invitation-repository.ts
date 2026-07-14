@@ -7,6 +7,12 @@ const TABLE = 'invitations';
 export class SupabaseInvitationRepository implements InvitationRepository {
   constructor(private readonly db: SupabaseClient) {}
 
+  async findById(id: string): Promise<Invitation | null> {
+    const { data, error } = await this.db.from(TABLE).select('*').eq('id', id).maybeSingle();
+    if (error) throw error;
+    return data ? rowToInvitation(data as InvitationRow) : null;
+  }
+
   async findBySlug(slug: string): Promise<Invitation | null> {
     const { data, error } = await this.db.from(TABLE).select('*').eq('slug', slug).maybeSingle();
     if (error) throw error;
@@ -36,6 +42,11 @@ export class SupabaseInvitationRepository implements InvitationRepository {
 
   async setPremium(id: string, isPremium: boolean): Promise<void> {
     const { error } = await this.db.from(TABLE).update({ is_premium: isPremium }).eq('id', id);
+    if (error) throw error;
+  }
+
+  async delete(id: string): Promise<void> {
+    const { error } = await this.db.from(TABLE).delete().eq('id', id);
     if (error) throw error;
   }
 }
