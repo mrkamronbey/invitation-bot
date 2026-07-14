@@ -21,7 +21,7 @@ export const uz = {
     askLocation: "📍 To'yxona lokatsiyasini yuboring (biriktirma → Lokatsiya)",
     askCover: "🖼 Asosiy rasmni yuboring — yoki o'tkazib yuboring",
     askStory: "Qisqa matn / hikoya? — yoki o'tkazib yuboring",
-    askDressCode: "Dress code? — yoki o'tkazib yuboring",
+    askDressCode: "Kiyim uslubi? — yoki o'tkazib yuboring",
     askMusic:
       "🎵 Fon musiqasi? Tayyorlaridan tanlang, o'zingiznikini yuboring yoki o'tkazib yuboring.",
     musicOwn: "🎼 O'zim yuklayman",
@@ -49,7 +49,7 @@ export const uz = {
     rsvpSubmit: 'Yuborish',
     rsvpThanks: 'Rahmat! Javobingiz qabul qilindi.',
     directions: "Yo'l ko'rsatish",
-    dressCode: 'Dress code',
+    dressCode: 'Kiyim uslubi',
     notFound: 'Taklifnoma topilmadi.',
   },
 } as const;

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { Music, Volume2 } from 'lucide-react';
 
 interface MusicToggleProps {
   readonly src: string;
@@ -31,9 +32,13 @@ export function MusicToggle({ src }: MusicToggleProps): ReactNode {
         type="button"
         onClick={toggle}
         aria-label="Musiqa"
-        className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gold/90 text-lg text-white shadow-lg backdrop-blur transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-gold/90 text-white shadow-lg backdrop-blur transition-transform hover:scale-105"
       >
-        {playing ? '🔊' : '🎵'}
+        {playing ? (
+          <Volume2 className="h-5 w-5" strokeWidth={2} />
+        ) : (
+          <Music className="h-5 w-5" strokeWidth={2} />
+        )}
       </button>
     </>
   );

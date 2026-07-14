@@ -23,7 +23,7 @@ export function ModernTemplate({ invitation }: TemplateProps): ReactNode {
           />
         ) : null}
         <div className="relative animate-fade-up">
-          <p className="text-xs uppercase tracking-[0.4em] text-gold">Save the date</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-gold">Muborak kun</p>
           <h1 className="mt-8 text-5xl font-light leading-tight sm:text-7xl">
             {invitation.groomName}
             <br />

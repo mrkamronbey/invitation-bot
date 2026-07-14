@@ -1,87 +1,116 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import {
+  Bell,
+  Bot,
+  CheckCircle,
+  Clock,
+  Eye,
+  FileText,
+  Image as ImageIcon,
+  Link2,
+  ListChecks,
+  type LucideIcon,
+  Map as MapIcon,
+  MapPin,
+  MessageCircle,
+  Music,
+  Palette,
+  Send,
+  Smartphone,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
 import { Reveal } from '@/shared/ui/Reveal';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
 const DEMO_URL = '/aziz-va-malika';
 
-const STEPS: ReadonlyArray<{ n: string; title: string; text: string; icon: string }> = [
+const STEPS: ReadonlyArray<{ n: string; title: string; text: string; icon: LucideIcon }> = [
   {
     n: '01',
-    icon: '🤖',
+    icon: Bot,
     title: 'Botni oching',
     text: 'Telegramda botni oching va /start bosing. Ro‘yxatdan o‘tish, parol — hech narsa kerak emas.',
   },
   {
     n: '02',
-    icon: '🎨',
+    icon: Palette,
     title: 'Shablon tanlang',
     text: 'Klassik, Zamonaviy yoki Minimal — o‘zingizga yoqqan chiroyli dizaynni tanlaysiz.',
   },
   {
     n: '03',
-    icon: '💬',
+    icon: MessageCircle,
     title: 'Ma’lumot kiriting',
     text: 'Bot savol beradi: ism, sana, joy, rasm, musiqa. Siz javob berasiz — 2 daqiqada tayyor.',
   },
   {
     n: '04',
-    icon: '🔗',
+    icon: Link2,
     title: 'Havolani ulashing',
     text: 'Bot noyob havola beradi. Uni mehmonlarga yuborasiz — ular chiroyli sahifada ko‘radi.',
   },
 ];
 
-const BOT_FEATURES: ReadonlyArray<{ icon: string; title: string; text: string }> = [
+const BOT_FEATURES: ReadonlyArray<{ icon: LucideIcon; title: string; text: string }> = [
   {
-    icon: '🎨',
+    icon: Palette,
     title: 'Shablon tanlash',
-    text: '3 xil chiroyli dizayn — preview bilan tanlaysiz.',
+    text: '3 xil chiroyli dizayn — namuna bilan tanlaysiz.',
   },
   {
-    icon: '📍',
-    title: 'Lokatsiya pin',
+    icon: MapPin,
+    title: 'Lokatsiya',
     text: 'To‘yxona joyini Telegramda “pin” qilib yuborasiz — qo‘lda yozish shart emas.',
   },
   {
-    icon: '🖼',
+    icon: ImageIcon,
     title: 'Rasm yuklash',
-    text: 'Asosiy rasm va foto-galereyani to‘g‘ridan-to‘g‘ri botga tashlaysiz.',
+    text: 'Asosiy rasm va suratlarni to‘g‘ridan-to‘g‘ri botga tashlaysiz.',
   },
   {
-    icon: '🎵',
+    icon: Music,
     title: 'Fon musiqasi',
     text: 'O‘zingiz xohlagan qo‘shiqni yuklaysiz — sahifada jaranglaydi.',
   },
   {
-    icon: '📝',
+    icon: FileText,
     title: 'Batafsil ma’lumot',
-    text: 'Sana, vaqt, dress code, qisqa hikoya — hammasini kiritasiz.',
+    text: 'Sana, vaqt, kiyim uslubi, qisqa hikoya — hammasini kiritasiz.',
   },
-  { icon: '🔔', title: 'RSVP xabari', text: 'Mehmon “kelaman” bossa, botga darrov xabar keladi.' },
+  { icon: Bell, title: 'Javob xabari', text: 'Mehmon “kelaman” bossa, botga darrov xabar keladi.' },
   {
-    icon: '📋',
+    icon: ListChecks,
     title: 'Taklifnomalarim',
     text: '/myinvites — barcha taklifnomalaringiz va havolalari bir joyda.',
   },
   {
-    icon: '⚡',
+    icon: Zap,
     title: 'Tez va oson',
     text: 'Butun jarayon Telegram ichida — 2 daqiqada tayyor havola.',
   },
 ];
 
-const WEB_FEATURES: ReadonlyArray<{ icon: string; title: string; text: string }> = [
-  { icon: '⏳', title: 'Countdown', text: 'To‘yga qolgan kun-soatni jonli sanaydi.' },
-  { icon: '🗺', title: 'Xarita', text: 'Yandex Maps + “Yo‘l ko‘rsatish” tugmasi.' },
-  { icon: '🖼', title: 'Galereya', text: 'Suratlar chiroyli grid + bosilganda kattalashadi.' },
-  { icon: '✅', title: 'RSVP forma', text: 'Mehmon kelishini + necha kishi ekanini bildiradi.' },
+const WEB_FEATURES: ReadonlyArray<{ icon: LucideIcon; title: string; text: string }> = [
+  { icon: Clock, title: 'Sanoq', text: 'To‘yga qolgan kun-soatni jonli sanaydi.' },
+  { icon: MapIcon, title: 'Xarita', text: 'Yandex Maps + “Yo‘l ko‘rsatish” tugmasi.' },
   {
-    icon: '📱',
-    title: 'Mobil-friendly',
+    icon: ImageIcon,
+    title: 'Galereya',
+    text: 'Suratlar chiroyli tarzda, bosilganda kattalashadi.',
+  },
+  {
+    icon: CheckCircle,
+    title: 'Javob formasi',
+    text: 'Mehmon kelishini va necha kishi ekanini bildiradi.',
+  },
+  {
+    icon: Smartphone,
+    title: 'Telefonga mos',
     text: 'Asosan telefonda ochiladi — hamma joyda chiroyli.',
   },
-  { icon: '✨', title: 'Animatsiya', text: 'Yumshoq, zamonaviy animatsiyalar bilan jonli.' },
+  { icon: Sparkles, title: 'Animatsiya', text: 'Yumshoq, zamonaviy animatsiyalar bilan jonli.' },
 ];
 
 const TEMPLATES: ReadonlyArray<{ name: string; desc: string; img: string }> = [
@@ -116,7 +145,7 @@ function TelegramButton({
       : 'border border-blush text-ink hover:border-gold';
   return (
     <a href={BOT_URL} target="_blank" rel="noreferrer" className={`${base} ${style}`}>
-      <span>✈️</span>
+      <Send className="h-4 w-4" strokeWidth={2} />
       {label}
     </a>
   );
@@ -152,7 +181,8 @@ export function LandingPage(): ReactNode {
               href={DEMO_URL}
               className="inline-flex items-center gap-2 rounded-full border border-blush px-8 py-3.5 font-medium text-ink transition-colors hover:border-gold"
             >
-              👀 Namunani ko‘rish
+              <Eye className="h-4 w-4" strokeWidth={2} />
+              Namunani ko‘rish
             </Link>
           </div>
         </Reveal>
@@ -167,8 +197,7 @@ export function LandingPage(): ReactNode {
               <b>taklif.uz</b> — to‘y uchun <b>elektron taklifnoma</b> yaratish xizmati. Kuyov-kelin
               Telegram bot orqali ma’lumot kiritadi, biz esa chiroyli, mobil, animatsiyali web
               sahifa tayyorlab beramiz. Mehmonlar havolani ochib, to‘y haqidagi barcha ma’lumotni
-              ko‘radi va kelishini bildiradi (RSVP). Qog‘oz taklifnoma emas — zamonaviy, tez,
-              tejamli.
+              ko‘radi va kelishini bildiradi. Qog‘oz taklifnoma emas — zamonaviy, tez va tejamli.
             </p>
           </Reveal>
         </div>
@@ -187,7 +216,9 @@ export function LandingPage(): ReactNode {
             <Reveal key={s.n} delay={i * 0.08}>
               <div className="h-full rounded-2xl border border-blush bg-white/60 p-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-3xl">{s.icon}</span>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/10 text-gold">
+                    <s.icon className="h-6 w-6" strokeWidth={1.75} />
+                  </span>
                   <span className="text-2xl font-bold text-blush">{s.n}</span>
                 </div>
                 <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
@@ -205,8 +236,9 @@ export function LandingPage(): ReactNode {
       <section className="border-y border-blush/60 bg-white/40">
         <div className="mx-auto max-w-5xl px-6 py-20">
           <Reveal>
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold sm:text-3xl">🤖 Bot imkoniyatlari</h2>
+            <div className="flex flex-col items-center text-center">
+              <Bot className="mb-3 h-8 w-8 text-gold" strokeWidth={1.75} />
+              <h2 className="text-2xl font-semibold sm:text-3xl">Bot imkoniyatlari</h2>
               <p className="mt-3 text-ink/60">Botda taklifnomangizni to‘liq sozlaysiz.</p>
             </div>
           </Reveal>
@@ -214,8 +246,10 @@ export function LandingPage(): ReactNode {
             {BOT_FEATURES.map((f, i) => (
               <Reveal key={f.title} delay={i * 0.05}>
                 <div className="h-full rounded-2xl border border-blush bg-cream/70 p-6">
-                  <span className="text-2xl">{f.icon}</span>
-                  <h3 className="mt-3 font-semibold">{f.title}</h3>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/10 text-gold">
+                    <f.icon className="h-5 w-5" strokeWidth={1.75} />
+                  </span>
+                  <h3 className="mt-4 font-semibold">{f.title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink/70">{f.text}</p>
                 </div>
               </Reveal>
@@ -227,16 +261,19 @@ export function LandingPage(): ReactNode {
       {/* Web taklifnoma imkoniyatlari */}
       <section className="mx-auto max-w-5xl px-6 py-20">
         <Reveal>
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold sm:text-3xl">✨ Web taklifnomada nima bor?</h2>
+          <div className="flex flex-col items-center text-center">
+            <Sparkles className="mb-3 h-8 w-8 text-gold" strokeWidth={1.75} />
+            <h2 className="text-2xl font-semibold sm:text-3xl">Web taklifnomada nima bor?</h2>
             <p className="mt-3 text-ink/60">Mehmon havolani ochganda ko‘radigan narsalar.</p>
           </div>
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {WEB_FEATURES.map((f, i) => (
             <Reveal key={f.title} delay={i * 0.05}>
-              <div className="flex h-full gap-4 rounded-2xl border border-blush bg-white/60 p-6">
-                <span className="text-2xl">{f.icon}</span>
+              <div className="flex h-full items-start gap-4 rounded-2xl border border-blush bg-white/60 p-6">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/10 text-gold">
+                  <f.icon className="h-5 w-5" strokeWidth={1.75} />
+                </span>
                 <div>
                   <h3 className="font-semibold">{f.title}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-ink/70">{f.text}</p>
