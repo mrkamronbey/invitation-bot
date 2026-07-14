@@ -1,6 +1,22 @@
-/** Foydalanuvchi kiritgan sana/vaqtni moslashuvchan tahlil qiladi. */
+/** Foydalanuvchi kiritgan ism/sana/vaqtni moslashuvchan tahlil qiladi. */
 
 const pad = (n: number): string => String(n).padStart(2, '0');
+
+/**
+ * "Kuyov va kelin" ismini bitta matndan ajratadi.
+ * Ajratuvchilar: "va", "and", "и", "&", ",", "/", "-", "—".
+ * Birinchi ism — kuyov, ikkinchisi — kelin. Ikkitadan kam bo'lsa — null.
+ */
+export function parseNames(raw: string): { groom: string; bride: string } | null {
+  const parts = raw
+    .split(/\s*(?:\bva\b|\band\b|\bи\b|&|,|\/|—|-|\+)\s*/i)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+  if (parts.length < 2) return null;
+  const [groom, bride] = parts;
+  if (!groom || !bride) return null;
+  return { groom, bride };
+}
 
 function isValidYmd(y: number, mo: number, d: number): boolean {
   if (mo < 1 || mo > 12 || d < 1 || d > 31) return false;

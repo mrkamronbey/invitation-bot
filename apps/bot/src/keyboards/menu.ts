@@ -66,7 +66,7 @@ export function flowKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
   return appendControls(kb, m, opts);
 }
 
-/** Vaqt tez tanlovlari (tugma) + ⏭/⏭⏭/◀️/❌. */
+/** Vaqt tez tanlovlari (tugma). Skip faqat ixtiyoriy bo'lsa. */
 export function timeChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
   const kb = new Keyboard();
   const t = m.timeChoices;
@@ -74,19 +74,14 @@ export function timeChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
     t.slice(i, i + 3).forEach((label) => kb.text(label));
     kb.row();
   }
-  kb.text(m.skipButton).row();
+  if (opts.optional) kb.text(m.skipButton).row();
   return appendControls(kb, m, opts);
 }
 
-/** Kiyim uslubi tez tanlovlari (tugma) + ⏭/⏭⏭/◀️/❌. */
+/** Kiyim uslubi tez tanlovlari (tugma). Skip faqat ixtiyoriy bo'lsa. */
 export function dressChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
-  const kb = new Keyboard()
-    .text(m.dressClassic)
-    .text(m.dressNational)
-    .text(m.dressFree)
-    .row()
-    .text(m.skipButton)
-    .row();
+  const kb = new Keyboard().text(m.dressClassic).text(m.dressNational).text(m.dressFree).row();
+  if (opts.optional) kb.text(m.skipButton).row();
   return appendControls(kb, m, opts);
 }
 
@@ -95,9 +90,10 @@ export function gateKeyboard(m: M): InlineKeyboard {
   return new InlineKeyboard().text(m.gateYes, 'gate:yes').text(m.gateNo, 'gate:no');
 }
 
-/** Lokatsiya so'rovi — Telegram "joy yuborish" tugmasi + ⏭/⏭⏭/◀️/❌. */
+/** Lokatsiya so'rovi — Telegram "joy yuborish" tugmasi. Skip faqat ixtiyoriy bo'lsa. */
 export function locationKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
-  const kb = new Keyboard().requestLocation('📍').row().text(m.skipButton).row();
+  const kb = new Keyboard().requestLocation('📍').row();
+  if (opts.optional) kb.text(m.skipButton).row();
   return appendControls(kb, m, opts);
 }
 

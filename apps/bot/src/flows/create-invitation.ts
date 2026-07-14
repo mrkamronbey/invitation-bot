@@ -12,7 +12,7 @@ import {
   timeChoicesKeyboard,
 } from '../keyboards/menu';
 import { localeOf } from '../i18n';
-import { parseDate, parseTime } from '../services/parse';
+import { parseDate, parseNames, parseTime } from '../services/parse';
 import { uploadTelegramFile } from './shared';
 import type { BotContext, BotConversation } from '../context';
 
@@ -23,8 +23,8 @@ const BACK = Symbol('back');
 const SKIPALL = Symbol('skipall');
 type Ctrl<T> = T | typeof BACK | typeof SKIPALL;
 
-const REQ_TOTAL = 3;
-const OPT_TOTAL = 7;
+const REQ_TOTAL = 5;
+const OPT_TOTAL = 4;
 
 interface Music {
   url: string | undefined;
@@ -50,7 +50,7 @@ function loc(ctx: BotContext): Msg {
   return getMessages(localeOf(ctx)).bot;
 }
 
-/** Progress ko'rsatkichi: "Asosiy · ▰▰▱ 2/3". */
+/** Progress ko'rsatkichi: "Asosiy · ▰▰▱ 2/5". */
 function head(label: string, n: number, total: number): string {
   const bar = '▰'.repeat(n) + '▱'.repeat(Math.max(0, total - n));
   return `${label} · ${bar} ${n}/${total}`;
@@ -73,7 +73,80 @@ async function readControl(
 
 // ── Majburiy faza (Asosiy) ────────────────────────────────────────────────
 
-async function askRequiredText(
+/** Kuyov va kelin ismi — bitta savolda. */
+async function askNames(
+  conversation: BotConversation,
+  ctx: BotContext,
+  m: Msg,
+  canBack: boolean,
+): Promise<typeof BACK | { groom: string; bride: string }> {
+  await ctx.reply(`${head(m.phaseMain, 1, REQ_TOTAL)}\n${m.askNames}`, {
+    reply_markup: flowKeyboard(m, { canBack }),
+  });
+  for (;;) {
+    const res = await conversation.waitFor(':text');
+    const txt = (res.message?.text ?? '').trim();
+    const ctrl = await readControl(ctx, m, txt);
+    if (ctrl === BACK) return BACK;
+    if (ctrl !== null) continue;
+    const names = parseNames(txt);
+    if (names) {
+      await ctx.reply(`✅ 💍 ${names.groom} & ${names.bride}`);
+      return names;
+    }
+    await ctx.reply(m.invalidNames);
+  }
+}
+
+async function askDate(
+  conversation: BotConversation,
+  ctx: BotContext,
+  m: Msg,
+  n: number,
+  canBack: boolean,
+): Promise<typeof BACK | string> {
+  await ctx.reply(`${head(m.phaseMain, n, REQ_TOTAL)}\n${m.askDate}`, {
+    reply_markup: flowKeyboard(m, { canBack }),
+  });
+  for (;;) {
+    const res = await conversation.waitFor(':text');
+    const txt = (res.message?.text ?? '').trim();
+    const ctrl = await readControl(ctx, m, txt);
+    if (ctrl === BACK) return BACK;
+    if (ctrl !== null) continue;
+    const iso = parseDate(txt);
+    if (iso) {
+      await ctx.reply(m.dateConfirmed(m.dateWords(iso)));
+      return iso;
+    }
+    await ctx.reply(m.invalidDate);
+  }
+}
+
+/** Vaqt — majburiy (tugmali tanlov yoki yozib). */
+async function askTimeReq(
+  conversation: BotConversation,
+  ctx: BotContext,
+  m: Msg,
+  n: number,
+  canBack: boolean,
+): Promise<typeof BACK | string> {
+  await ctx.reply(`${head(m.phaseMain, n, REQ_TOTAL)}\n${m.askTime}`, {
+    reply_markup: timeChoicesKeyboard(m, { canBack }),
+  });
+  for (;;) {
+    const res = await conversation.waitFor(':text');
+    const txt = (res.message?.text ?? '').trim();
+    const ctrl = await readControl(ctx, m, txt);
+    if (ctrl === BACK) return BACK;
+    if (ctrl !== null) continue;
+    const hm = parseTime(txt);
+    if (hm) return hm;
+    await ctx.reply(m.invalidTime);
+  }
+}
+
+async function askReqText(
   conversation: BotConversation,
   ctx: BotContext,
   m: Msg,
@@ -94,31 +167,28 @@ async function askRequiredText(
   }
 }
 
-async function askDate(
+/** Lokatsiya — majburiy (Telegram "joy yuborish"). */
+async function askLocationReq(
   conversation: BotConversation,
   ctx: BotContext,
   m: Msg,
+  n: number,
   canBack: boolean,
-): Promise<typeof BACK | string> {
-  await ctx.reply(`${head(m.phaseMain, 3, REQ_TOTAL)}\n${m.askDate}`, {
-    reply_markup: flowKeyboard(m, { canBack }),
-  });
+): Promise<typeof BACK | { lat: number; lng: number }> {
   for (;;) {
-    const res = await conversation.waitFor(':text');
-    const txt = (res.message?.text ?? '').trim();
-    const ctrl = await readControl(ctx, m, txt);
+    await ctx.reply(`${head(m.phaseMain, n, REQ_TOTAL)}\n${m.askLocation}`, {
+      reply_markup: locationKeyboard(m, { canBack }),
+    });
+    const res = await conversation.wait();
+    const geo = res.message?.location;
+    if (geo) return { lat: geo.latitude, lng: geo.longitude };
+    const ctrl = await readControl(ctx, m, (res.message?.text ?? '').trim());
     if (ctrl === BACK) return BACK;
-    if (ctrl !== null) continue;
-    const iso = parseDate(txt);
-    if (iso) {
-      await ctx.reply(m.dateConfirmed(m.dateWords(iso)));
-      return iso;
-    }
-    await ctx.reply(m.invalidDate);
+    await ctx.reply(m.invalidLocation);
   }
 }
 
-/** Asosiy 3 maydon (kuyov, kelin, sana) — orqaga bilan. */
+/** Asosiy 5 maydon (ism, sana, vaqt, to'yxona, lokatsiya) — orqaga bilan. */
 async function collectRequired(
   conversation: BotConversation,
   ctx: BotContext,
@@ -128,26 +198,50 @@ async function collectRequired(
   let i = 0;
   while (i < REQ_TOTAL) {
     const canBack = i > 0;
-    if (i === 0) {
-      const r = await askRequiredText(conversation, ctx, m, 1, m.askGroom, canBack);
-      if (r === BACK) i = Math.max(0, i - 1);
-      else {
-        d.groomName = r;
+    switch (i) {
+      case 0: {
+        const r = await askNames(conversation, ctx, m, canBack);
+        if (r === BACK) break;
+        d.groomName = r.groom;
+        d.brideName = r.bride;
         i++;
+        break;
       }
-    } else if (i === 1) {
-      const r = await askRequiredText(conversation, ctx, m, 2, m.askBride, canBack);
-      if (r === BACK) i--;
-      else {
-        d.brideName = r;
-        i++;
+      case 1: {
+        const r = await askDate(conversation, ctx, m, 2, canBack);
+        if (r === BACK) i--;
+        else {
+          d.eventDate = r;
+          i++;
+        }
+        break;
       }
-    } else {
-      const r = await askDate(conversation, ctx, m, canBack);
-      if (r === BACK) i--;
-      else {
-        d.eventDate = r;
-        i++;
+      case 2: {
+        const r = await askTimeReq(conversation, ctx, m, 3, canBack);
+        if (r === BACK) i--;
+        else {
+          d.eventTime = r;
+          i++;
+        }
+        break;
+      }
+      case 3: {
+        const r = await askReqText(conversation, ctx, m, 4, m.askVenue, canBack);
+        if (r === BACK) i--;
+        else {
+          d.venueName = r;
+          i++;
+        }
+        break;
+      }
+      default: {
+        const r = await askLocationReq(conversation, ctx, m, 5, canBack);
+        if (r === BACK) i--;
+        else {
+          d.location = r;
+          i++;
+        }
+        break;
       }
     }
   }
@@ -177,27 +271,6 @@ async function askOptText(
   return txt;
 }
 
-async function askTime(
-  conversation: BotConversation,
-  ctx: BotContext,
-  m: Msg,
-  n: number,
-): Promise<Ctrl<string | undefined>> {
-  await ctx.reply(optPrompt(m, n, m.askTime), {
-    reply_markup: timeChoicesKeyboard(m, { canBack: true, skipRest: true }),
-  });
-  for (;;) {
-    const res = await conversation.waitFor(':text');
-    const txt = (res.message?.text ?? '').trim();
-    const ctrl = await readControl(ctx, m, txt);
-    if (ctrl !== null) return ctrl;
-    if (txt === m.skipButton) return undefined;
-    const hm = parseTime(txt);
-    if (hm) return hm;
-    await ctx.reply(m.invalidTime);
-  }
-}
-
 async function askDress(
   conversation: BotConversation,
   ctx: BotContext,
@@ -205,7 +278,7 @@ async function askDress(
   n: number,
 ): Promise<Ctrl<string | undefined>> {
   await ctx.reply(optPrompt(m, n, m.askDressCode), {
-    reply_markup: dressChoicesKeyboard(m, { canBack: true, skipRest: true }),
+    reply_markup: dressChoicesKeyboard(m, { optional: true, canBack: true, skipRest: true }),
   });
   const res = await conversation.waitFor(':text');
   const txt = (res.message?.text ?? '').trim();
@@ -213,22 +286,6 @@ async function askDress(
   if (ctrl !== null) return ctrl;
   if (txt === m.skipButton || txt.length === 0) return undefined;
   return txt;
-}
-
-async function askLocation(
-  conversation: BotConversation,
-  ctx: BotContext,
-  m: Msg,
-  n: number,
-): Promise<Ctrl<{ lat: number; lng: number } | undefined>> {
-  await ctx.reply(optPrompt(m, n, m.askLocation), {
-    reply_markup: locationKeyboard(m, { canBack: true, skipRest: true }),
-  });
-  const res = await conversation.wait();
-  const geo = res.message?.location;
-  if (geo) return { lat: geo.latitude, lng: geo.longitude };
-  const ctrl = await readControl(ctx, m, (res.message?.text ?? '').trim());
-  return ctrl !== null ? ctrl : undefined;
 }
 
 async function askCover(
@@ -278,8 +335,8 @@ async function askMusic(
 }
 
 /**
- * Qo'shimcha 7 maydon — orqaga (birinchisidan darvozaga qaytadi) va
- * "qolganini o'tkazish" bilan. 'gate' — darvozaga qайtish, aks holda tugadi.
+ * Qo'shimcha 4 maydon (rasm, matn, kiyim, musiqa) — orqaga (birinchisidan
+ * darvozaga) va "qolganini o'tkazish" bilan. 'gate' — darvozaga qaytish.
  */
 async function collectOptional(
   conversation: BotConversation,
@@ -293,36 +350,18 @@ async function collectOptional(
     let ctrl: typeof BACK | typeof SKIPALL | null = null;
     switch (i) {
       case 0: {
-        const r = await askTime(conversation, ctx, m, n);
-        if (r === BACK || r === SKIPALL) ctrl = r;
-        else d.eventTime = r;
-        break;
-      }
-      case 1: {
-        const r = await askOptText(conversation, ctx, m, n, m.askVenue);
-        if (r === BACK || r === SKIPALL) ctrl = r;
-        else d.venueName = r;
-        break;
-      }
-      case 2: {
-        const r = await askLocation(conversation, ctx, m, n);
-        if (r === BACK || r === SKIPALL) ctrl = r;
-        else d.location = r;
-        break;
-      }
-      case 3: {
         const r = await askCover(conversation, ctx, m, n);
         if (r === BACK || r === SKIPALL) ctrl = r;
         else d.coverImageUrl = r;
         break;
       }
-      case 4: {
+      case 1: {
         const r = await askOptText(conversation, ctx, m, n, m.askStory);
         if (r === BACK || r === SKIPALL) ctrl = r;
         else d.story = r;
         break;
       }
-      case 5: {
+      case 2: {
         const r = await askDress(conversation, ctx, m, n);
         if (r === BACK || r === SKIPALL) ctrl = r;
         else d.dressCode = r;
@@ -375,7 +414,7 @@ function reviewText(m: Msg, templateId: string, d: Collected): string {
   ].join('\n');
 }
 
-/** Taklifnoma yaratish FSM: asosiy → darvoza → qo'shimcha → tasdiqlash → havola. */
+/** Taklifnoma yaratish FSM: asosiy (5) → darvoza → qo'shimcha (4) → tasdiqlash → havola. */
 export async function createInvitationFlow(
   conversation: BotConversation,
   ctx: BotContext,
