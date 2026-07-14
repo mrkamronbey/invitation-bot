@@ -329,7 +329,9 @@ type Result<T, E = AppError> =
 
 | Mavzu | Yechim |
 |---|---|
+| **Baza** | **Postgres** (Supabase — managed). Domain uni bilmaydi, faqat `InvitationRepository` port. Keyin o'z Postgres'ga ko'chsa — adapter almashadi, mantiq o'zgarmaydi. |
 | **O'qish tezligi** | `[slug]` sahifа SSR + ISR/cache (taklifnoma kam o'zгаради). Vercel edge cache. |
+| **Redis / kesh** | **MVP'да YO'Q** (YAGNI — CDN cache yetарли). Kerак bo'lганда `CachePort` qo'шиб ulanади, biznes-mantiq o'zгармайди. |
 | **Rasm** | Supabase Storage + Next `<Image>` optimizatsiya. Yuklашда bir marta. |
 | **Bot masshtаbi** | v1 polling (Railway). O'sса — webhook + queue (RSVP xabarларини navbatга). |
 | **Idempotentlik** | RSVP takroriy yuborilса — `(invitation_id, guest fingerprint)` bo'yича nazorat. |
