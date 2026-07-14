@@ -48,23 +48,57 @@ export function contactKeyboard(m: M): Keyboard {
 interface FlowOpts {
   readonly optional?: boolean;
   readonly canBack?: boolean;
+  readonly skipRest?: boolean;
 }
 
-/** Yaratish oqimida — reply tugmalar (⏭ ixtiyoriy, ◀️ orqaga, ❌ bekor). */
-export function flowKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
-  const kb = new Keyboard();
-  if (opts.optional) kb.text(m.skipButton).row();
+/** Boshqaruv tugmalari qatorlari (⏭ qolgani / ◀️ orqaga / ❌ bekor) — barcha oqim klaviaturalari uchun umumiy. */
+function appendControls(kb: Keyboard, m: M, opts: FlowOpts): Keyboard {
+  if (opts.skipRest) kb.text(m.skipRestButton).row();
   if (opts.canBack) kb.text(m.backButton);
   kb.text(m.cancelButton);
   return kb.resized();
 }
 
-/** Lokatsiya so'rovi — Telegram "joy yuborish" tugmasi + ⏭/◀️/❌. */
-export function locationKeyboard(m: M, canBack = false): Keyboard {
+/** Yaratish oqimida — reply tugmalar (⏭ ixtiyoriy, ⏭⏭ qolgani, ◀️ orqaga, ❌ bekor). */
+export function flowKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
+  const kb = new Keyboard();
+  if (opts.optional) kb.text(m.skipButton).row();
+  return appendControls(kb, m, opts);
+}
+
+/** Vaqt tez tanlovlari (tugma) + ⏭/⏭⏭/◀️/❌. */
+export function timeChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
+  const kb = new Keyboard();
+  const t = m.timeChoices;
+  for (let i = 0; i < t.length; i += 3) {
+    t.slice(i, i + 3).forEach((label) => kb.text(label));
+    kb.row();
+  }
+  kb.text(m.skipButton).row();
+  return appendControls(kb, m, opts);
+}
+
+/** Kiyim uslubi tez tanlovlari (tugma) + ⏭/⏭⏭/◀️/❌. */
+export function dressChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
+  const kb = new Keyboard()
+    .text(m.dressClassic)
+    .text(m.dressNational)
+    .text(m.dressFree)
+    .row()
+    .text(m.skipButton)
+    .row();
+  return appendControls(kb, m, opts);
+}
+
+/** Ixtiyoriy ma'lumot darvozasi — inline (Ha, qo'shaman / Yo'q, tayyor). */
+export function gateKeyboard(m: M): InlineKeyboard {
+  return new InlineKeyboard().text(m.gateYes, 'gate:yes').text(m.gateNo, 'gate:no');
+}
+
+/** Lokatsiya so'rovi — Telegram "joy yuborish" tugmasi + ⏭/⏭⏭/◀️/❌. */
+export function locationKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
   const kb = new Keyboard().requestLocation('📍').row().text(m.skipButton).row();
-  if (canBack) kb.text(m.backButton);
-  kb.text(m.cancelButton);
-  return kb.resized();
+  return appendControls(kb, m, opts);
 }
 
 /** Tasdiqlash — inline (Ha, yaratish / Boshidan). */

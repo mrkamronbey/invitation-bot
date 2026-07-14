@@ -1,3 +1,18 @@
+const UZ_MONTHS = [
+  'yanvar',
+  'fevral',
+  'mart',
+  'aprel',
+  'may',
+  'iyun',
+  'iyul',
+  'avgust',
+  'sentabr',
+  'oktabr',
+  'noyabr',
+  'dekabr',
+];
+
 /** Barcha o'zbekcha matnlar. Yangi til qo'shish uchun shu tuzilmani nusxalab tarjima qiling. */
 export const uz = {
   common: {
@@ -93,8 +108,33 @@ export const uz = {
     askDressCode: 'Kiyim uslubi?',
     askMusic: '🎵 Fon musiqasi kerakmi?\nAudio yuboring yoki o‘tkazib yuboring.',
     skipButton: '⏭ O‘tkazib yuborish',
+    skipRestButton: '⏭⏭ Qolganini o‘tkazish',
     cancelButton: '❌ Bekor qilish',
     backButton: '◀️ Orqaga',
+    // Qadam bosqichlari (progress ko'rsatkichi uchun)
+    phaseMain: 'Asosiy',
+    phaseExtra: 'Qo‘shimcha',
+    optionalHint: 'ixtiyoriy',
+    // Ixtiyoriy ma'lumot darvozasi (asosiylardan keyin)
+    gateTitle: [
+      '✅ *Asosiy ma’lumotlar tayyor!*',
+      '',
+      'Qo‘shimcha ma’lumot (vaqt, manzil, rasm, musiqa...) qo‘shasizmi?',
+      'Ular taklifnomani chiroyliroq qiladi — lekin ixtiyoriy.',
+    ].join('\n'),
+    gateYes: '➕ Ha, qo‘shaman',
+    gateNo: '✅ Yo‘q, tayyor',
+    // Vaqt tez tanlovlari (tugma)
+    timeChoices: ['16:00', '17:00', '18:00', '19:00', '20:00', '21:00'],
+    // Kiyim uslubi tez tanlovlari
+    dressClassic: 'Klassik',
+    dressNational: 'Milliy',
+    dressFree: 'Erkin',
+    dateConfirmed: (words: string): string => `✅ Sana: ${words}`,
+    dateWords: (iso: string): string => {
+      const [y, mo, d] = iso.split('-');
+      return `${Number(d)}-${UZ_MONTHS[Number(mo) - 1]}, ${y}-yil`;
+    },
     cancelled: 'Bekor qilindi. Boshlash uchun /start bosing.',
     creating: '⏳ Taklifnomangiz tayyorlanmoqda...',
     errorGeneric: '❌ Kutilmagan xatolik yuz berdi.\nQaytadan boshlash uchun /start bosing.',

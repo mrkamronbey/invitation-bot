@@ -1,5 +1,20 @@
 import type { Messages } from '../index';
 
+const RU_MONTHS = [
+  'января',
+  'февраля',
+  'марта',
+  'апреля',
+  'мая',
+  'июня',
+  'июля',
+  'августа',
+  'сентября',
+  'октября',
+  'ноября',
+  'декабря',
+];
+
 /** Все русские тексты. Структура повторяет uz.ts (тот же тип Messages). */
 export const ru: Messages = {
   common: {
@@ -95,8 +110,29 @@ export const ru: Messages = {
     askDressCode: 'Дресс-код?',
     askMusic: '🎵 Нужна фоновая музыка?\nОтправьте аудио или пропустите.',
     skipButton: '⏭ Пропустить',
+    skipRestButton: '⏭⏭ Пропустить остальное',
     cancelButton: '❌ Отмена',
     backButton: '◀️ Назад',
+    phaseMain: 'Основное',
+    phaseExtra: 'Дополнительно',
+    optionalHint: 'необязательно',
+    gateTitle: [
+      '✅ *Основные данные готовы!*',
+      '',
+      'Добавите доп. данные (время, адрес, фото, музыку...)?',
+      'Они сделают приглашение красивее — но это необязательно.',
+    ].join('\n'),
+    gateYes: '➕ Да, добавлю',
+    gateNo: '✅ Нет, готово',
+    timeChoices: ['16:00', '17:00', '18:00', '19:00', '20:00', '21:00'],
+    dressClassic: 'Классический',
+    dressNational: 'Национальный',
+    dressFree: 'Свободный',
+    dateConfirmed: (words: string): string => `✅ Дата: ${words}`,
+    dateWords: (iso: string): string => {
+      const [y, mo, d] = iso.split('-');
+      return `${Number(d)} ${RU_MONTHS[Number(mo) - 1]} ${y} г.`;
+    },
     cancelled: 'Отменено. Нажмите /start, чтобы начать.',
     creating: '⏳ Ваше приглашение готовится...',
     errorGeneric: '❌ Произошла непредвиденная ошибка.\nНажмите /start, чтобы начать заново.',
