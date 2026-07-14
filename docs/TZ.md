@@ -30,8 +30,8 @@ Kuyov-kelin **Telegram bot** orqali savol-javob tarzida taklifnoma yaratadi (ism
 | 1 | **Telegram-native yaratish** | Raqobatchilar web-forma orqali. Biz botда savol-javob — texnik bo'lmagan kelin-kuyovga oson. **Asosiy farq.** |
 | 2 | **To'liq lokalizatsiya** | O'zbek tili (keyin ru/en), **Yandex Maps** (mahalliy aniq), milliy uslub shablonlar |
 | 3 | **Tezlik va soddalik** | 📍 lokatsiya pin, 🖼 rasm tashlash, tayyor havola |
-| 4 | **Freemium** | Bepul asosiy taklifnoma; premium keyin (branding olib tashlash, premium shablon, ko'proq foto/musiqa) |
-| 5 | **Mahalliy to'lov** *(keyin, ixtiyoriy)* | **Click / Payme** — MVP uchun MAJBURIY EMAS, monetizatsiya bosqichida qo'shiladi |
+| 4 | **Freemium** | Bepul asosiy taklifnoma; premium (branding olib tashlash, premium shablon, ko'proq foto/musiqa) |
+| 5 | **Telegram-native to'lov** | Premium uchun **Telegram Stars (⭐ XTR)** — botга o'rnatilган, provayder kerak emas. Click/Payme keyin (so'mда yechиш uchun) |
 
 ### 1.4. Muhim arxitektura qoidasi
 **Har taklifnoma uchun ALOHIDA deploy YO'Q.** Bitta deploy qilingan web ilova bazadan `slug` bo'yicha ma'lumotni dinamik render qiladi:
@@ -42,6 +42,26 @@ taklif.uz/bobur-va-nigora   → shu bitta ilova, boshqa ma'lumot
 ```
 
 Yangi taklifnoma = **bazaga bitta yozuv**, deploy emas. Bot va web **bitta Supabase bazani** bo'lishadi.
+
+### 1.5. Monetizatsiya — Telegram Stars (⭐)
+
+Premium funksiyalar uchun to'lov **Telegram Stars (XTR)** orqали — Telegram Bot API'ga **o'rnatilган**, tashqи provayder (Click/Payme/Stripe) **kerak emas**.
+
+**Model (freemium):**
+| Reja | Narx | Nima |
+|---|---|---|
+| **Bepbul** | 0 | 1 ta asosiy taklifnoma, standart shablon, "Powered by" branding |
+| **Premium** | ⭐ Stars | Premium/milliy shablon, branding olib tashlash, ko'proq foto, custom musiqa, o'z sub-domen |
+
+**Texnik jihat:**
+- To'lov: `sendInvoice` (`currency: "XTR"`, `provider_token` bo'sh) → `pre_checkout_query` tasdiqlash → `successful_payment` hodisasi → premium yoqiladi (`invitations.is_premium = true`).
+- **Refund:** `refundStarPayment` orqали qaytarиш imkoni.
+- **Pul oqimi:** Starlar **bot balansига** tushади (egasi — biz). Fragment orqали **TON**ga yechилади (~21 kun holding) yoki Telegram Ads'га sarflanади. Shaxsiy profilга "gift" emas — bot balansи.
+- **Ogohlantirish:** iOS/Android ичида Star sotиб olинса, Apple/Google ~30% oladi (platforma solig'и, Telegram cheklovи emas).
+
+**Arxitektура:** to'lov `PaymentPort` (domain port) sifатида — bugun `TelegramStarsAdapter`, ertага `ClickAdapter`/`PaymeAdapter` qo'шиб bo'лади, use-case o'zгармайди (Ports & Adapters).
+
+> **Bosqich:** Stars integratsiyasi — monetizatsiya bosqичида (Bosqич 5). MVP'да barcha funksiya bepul, keyin premium ajratилади.
 
 ---
 
@@ -115,6 +135,7 @@ Yangi taklifnoma = **bazaga bitta yozuv**, deploy emas. Bot va web **bitta Supab
 | `music_url` | `text` null | fon musiqasi URL. Default trek (`/audio/track-1.mp3`) yoki user yuklagan Storage URL. `null` = musiqasiz |
 | `music_source` | `text` default `'none'` | `none` / `default` / `custom` — UI va tahlil uchun |
 | `status` | `text` default `'draft'` | `draft` / `published` |
+| `is_premium` | `boolean` default `false` | Telegram Stars to'lovдан keyin `true` (premium funksiyalar) |
 | `locale` | `text` default `'uz'` | |
 | `created_at` | `timestamptz` default `now()` | |
 | `updated_at` | `timestamptz` default `now()` | |
@@ -370,7 +391,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 ### Bosqich 5 (keyin) — Monetizatsiya & ko'p til
 - [ ] Freemium: bepul asosiy + premium shablon / o'z sub-domen / branding olib tashlash.
-- [ ] **Click / Payme** to'lov integratsiyasi — *ixtiyoriy, MVP uchun majburiy emas*.
+- [ ] **Telegram Stars (⭐)** to'lov — `PaymentPort` + `TelegramStarsAdapter` (`sendInvoice` XTR → `successful_payment` → `is_premium`). Refund (`refundStarPayment`).
+- [ ] **Click / Payme** — keyin, so'mда to'g'ridan-to'g'ri yechиш kerak bo'lganда (`ClickAdapter`/`PaymeAdapter`, use-case o'zгармайди).
 - [ ] ru / en tillari (i18n allaqachon tayyor).
 - [ ] Milliy uslub shablonlar (naqsh + zamonaviy).
 - [ ] Analytics (taklifnoma necha marta ochildi).
