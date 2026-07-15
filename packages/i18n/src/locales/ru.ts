@@ -123,10 +123,15 @@ export const ru: Messages = {
     askTime: 'Во сколько начало?\n(например: 17:00)',
     askVenue: 'Название ресторана / места?',
     askLocation: '📍 Отправьте локацию места\n(внизу 📎 → Локация → выберите точку)',
-    askCover: '🖼 Отправьте главное фото',
+    askCover: '🖼 Отправьте фото\nМожно несколько — будет галерея.',
+    photoAdded: (n: number): string => `✅ Фото ${n} добавлено. Отправьте ещё или «Готово».`,
+    photosDone: '✅ Фото готовы',
     askStory: 'Короткий текст / история?',
     askDressCode: 'Дресс-код?',
-    askMusic: '🎵 Нужна фоновая музыка?\nОтправьте аудио или пропустите.',
+    askMusic: '🎵 Выберите фоновую музыку или отправьте своё аудио:',
+    musicOwn: '🎤 Своя музыка',
+    musicNone: '🔇 Без музыки',
+    askMusicOwn: '🎤 Отправьте аудиофайл:',
     skipButton: '⏭ Пропустить',
     skipRestButton: '⏭⏭ Пропустить остальное',
     cancelButton: '❌ Отмена',
@@ -191,6 +196,24 @@ export const ru: Messages = {
     manageEdit: '✏️ Редактировать',
     manageStats: '📊 Статистика',
     manageDelete: '🗑 Удалить',
+    manageShare: '📤 Пост для рассылки',
+    sharePost: (o: {
+      groom: string;
+      bride: string;
+      dateline: string;
+      venue: string;
+      url: string;
+    }): string =>
+      [
+        '💌 *Приглашаем вас на свадьбу!*',
+        '',
+        `💍 ${o.groom} & ${o.bride}`,
+        `📅 ${o.dateline}`,
+        `📍 ${o.venue}`,
+        '',
+        'Приглашение и подтверждение «приду» 👇',
+        o.url,
+      ].join('\n'),
     editTitle: 'Что изменим?',
     editPrompt: 'Отправьте новое значение:',
     editSaved: '✅ Сохранено.',

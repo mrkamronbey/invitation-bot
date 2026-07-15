@@ -36,6 +36,38 @@ export function registerManage(bot: Bot<BotContext>): void {
     await ctx.conversation.enter('edit-invitation');
   });
 
+  // 📤 Ulashish uchun post — guruhga forward qilinadigan chiroyli xabar
+  bot.callbackQuery(/^share:(.+)$/, async (ctx) => {
+    const id = ctx.match?.[1];
+    const m = botText(ctx);
+    const user = await ensureUser(ctx);
+    await ctx.answerCallbackQuery();
+    if (!id || !user) return;
+    const inv = (await container.listOwnerInvitations.execute(user.id)).find((x) => x.id === id);
+    if (!inv) {
+      await ctx.reply(m.errorGeneric);
+      return;
+    }
+    const url = `${container.env.siteUrl}/${inv.slug}`;
+    const dateline = `${m.dateWords(inv.eventDate)}${inv.eventTime ? ` · ${inv.eventTime}` : ''}`;
+    const caption = m.sharePost({
+      groom: inv.groomName,
+      bride: inv.brideName,
+      dateline,
+      venue: inv.venue?.name ?? '—',
+      url,
+    });
+    if (inv.coverImageUrl) {
+      try {
+        await ctx.replyWithPhoto(inv.coverImageUrl, { caption, parse_mode: 'Markdown' });
+        return;
+      } catch {
+        // Rasm yuborilmasa — matn bilan davom etamiz.
+      }
+    }
+    await ctx.reply(caption, { parse_mode: 'Markdown' });
+  });
+
   // 📊 Statistika
   bot.callbackQuery(/^stats:(.+)$/, async (ctx) => {
     const id = ctx.match?.[1];

@@ -1,4 +1,5 @@
 import { InlineKeyboard, Keyboard } from 'grammy';
+import { DEFAULT_MUSIC } from '@invitation/contracts';
 import type { Messages } from '@invitation/i18n';
 
 type M = Messages['bot'];
@@ -85,6 +86,22 @@ export function dressChoicesKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
   return appendControls(kb, m, opts);
 }
 
+/** Musiqa tanlovi — tayyor kuylar + o'z musiqasi + musiqasiz. */
+export function musicKeyboard(m: M, opts: FlowOpts = {}): Keyboard {
+  const kb = new Keyboard();
+  for (const track of DEFAULT_MUSIC) kb.text(track.name);
+  kb.row().text(m.musicOwn).text(m.musicNone).row();
+  return appendControls(kb, m, opts);
+}
+
+/** Rasm(lar) — bir nechta yuborilgach "Tayyor" chiqadi. */
+export function photosKeyboard(m: M, count: number, opts: FlowOpts = {}): Keyboard {
+  const kb = new Keyboard();
+  if (count > 0) kb.text(m.photosDone).row();
+  else kb.text(m.skipButton).row();
+  return appendControls(kb, m, opts);
+}
+
 /** Ixtiyoriy ma'lumot darvozasi — inline (Ha, qo'shaman / Yo'q, tayyor). */
 export function gateKeyboard(m: M): InlineKeyboard {
   return new InlineKeyboard().text(m.gateYes, 'gate:yes').text(m.gateNo, 'gate:no');
@@ -112,7 +129,9 @@ export function manageKeyboard(m: M, invitationId: string, link: string): Inline
     .text(m.manageStats, `stats:${invitationId}`)
     .row()
     .text(m.manageEdit, `edit:${invitationId}`)
-    .text(m.manageDelete, `del:${invitationId}`);
+    .text(m.manageDelete, `del:${invitationId}`)
+    .row()
+    .text(m.manageShare, `share:${invitationId}`);
 }
 
 /** Tahrirlanadigan maydonlar — inline. */
@@ -143,7 +162,7 @@ export function editFieldsKeyboard(m: M): InlineKeyboard {
 export function afterCreateKeyboard(m: M, invitationId: string, link: string): InlineKeyboard {
   return new InlineKeyboard()
     .url(m.openButton, link)
-    .url(m.shareButton, `https://t.me/share/url?url=${encodeURIComponent(link)}`)
+    .text(m.manageShare, `share:${invitationId}`)
     .row()
     .text(m.manageEdit, `edit:${invitationId}`)
     .text(m.newButton, 'menu:new');

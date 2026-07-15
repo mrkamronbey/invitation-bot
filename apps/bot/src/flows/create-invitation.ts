@@ -1,4 +1,4 @@
-import { type CreateInvitationInput, TEMPLATE_CATALOG } from '@invitation/contracts';
+import { type CreateInvitationInput, DEFAULT_MUSIC, TEMPLATE_CATALOG } from '@invitation/contracts';
 import { getMessages } from '@invitation/i18n';
 import { container } from '../composition';
 import {
@@ -9,6 +9,8 @@ import {
   gateKeyboard,
   locationKeyboard,
   mainReplyKeyboard,
+  musicKeyboard,
+  photosKeyboard,
   timeChoicesKeyboard,
 } from '../keyboards/menu';
 import { buildCalendar } from '../keyboards/calendar';
@@ -29,7 +31,7 @@ const OPT_TOTAL = 4;
 
 interface Music {
   url: string | undefined;
-  source: 'none' | 'custom';
+  source: 'none' | 'custom' | 'default';
 }
 
 interface Collected {
@@ -40,10 +42,13 @@ interface Collected {
   venueName?: string;
   location?: { lat: number; lng: number };
   coverImageUrl?: string;
+  gallery?: string[];
   story?: string;
   dressCode?: string;
   music: Music;
 }
+
+const MAX_PHOTOS = 8;
 
 type Msg = ReturnType<typeof getMessages>['bot'];
 
@@ -325,23 +330,42 @@ async function askDress(
   return txt;
 }
 
-async function askCover(
+/** Rasm(lar) — bir nechta yuborish mumkin; birinchisi cover, qolgani galereya. */
+async function askPhotos(
   conversation: BotConversation,
   ctx: BotContext,
   m: Msg,
   n: number,
-): Promise<Ctrl<string | undefined>> {
+): Promise<Ctrl<string[]>> {
+  const urls: string[] = [];
   await ctx.reply(optPrompt(m, n, m.askCover), {
-    reply_markup: flowKeyboard(m, { optional: true, canBack: true, skipRest: true }),
+    reply_markup: photosKeyboard(m, 0, { canBack: true, skipRest: true }),
   });
-  const res = await conversation.wait();
-  const photos = res.message?.photo;
-  const largest = photos?.[photos.length - 1];
-  if (largest) {
-    return uploadTelegramFile(conversation, ctx, largest.file_id, 'covers', 'image/jpeg', 'jpg');
+  for (;;) {
+    const res = await conversation.wait();
+    const photos = res.message?.photo;
+    const largest = photos?.[photos.length - 1];
+    if (largest) {
+      const url = await uploadTelegramFile(
+        conversation,
+        ctx,
+        largest.file_id,
+        'covers',
+        'image/jpeg',
+        'jpg',
+      );
+      if (url) urls.push(url);
+      if (urls.length >= MAX_PHOTOS) return urls;
+      await ctx.reply(m.photoAdded(urls.length), {
+        reply_markup: photosKeyboard(m, urls.length, { canBack: true, skipRest: true }),
+      });
+      continue;
+    }
+    const txt = (res.message?.text ?? '').trim();
+    if (txt === m.photosDone || txt === m.skipButton) return urls;
+    const ctrl = await readControl(ctx, m, txt);
+    if (ctrl !== null) return ctrl;
   }
-  const ctrl = await readControl(ctx, m, (res.message?.text ?? '').trim());
-  return ctrl !== null ? ctrl : undefined;
 }
 
 async function askMusic(
@@ -351,24 +375,67 @@ async function askMusic(
   n: number,
 ): Promise<Ctrl<Music>> {
   await ctx.reply(optPrompt(m, n, m.askMusic), {
-    reply_markup: flowKeyboard(m, { optional: true, canBack: true, skipRest: true }),
+    reply_markup: musicKeyboard(m, { canBack: true, skipRest: true }),
   });
-  const res = await conversation.wait();
-  const audio = res.message?.audio ?? res.message?.voice;
-  if (audio) {
-    const url = await uploadTelegramFile(
-      conversation,
-      ctx,
-      audio.file_id,
-      'music',
-      'audio/mpeg',
-      'mp3',
-    );
-    return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+  for (;;) {
+    const res = await conversation.wait();
+    const audio = res.message?.audio ?? res.message?.voice;
+    if (audio) {
+      const url = await uploadTelegramFile(
+        conversation,
+        ctx,
+        audio.file_id,
+        'music',
+        'audio/mpeg',
+        'mp3',
+      );
+      return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+    }
+    const txt = (res.message?.text ?? '').trim();
+
+    const track = DEFAULT_MUSIC.find((t) => t.name === txt);
+    if (track) return { url: track.url, source: 'default' };
+    if (txt === m.musicNone || txt === m.skipButton) return { url: undefined, source: 'none' };
+
+    if (txt === m.musicOwn) {
+      const own = await askOwnMusic(conversation, ctx, m);
+      if (own !== 'menu') return own;
+      await ctx.reply(optPrompt(m, n, m.askMusic), {
+        reply_markup: musicKeyboard(m, { canBack: true, skipRest: true }),
+      });
+      continue;
+    }
+
+    const ctrl = await readControl(ctx, m, txt);
+    if (ctrl !== null) return ctrl;
   }
-  const ctrl = await readControl(ctx, m, (res.message?.text ?? '').trim());
-  if (ctrl !== null) return ctrl;
-  return { url: undefined, source: 'none' };
+}
+
+/** "O'z musiqam" — audio kutadi; ◀️ orqaga bosilса menyuga qaytadi. */
+async function askOwnMusic(
+  conversation: BotConversation,
+  ctx: BotContext,
+  m: Msg,
+): Promise<Ctrl<Music> | 'menu'> {
+  await ctx.reply(m.askMusicOwn, { reply_markup: flowKeyboard(m, { canBack: true }) });
+  for (;;) {
+    const res = await conversation.wait();
+    const audio = res.message?.audio ?? res.message?.voice;
+    if (audio) {
+      const url = await uploadTelegramFile(
+        conversation,
+        ctx,
+        audio.file_id,
+        'music',
+        'audio/mpeg',
+        'mp3',
+      );
+      return url ? { url, source: 'custom' } : { url: undefined, source: 'none' };
+    }
+    const ctrl = await readControl(ctx, m, (res.message?.text ?? '').trim());
+    if (ctrl === BACK) return 'menu';
+    if (ctrl === SKIPALL) return SKIPALL;
+  }
 }
 
 /**
@@ -387,9 +454,12 @@ async function collectOptional(
     let ctrl: typeof BACK | typeof SKIPALL | null = null;
     switch (i) {
       case 0: {
-        const r = await askCover(conversation, ctx, m, n);
+        const r = await askPhotos(conversation, ctx, m, n);
         if (r === BACK || r === SKIPALL) ctrl = r;
-        else d.coverImageUrl = r;
+        else if (r.length > 0) {
+          d.coverImageUrl = r[0];
+          d.gallery = r.slice(1);
+        }
         break;
       }
       case 1: {
@@ -444,10 +514,10 @@ function reviewText(m: Msg, templateId: string, d: Collected): string {
     `📅 ${L.date}: ${m.dateWords(d.eventDate)}${d.eventTime ? ` · ${d.eventTime}` : ''}`,
     `🏛 ${L.venue}: ${d.venueName ?? L.none}`,
     `📍 ${L.location}: ${d.location ? L.yes : L.none}`,
-    `🖼 ${L.photo}: ${d.coverImageUrl ? L.yes : L.none}`,
+    `🖼 ${L.photo}: ${d.coverImageUrl ? `${L.yes} (${1 + (d.gallery?.length ?? 0)})` : L.none}`,
     `📝 ${L.story}: ${d.story ?? L.none}`,
     `👗 ${L.dress}: ${d.dressCode ?? L.none}`,
-    `🎵 ${L.music}: ${d.music.source === 'custom' ? L.yes : L.none}`,
+    `🎵 ${L.music}: ${d.music.source !== 'none' ? L.yes : L.none}`,
   ].join('\n');
 }
 
@@ -512,6 +582,7 @@ export async function createInvitationFlow(
     story: d.story,
     dressCode: d.dressCode,
     coverImageUrl: d.coverImageUrl,
+    gallery: d.gallery,
     musicUrl: d.music.url,
     musicSource: d.music.source,
   };

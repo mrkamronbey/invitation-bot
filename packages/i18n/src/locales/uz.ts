@@ -106,10 +106,15 @@ export const uz = {
     askTime: 'Nechada boshlanadi?\n(masalan: 17:00)',
     askVenue: "To'yxona nomi?",
     askLocation: "📍 To'yxona lokatsiyasini yuboring\n(pastdagi 📎 → Lokatsiya → joyni tanlang)",
-    askCover: '🖼 Asosiy rasmni yuboring',
+    askCover: '🖼 Rasm(lar)ni yuboring\nBir nechta rasm yuborsangiz — galereya bo‘ladi.',
+    photoAdded: (n: number): string => `✅ ${n}-rasm qo‘shildi. Yana yuboring yoki “Tayyor”.`,
+    photosDone: '✅ Rasmlar tayyor',
     askStory: 'Qisqa matn / hikoya?',
     askDressCode: 'Kiyim uslubi?',
-    askMusic: '🎵 Fon musiqasi kerakmi?\nAudio yuboring yoki o‘tkazib yuboring.',
+    askMusic: '🎵 Fon musiqasini tanlang yoki o‘z audioyingizni yuboring:',
+    musicOwn: '🎤 O‘z musiqam',
+    musicNone: '🔇 Musiqasiz',
+    askMusicOwn: '🎤 Audio faylni yuboring:',
     skipButton: '⏭ O‘tkazib yuborish',
     skipRestButton: '⏭⏭ Qolganini o‘tkazish',
     cancelButton: '❌ Bekor qilish',
@@ -179,6 +184,24 @@ export const uz = {
     manageEdit: '✏️ Tahrirlash',
     manageStats: '📊 Statistika',
     manageDelete: '🗑 O‘chirish',
+    manageShare: '📤 Ulashish uchun post',
+    sharePost: (o: {
+      groom: string;
+      bride: string;
+      dateline: string;
+      venue: string;
+      url: string;
+    }): string =>
+      [
+        '💌 *Sizni to‘yga taklif qilamiz!*',
+        '',
+        `💍 ${o.groom} & ${o.bride}`,
+        `📅 ${o.dateline}`,
+        `📍 ${o.venue}`,
+        '',
+        'Taklifnoma va “kelaman” tasdiqlash 👇',
+        o.url,
+      ].join('\n'),
     editTitle: 'Nimani o‘zgartiramiz?',
     editPrompt: 'Yangi qiymatni yuboring:',
     editSaved: '✅ Saqlandi.',
