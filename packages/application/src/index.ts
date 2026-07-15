@@ -5,3 +5,4 @@ export * from './use-cases/list-owner-invitations';
 export * from './use-cases/update-invitation';
 export * from './use-cases/delete-invitation';
 export * from './use-cases/get-invitation-stats';
+export * from './use-cases/list-wishes';

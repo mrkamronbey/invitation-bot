@@ -7,6 +7,7 @@ export interface SessionData {
   templateId?: string;
   ownerId?: string;
   editInvitationId?: string;
+  guestInvitationId?: string;
 }
 
 /** Bot konteksti — session + conversations flavor bilan. */

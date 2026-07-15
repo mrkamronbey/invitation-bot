@@ -7,6 +7,7 @@ import { Countdown } from '@/widgets/countdown/Countdown';
 import { Gallery } from '@/widgets/gallery/Gallery';
 import { MapBlock } from '@/widgets/map/MapBlock';
 import { MusicToggle } from '@/widgets/music/MusicToggle';
+import { WishesWall } from '@/widgets/wishes/WishesWall';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 
 interface InvitationBodyProps {
@@ -67,6 +68,8 @@ export function InvitationBody({ invitation }: InvitationBodyProps): ReactNode {
           <Gallery images={invitation.gallery} />
         </Section>
       ) : null}
+
+      <WishesWall slug={invitation.slug} locale={invitation.locale} />
 
       <Section title={m.web.rsvpTitle} className="pb-20">
         <Reveal>

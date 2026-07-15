@@ -131,7 +131,13 @@ export function manageKeyboard(m: M, invitationId: string, link: string): Inline
     .text(m.manageEdit, `edit:${invitationId}`)
     .text(m.manageDelete, `del:${invitationId}`)
     .row()
-    .text(m.manageShare, `share:${invitationId}`);
+    .text(m.manageShare, `share:${invitationId}`)
+    .text(m.manageGuest, `guest:${invitationId}`);
+}
+
+/** Shaxsiy havola oqimida — faqat "Tayyor" (reply). */
+export function guestLinkKeyboard(m: M): Keyboard {
+  return new Keyboard().text(m.editDone).resized();
 }
 
 /** Tahrirlanadigan maydonlar — inline. */

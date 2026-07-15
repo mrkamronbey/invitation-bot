@@ -5,6 +5,7 @@ import type { BotContext, SessionData } from './context';
 import { botText } from './i18n';
 import { createInvitationFlow } from './flows/create-invitation';
 import { editInvitationFlow } from './flows/edit-invitation';
+import { guestLinkFlow } from './flows/guest-link';
 import { mainReplyKeyboard } from './keyboards/menu';
 import { registerStart } from './handlers/start';
 import { registerMyInvites } from './handlers/myinvites';
@@ -24,6 +25,7 @@ export function createBot(): Bot<BotContext> {
   bot.use(conversations());
   bot.use(createConversation(createInvitationFlow, 'create-invitation'));
   bot.use(createConversation(editInvitationFlow, 'edit-invitation'));
+  bot.use(createConversation(guestLinkFlow, 'guest-link'));
 
   registerStart(bot);
   registerMyInvites(bot);

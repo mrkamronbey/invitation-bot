@@ -36,6 +36,17 @@ export function registerManage(bot: Bot<BotContext>): void {
     await ctx.conversation.enter('edit-invitation');
   });
 
+  // 📇 Shaxsiy havola → mehmon ismi bilan oqim
+  bot.callbackQuery(/^guest:(.+)$/, async (ctx) => {
+    const id = ctx.match?.[1];
+    const user = await ensureUser(ctx);
+    await ctx.answerCallbackQuery();
+    if (!id || !user) return;
+    ctx.session.guestInvitationId = id;
+    ctx.session.ownerId = user.id;
+    await ctx.conversation.enter('guest-link');
+  });
+
   // 📤 Ulashish uchun post — guruhga forward qilinadigan chiroyli xabar
   bot.callbackQuery(/^share:(.+)$/, async (ctx) => {
     const id = ctx.match?.[1];

@@ -140,6 +140,7 @@ export function registerStart(bot: Bot<BotContext>): void {
   bot.command('cancel', async (ctx) => {
     await ctx.conversation.exit('create-invitation');
     await ctx.conversation.exit('edit-invitation');
+    await ctx.conversation.exit('guest-link');
     const m = botText(ctx);
     await ctx.reply(m.cancelled, { reply_markup: mainReplyKeyboard(m) });
   });
