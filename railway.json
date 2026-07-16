@@ -1,0 +1,12 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "echo 'bot tsx runtime bilan ishlaydi — build shart emas'"
+  },
+  "deploy": {
+    "startCommand": "pnpm --filter @invitation/bot start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
