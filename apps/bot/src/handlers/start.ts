@@ -73,6 +73,18 @@ async function sendTemplateChooser(ctx: BotContext): Promise<void> {
   await ctx.reply(m.chooseTemplate, { reply_markup: templatesKeyboard('tpl') });
 }
 
+/** Shablonni belgilaydi va yaratish oqimiga kiradi (foydalanuvchini ta'minlab). */
+async function enterCreate(ctx: BotContext, templateId: string): Promise<void> {
+  const user = await ensureUser(ctx);
+  if (!user) {
+    await ctx.reply(getMessages(localeOf(ctx)).common.error);
+    return;
+  }
+  ctx.session.templateId = templateId;
+  ctx.session.ownerId = user.id;
+  await ctx.conversation.enter('create-invitation');
+}
+
 /** Tilni sessiya va foydalanuvchi profiliga yozadi. */
 async function applyLanguage(ctx: BotContext, lang: Locale): Promise<void> {
   ctx.session.lang = lang;
@@ -164,20 +176,23 @@ export function registerStart(bot: Bot<BotContext>): void {
   // Inline "Yaratish / Yana yaratish" tugmasi
   bot.callbackQuery('menu:new', async (ctx) => {
     await ctx.answerCallbackQuery();
+    // Bitta shablon bo'lsa — tanlash qadamini o'tkazib, to'g'ridan-to'g'ri
+    // yaratishga kiramiz. Shablonlar ko'paysa — tanlov qayta ochiladi.
+    if (TEMPLATE_CATALOG.length === 1) {
+      await enterCreate(ctx, TEMPLATE_CATALOG[0]!.id);
+      return;
+    }
     await sendTemplateChooser(ctx);
   });
 
-  // Shablon tanlandi → yaratish oqimiga kirish
+  // Shablon tanlandi → yaratish oqimiga kirish (ko'p shablonli holat)
   bot.callbackQuery(/^tpl:(.+)$/, async (ctx) => {
-    const templateId = ctx.match ? ctx.match[1] : undefined;
-    const user = await ensureUser(ctx);
     await ctx.answerCallbackQuery();
-    if (!templateId || !user) {
+    const templateId = ctx.match ? ctx.match[1] : undefined;
+    if (!templateId) {
       await ctx.reply(getMessages(localeOf(ctx)).common.error);
       return;
     }
-    ctx.session.templateId = templateId;
-    ctx.session.ownerId = user.id;
-    await ctx.conversation.enter('create-invitation');
+    await enterCreate(ctx, templateId);
   });
 }
