@@ -23,7 +23,7 @@ export function loadEnv(): BotEnv {
   }
 
   const bannerUrl = process.env.WELCOME_BANNER_URL ?? DEFAULT_BANNER;
-  const demoUrl = process.env.DEMO_INVITATION_URL ?? `${siteUrl}/aziz-va-malika`;
+  const demoUrl = process.env.DEMO_INVITATION_URL ?? `${siteUrl}/i/aziz-va-malika`;
 
   return { botToken, supabaseUrl, supabaseServiceKey, siteUrl, bannerUrl, demoUrl };
 }

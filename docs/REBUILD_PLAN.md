@@ -1,6 +1,6 @@
 # Rebuild Plan — Web platforma + bot (Royal only)
 
-> Holat: **REJA (tasdiqlash kutilmoqda)**. Kod hali o'zgartirilmadi.
+> Holat: **BAJARILDI ✅ (1–10 bosqich)**. Deploy sozlash — `docs/DEPLOY.md`.
 > Sana: 2026-07-23. Muallif: platforma rejasi.
 
 Bu hujjat foydalanuvchi g'oyasini bosqichma-bosqich amalga oshirish rejasi.
