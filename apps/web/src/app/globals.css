@@ -101,3 +101,40 @@ body {
     animation: none;
   }
 }
+
+/* Suzuvchi barg — sekin tebranib aylanadi (konvert + emerald hero) */
+@keyframes leaf-drift {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+.leaf-drift {
+  animation: leaf-drift 7s ease-in-out infinite;
+}
+
+/* Oltin yaltirash — sarlavha ostidagi chiziq/urg'u uchun */
+@keyframes gold-shimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.gold-shimmer {
+  animation: gold-shimmer 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaf-drift,
+  .gold-shimmer {
+    animation: none;
+  }
+}

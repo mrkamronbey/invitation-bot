@@ -14,6 +14,10 @@ const config: Config = {
         sage: '#8ea67f', // eukalipt bargi (yashil)
         'sage-dark': '#6f8663', // to'q barg
         rose: '#efe3d8', // atirgul rangi (krem-pushti)
+        emerald: '#0f3d2e', // zumrad (Emerald shablon foni)
+        'emerald-deep': '#082019', // eng to'q zumrad
+        'gold-light': '#d8bd82', // yorqinroq oltin (to'q fon uchun)
+        ivory: '#f4efe3', // fil suyagi (to'q fonda matn)
       },
       fontFamily: {
         // Gilroy — default (tana, UI). Fayl bo'lmasa tizim shriftiga tushadi.

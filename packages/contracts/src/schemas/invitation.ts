@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const templateIdSchema = z.enum(['classic', 'modern', 'minimal', 'floral', 'parallax']);
+export const templateIdSchema = z.enum([
+  'classic',
+  'modern',
+  'minimal',
+  'floral',
+  'parallax',
+  'emerald',
+]);
 export const musicSourceSchema = z.enum(['none', 'default', 'custom']);
 
 export const locationSchema = z.object({
