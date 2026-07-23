@@ -12,11 +12,16 @@ import { DeleteInvitationButton } from '@/features/dashboard/DeleteInvitationBut
 
 export const dynamic = 'force-dynamic';
 
+interface PageProps {
+  readonly searchParams: Promise<{ readonly saved?: string }>;
+}
+
 /** Shaxsiy kabinet — foydalanuvchi taklifnomalari ro'yxati va boshqaruv. */
-export default async function DashboardPage(): Promise<ReactNode> {
+export default async function DashboardPage({ searchParams }: PageProps): Promise<ReactNode> {
   const session = await getSession();
   if (!session) redirect('/login');
 
+  const { saved } = await searchParams;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
   const invitations = await listMyInvitations(session.sub);
   const stats = await Promise.all(
@@ -35,11 +40,16 @@ export default async function DashboardPage(): Promise<ReactNode> {
               Salom, {session.name}! Bu yerda taklifnomalaringizni boshqarasiz.
             </p>
           </div>
-          {/* Yangi taklifnoma — 8-bosqichda ochiladi */}
-          <Button disabled title="Tez orada">
-            + Yangi taklifnoma
+          <Button asChild>
+            <Link href="/dashboard/new">+ Yangi taklifnoma</Link>
           </Button>
         </div>
+
+        {saved ? (
+          <p className="mt-6 rounded-lg bg-primary/15 px-4 py-3 text-sm text-primary">
+            ✓ Saqlandi! Taklifnoma tayyor — havolani nusxalab ulashishingiz mumkin.
+          </p>
+        ) : null}
 
         {invitations.length === 0 ? (
           <Card className="mt-10">
@@ -106,8 +116,8 @@ export default async function DashboardPage(): Promise<ReactNode> {
                         </Link>
                       </Button>
                       <CopyLinkButton url={link} />
-                      <Button size="sm" variant="ghost" disabled title="Tez orada">
-                        Tahrir
+                      <Button asChild size="sm" variant="ghost">
+                        <Link href={`/dashboard/${inv.id}/edit`}>Tahrir</Link>
                       </Button>
                       <DeleteInvitationButton id={inv.id} label="O‘chirish" />
                     </div>
