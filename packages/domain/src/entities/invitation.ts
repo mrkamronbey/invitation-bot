@@ -1,4 +1,11 @@
-export type TemplateId = 'classic' | 'modern' | 'minimal' | 'floral' | 'parallax' | 'emerald';
+export type TemplateId =
+  | 'classic'
+  | 'modern'
+  | 'minimal'
+  | 'floral'
+  | 'parallax'
+  | 'emerald'
+  | 'royal';
 export const TEMPLATE_IDS: readonly TemplateId[] = [
   'classic',
   'modern',
@@ -6,6 +13,7 @@ export const TEMPLATE_IDS: readonly TemplateId[] = [
   'floral',
   'parallax',
   'emerald',
+  'royal',
 ];
 
 export type InvitationStatus = 'draft' | 'published';

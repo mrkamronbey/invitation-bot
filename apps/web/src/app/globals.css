@@ -138,3 +138,45 @@ body {
     animation: none;
   }
 }
+
+/* Royal — tushuvchi atirgul bargi (hero ustida sekin yog'iladi) */
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) translateX(var(--drift, 30px)) rotate(320deg);
+    opacity: 0;
+  }
+}
+.royal-petal {
+  animation-name: petal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* Royal — burchak buketlarining nozik tebranishi */
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(1.6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .royal-petal {
+    animation: none;
+    opacity: 0;
+  }
+}

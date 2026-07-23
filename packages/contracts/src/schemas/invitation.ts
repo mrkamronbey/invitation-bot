@@ -7,6 +7,7 @@ export const templateIdSchema = z.enum([
   'floral',
   'parallax',
   'emerald',
+  'royal',
 ]);
 export const musicSourceSchema = z.enum(['none', 'default', 'custom']);
 

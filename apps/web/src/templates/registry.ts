@@ -5,6 +5,7 @@ import { minimalTemplate } from './minimal';
 import { floralTemplate } from './floral';
 import { parallaxTemplate } from './parallax';
 import { emeraldTemplate } from './emerald';
+import { royalTemplate } from './royal';
 
 /**
  * Shablon registry (plagin — Open/Closed). Yangi shablon = shu yerga bitta yozuv,
@@ -17,6 +18,7 @@ export const templates: Record<string, TemplateMeta> = {
   floral: floralTemplate,
   parallax: parallaxTemplate,
   emerald: emeraldTemplate,
+  royal: royalTemplate,
 };
 
 export function getTemplate(id: string): TemplateMeta {
