@@ -19,7 +19,10 @@ bo'lmasa keyingisiga o'tilmaydi.
    mumkin.
 5. Yaratgandan so'ng **natija sahifasi**da **preview + taklifnoma linki** beriladi.
    Link **unique** — birov boshqasining taklifnomasini ko'rib qolmasin.
-6. **Shablonlardan faqat oxirgi (Royal)** qoladi, qolganlari o'chiriladi.
+6. **Ko'p-shablonli arxitektura SAQLANADI.** Hozircha faqat **Royal** faol qoladi
+   (eski, sifatsiz shablonlar o'chiriladi), lekin plagin/registry tizimi
+   o'zgarmaydi — web tayyor bo'lgach **boshqa shablonlar qayta qo'shiladi**
+   (yangi shablon = bitta papka + registry'ga bitta yozuv).
 7. Frontend qismini **qaytadan** (Next.js, TS, Tailwind, shadcn/ui) quramiz.
 
 ---
@@ -163,24 +166,30 @@ qayta ishlatadi va anonim yozuvga yo'l qo'ymaydi.
 ### Bosqich 0 — Qarorlarni tasdiqlash
 - D2, D3, D5, D6 bo'yicha javob. (Bu hujjat asosida.)
 
-### Bosqich 1 — O'lik kodni tozalash
-- Shablonlarni o'chirish: `classic, modern, minimal, floral, parallax, emerald`
-  (papkalari bilan). **Royal** qoladi.
-- `registry.ts` → faqat `royal`. `getTemplate` fallback ham `royal`.
+### Bosqich 1 — O'lik kodni tozalash (arxitektura ko'p-shablonli qoladi!)
+- Eski shablon **fayllarini** o'chirish: `classic, modern, minimal, floral, parallax,
+  emerald` (papkalari bilan). **Royal** qoladi. ⚠️ Plagin/registry **tizimini
+  o'chirmaymiz** — keyin yangi shablonlar shu tizimga qo'shiladi.
+- `registry.ts` → hozircha faqat `royal` **yozuvi** (tizim o'zi ko'p-shablonli qoladi).
+  `getTemplate` fallback → `royal`.
 - Ishlatilmagan shared/widget'lar (Royal import qilmaydiganlar) — tekshirib o'chirish:
   `shared/ui/Leaves, Section, floral, ornaments`(landing rebuilddan keyin),
   `widgets/gallery, invitation-body, map, music` (agar hech kim ishlatmasa).
 - Ishlatilmagan rasmlar: `emerald-frame-real.png, floral-cover.jpg, floral-frame-real.png,
   frame-floral.png` (Royal `/images/royal/*` dan foydalanadi).
-- Bot: shablon tanlash qadamini olib tashlash → default `royal`
-  (`keyboards/templates.ts` o'chadi yoki soddalashadi).
+- Bot: shablon tanlash **registry'dan** quriladi (hozir 1 ta → avtomatik Royal).
+  `keyboards/templates.ts` **o'chirilmaydi** — faqat registry'ga bog'lanadi.
 - `demo.ts` `templateId: 'royal'` (allaqachon shunday).
 - **Natija:** build yashil, faqat Royal ishlaydi.
 
 ### Bosqich 2 — Domain/contracts + DB
-- `TemplateId = 'royal'` (union, `TEMPLATE_IDS`, zod enum) — bittaga qisqaradi.
+- `TemplateId` **union'ni qattiq cheklamaymiz** — hozir `TEMPLATE_IDS`/zod enum'da faqat
+  `'royal'`, lekin yangi shablon qo'shishda faqat shu ro'yxatga bitta id qo'shiladi
+  (tur tizimi ko'p-shablonli qoladi).
 - `Invitation` entity'ga `parents/schedule/gift` (ixtiyoriy) qo'shish.
-- Migratsiya: template CHECK → `'royal'`; `parents/schedule/gift jsonb`.
+- Migratsiya: `invitations.template_id` **CHECK constraint'ini olib tashlash**
+  (yoki keng qilish) — shunda kelajakda har yangi shablon uchun alohida migratsiya
+  shart bo'lmaydi. `parents/schedule/gift jsonb` qo'shiladi.
 - Mapper'lar (infra) yangilanadi.
 
 ### Bosqich 3 — Unique link (slug)
@@ -211,7 +220,10 @@ qayta ishlatadi va anonim yozuvga yo'l qo'ymaydi.
 
 ### Bosqich 9 — Botni moslash
 - Ro'yxat (`ensureUser`) — o'zgarmaydi.
-- Shablon tanlash yo'q (royal). Yaratish oxirida preview + unique link.
+- Shablon tanlash qadami **registry'dagi shablon soniga qarab shartli**: 1 ta bo'lsa
+  avtomatik tanlanadi (hozir — Royal), keyin shablonlar ko'paysa tanlov qayta ochiladi.
+  (`keyboards/templates.ts` registry'dan quriladi — o'chirilmaydi.)
+- Yaratish oxirida preview + unique link.
 - (Ixtiyoriy) `/kirish` — saytga magic-link.
 - Bot ham `Create/Update` use-case'larni ishlatadi (o'zgarishsiz).
 
@@ -230,7 +242,7 @@ qayta ishlatadi va anonim yozuvga yo'l qo'ymaydi.
 - `src/shared/ui/floral.tsx`, `ornaments.tsx` — **landing rebuilddan keyin**
 - `src/widgets/{gallery,invitation-body,map,music}/**` — import tekshirib
 - `public/images/{emerald-frame-real.png, floral-cover.jpg, floral-frame-real.png, frame-floral.png}`
-- Bot: `keyboards/templates.ts` (yoki soddalashtirish)
+- Bot: `keyboards/templates.ts` — **qoladi** (registry'dan quriladi, 1 ta shablonda avto-tanlov)
 
 **Qoladi (Royal ishlatadi):**
 - `templates/royal/**`
