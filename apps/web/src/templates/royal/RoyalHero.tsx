@@ -44,10 +44,10 @@ export function RoyalHero({ groom, bride, eyebrow }: RoyalHeroProps): ReactNode 
       {/* miltillovchi yulduzchalar */}
       <RoyalStars />
 
-      {/* bitta ingichka oltin ramka */}
+      {/* bitta ingichka oltin ramka — kichikroq va markazda */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-5 z-0 border border-gold-light/55 sm:inset-8"
+        className="pointer-events-none absolute inset-y-8 left-[9%] right-[9%] z-0 border border-gold-light/60 sm:inset-y-12"
       />
 
       {/* Diagonal ikki buket (ramka ustidan oshadi) */}

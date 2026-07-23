@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { TemplateProps } from '../types';
 import { formatEventDate, formatEventTime } from '@/shared/lib/format';
 import { RoyalCover } from './RoyalCover';
@@ -19,7 +19,14 @@ export function RoyalTemplate({ invitation }: TemplateProps): ReactNode {
   const kicker = ru ? 'Приглашение' : 'Taklifnoma';
   const eyebrow = ru ? 'Приглашаем вас на нашу свадьбу' : 'Sizni to‘yimizga taklif qilamiz';
 
+  // Royal ichida barcha `font-display` matni Playfair Display'ga o'tadi
+  // (--font-display o'zgaruvchisini shu daraxtda qayta belgilaymiz).
+  const royalFont = {
+    '--font-display': 'var(--font-royal)',
+  } as CSSProperties;
+
   return (
+    <div style={royalFont}>
     <RoyalCover
       groom={invitation.groomName}
       bride={invitation.brideName}
@@ -36,5 +43,6 @@ export function RoyalTemplate({ invitation }: TemplateProps): ReactNode {
         </div>
       </main>
     </RoyalCover>
+    </div>
   );
 }
