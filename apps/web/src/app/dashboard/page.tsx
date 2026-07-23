@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { getSession } from '@/shared/auth/current-user';
+import { SiteHeader } from '@/widgets/site-header/SiteHeader';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Button } from '@/shared/ui/button';
 
 /**
  * Dashboard (vaqtinchalik minimal) — sessiyani tekshiradi va foydalanuvchini
@@ -12,24 +15,26 @@ export default async function DashboardPage(): Promise<ReactNode> {
   if (!session) redirect('/login');
 
   return (
-    <main className="min-h-screen bg-emerald-deep px-6 py-16 text-ivory">
-      <div className="mx-auto max-w-2xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-gold-light/80">Dashboard</p>
-        <h1 className="mt-2 font-display text-4xl text-ivory">Salom, {session.name}! 👋</h1>
-        <p className="mt-3 text-ivory/70">
+    <div className="min-h-screen bg-background text-foreground">
+      <SiteHeader userName={session.name} />
+      <main className="mx-auto max-w-5xl px-6 py-12">
+        <p className="text-xs uppercase tracking-[0.3em] text-primary/80">Dashboard</p>
+        <h1 className="mt-2 font-display text-4xl">Salom, {session.name}! 👋</h1>
+        <p className="mt-2 max-w-xl text-muted-foreground">
           Bu yer — sizning shaxsiy kabinetingiz. Tez orada shu yerda barcha
-          taklifnomalaringiz ro‘yxati, yaratish va tahrirlash bo‘ladi.
+          taklifnomalaringiz, yaratish va tahrirlash bo‘ladi.
         </p>
 
-        <form action="/api/auth/logout" method="post" className="mt-8">
-          <button
-            type="submit"
-            className="rounded-full border border-gold-light/40 px-6 py-2 text-sm uppercase tracking-[0.2em] text-gold-light transition hover:bg-gold-light/10"
-          >
-            Chiqish
-          </button>
-        </form>
-      </div>
-    </main>
+        <Card className="mt-8 max-w-md">
+          <CardHeader>
+            <CardTitle>Yangi taklifnoma</CardTitle>
+            <CardDescription>Bir necha daqiqada chiroyli taklifnoma yarating.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button disabled>Yaratish (tez orada)</Button>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
   );
 }

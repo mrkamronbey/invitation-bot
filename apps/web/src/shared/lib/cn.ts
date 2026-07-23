@@ -1,4 +1,7 @@
-/** Shartli class nomlarini birlashtiradi. */
-export function cn(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join(' ');
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+/** Shartli class nomlarini birlashtiradi + Tailwind konfliktlarini hal qiladi (shadcn). */
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }

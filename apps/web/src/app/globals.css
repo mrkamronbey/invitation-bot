@@ -39,6 +39,28 @@
 
 :root {
   color-scheme: light;
+
+  /* shadcn/ui tokenlari — sayt UI (dashboard/login) uchun to'q zumrad+oltin tema */
+  --background: 157 60% 8%;
+  --foreground: 40 44% 92%;
+  --card: 157 61% 14%;
+  --card-foreground: 40 44% 92%;
+  --popover: 157 61% 14%;
+  --popover-foreground: 40 44% 92%;
+  --primary: 42 55% 68%;
+  --primary-foreground: 157 65% 8%;
+  --secondary: 157 45% 16%;
+  --secondary-foreground: 40 44% 92%;
+  --muted: 157 30% 18%;
+  --muted-foreground: 40 20% 72%;
+  --accent: 35 36% 51%;
+  --accent-foreground: 157 65% 8%;
+  --destructive: 0 62% 45%;
+  --destructive-foreground: 40 44% 92%;
+  --border: 157 25% 24%;
+  --input: 157 25% 24%;
+  --ring: 42 55% 68%;
+  --radius: 0.75rem;
 }
 
 html,
