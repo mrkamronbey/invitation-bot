@@ -64,15 +64,15 @@ apps/
 
 ## 3. Asosiy qarorlar (va tasdiqlash kerak bo'lganlar)
 
-| # | Qaror | Taklif | Tasdiq kerakmi |
-|---|-------|--------|----------------|
-| D1 | Monorepo/hexagonal saqlanadimi? | **Ha** — domain/application/infra qayta ishlatiladi | — |
-| D2 | Web login usuli | **Telegram Login Widget** (1-klik) + bot magic-link zaxira | ✅ tanlash |
-| D3 | Unique link formati | `kuyov-kelin-<kod>` (pastda D3 batafsil) | ✅ tanlash |
-| D4 | Web yozish (create/edit) qanday | **Server Actions/Route Handlers** — bizning sessiyani tekshirib, `service_role` bilan yozadi (RLS o'zgarmaydi) | ✅ tasdiq |
-| D5 | shadcn/ui ishlatamizmi | **Ha** — dashboard/editor form/landing UI uchun (taklifnoma shabloni o'zi custom qoladi) | ✅ tanlash |
-| D6 | Public sahifa yo'li | `/[slug]` → **`/i/[slug]`** (yoki hozirgicha `/[slug]`) | ✅ tanlash |
-| D7 | 2-bosqich ma'lumotlar (ota-ona, kun tartibi, sovg'a) | Shu rebuild ichida DB'ga qo'shiladi (data-driven) | ✅ tasdiq |
+| # | Qaror | Belgilangan (✅ tasdiqlangan) |
+|---|-------|-------------------------------|
+| D1 | Monorepo/hexagonal saqlanadi | **Ha** — domain/application/infra qayta ishlatiladi |
+| D2 | Web login usuli | ✅ **Telegram Login Widget** (1-klik) |
+| D3 | Unique link formati | ✅ **Ismlar + tasodifiy kod** — `aziz-malika-7f3k9q` |
+| D4 | Web yozish (create/edit) | **Server Actions** — sessiyani tekshirib `service_role` bilan yozadi (RLS o'zgarmaydi) |
+| D5 | shadcn/ui | ✅ **Ha** — dashboard/editor/landing UI (shablon custom qoladi) |
+| D6 | Public sahifa yo'li | ✅ **`/i/[slug]`** |
+| D7 | 2-bosqich (ota-ona/kun-tartibi/sovg'a) | Shu rebuild ichida DB'ga qo'shiladi (data-driven) |
 
 ### D3 — Unique link (batafsil)
 
@@ -263,11 +263,13 @@ qayta ishlatadi va anonim yozuvga yo'l qo'ymaydi.
 
 ---
 
-## 11. Ochiq savollar (javob kutilmoqda)
+## 11. Tasdiqlangan qarorlar (2026-07-23)
 
-1. **Link:** faqat tasodifiy kod (`aziz-malika-7f3k9q`, tavsiya) — yoki user handle + kod?
-2. **Login:** Telegram Login Widget (1-klik) asosiy bo'lsinmi? Domen sozlashga tayyor bo'lasizmi?
-3. **shadcn/ui** ishlataymizmi (tavsiya: ha)?
-4. **Public yo'l:** `/i/[slug]` bo'lsinmi yoki hozirgicha `/[slug]`?
-5. **Domen nomi** bormi (taklif.uz?) — link va OG uchun kerak.
+1. ✅ **Link:** ismlar + tasodifiy kod — `aziz-malika-7f3k9q`.
+2. ✅ **Login:** Telegram Login Widget (asosiy). Domen BotFather `/setdomain` bilan sozlanadi.
+3. ✅ **shadcn/ui:** ha.
+4. ✅ **Public yo'l:** `/i/[slug]`.
+
+### Qolgan (ish boshlashdan oldin foydali, majburiy emas)
+- **Domen nomi** — link/OG uchun (masalan `taklif.uz`). Bo'lmasa Vercel subdomeni ishlatiladi.
 ```
