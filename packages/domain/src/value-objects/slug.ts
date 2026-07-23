@@ -85,6 +85,21 @@ export class Slug {
     return Slug.create(`${g}-va-${b}`);
   }
 
+  /**
+   * Ismlar + noyob (taxmin qilib bo'lmaydigan) qisqa kod: `aziz-malika-7f3k9q`.
+   * Kod use-case tomonidan beriladi (IdGenerator asosida). Har taklifnoma uchun
+   * unique link — birov boshqasinikini ko'ra olmaydi.
+   */
+  static fromNamesWithCode(groom: string, bride: string, code: string): Result<Slug, DomainError> {
+    const g = slugify(groom);
+    const b = slugify(bride);
+    const c = slugify(code);
+    if (g.length === 0 || b.length === 0 || c.length === 0) {
+      return err(new DomainError('INVALID_SLUG', "Ismlardan slug yasab bo'lmadi."));
+    }
+    return Slug.create(`${g}-${b}-${c}`);
+  }
+
   /** Band bo'lgan slug uchun raqamli qo'shimcha: `aziz-va-malika-2`. */
   withSuffix(n: number): Result<Slug, DomainError> {
     return Slug.create(`${this.value}-${n}`);

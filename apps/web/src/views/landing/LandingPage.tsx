@@ -26,7 +26,7 @@ import { Corners, Flourish, Monogram } from '@/shared/ui/ornaments';
 import { FloralFrame } from '@/shared/ui/floral';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
-const DEMO_URL = '/aziz-va-malika';
+const DEMO_URL = '/i/aziz-va-malika';
 
 const STEPS: ReadonlyArray<{ n: string; title: string; text: string; icon: LucideIcon }> = [
   {

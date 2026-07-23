@@ -26,7 +26,7 @@ export async function guestLinkFlow(conversation: BotConversation, ctx: BotConte
     return;
   }
 
-  const base = `${container.env.siteUrl}/${slug}`;
+  const base = `${container.env.siteUrl}/i/${slug}`;
   await ctx.reply(m.guestAsk, { parse_mode: 'Markdown', reply_markup: guestLinkKeyboard(m) });
 
   for (;;) {

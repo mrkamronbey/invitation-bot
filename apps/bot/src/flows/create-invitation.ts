@@ -595,7 +595,7 @@ export async function createInvitationFlow(
     return;
   }
 
-  const link = `${container.env.siteUrl}/${result.value.slug}`;
+  const link = `${container.env.siteUrl}/i/${result.value.slug}`;
   await ctx.reply(m.ready(link), {
     parse_mode: 'Markdown',
     reply_markup: afterCreateKeyboard(m, result.value.id, link),

@@ -22,7 +22,7 @@ export async function sendMyInvites(ctx: BotContext): Promise<void> {
 
   await ctx.reply(m.myInvitesTitle, { parse_mode: 'Markdown' });
   for (const inv of list) {
-    const link = `${container.env.siteUrl}/${inv.slug}`;
+    const link = `${container.env.siteUrl}/i/${inv.slug}`;
     const title = `💍 ${inv.groomName} & ${inv.brideName}\n📅 ${inv.eventDate}${
       inv.eventTime ? ` · ${inv.eventTime}` : ''
     }`;

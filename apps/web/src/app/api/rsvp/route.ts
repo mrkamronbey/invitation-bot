@@ -20,7 +20,7 @@ const formatRsvp =
   (owner, rsvp, slug) => {
     const m = getMessages(owner.locale).bot;
     const notice = m.rsvpNotice(rsvp.guestName, rsvp.attending, rsvp.guestsCount);
-    return `${notice}\n${siteUrl}/${slug}`;
+    return `${notice}\n${siteUrl}/i/${slug}`;
   };
 
 /** BOT_TOKEN bo'lsa egaga Telegram xabari yuboriladi, aks holda no-op. */

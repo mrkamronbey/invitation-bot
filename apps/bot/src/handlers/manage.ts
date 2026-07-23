@@ -59,7 +59,7 @@ export function registerManage(bot: Bot<BotContext>): void {
       await ctx.reply(m.errorGeneric);
       return;
     }
-    const url = `${container.env.siteUrl}/${inv.slug}`;
+    const url = `${container.env.siteUrl}/i/${inv.slug}`;
     const dateline = `${m.dateWords(inv.eventDate)}${inv.eventTime ? ` · ${inv.eventTime}` : ''}`;
     const caption = m.sharePost({
       groom: inv.groomName,

@@ -35,10 +35,7 @@ export class CreateInvitationUseCase {
       return err(new DomainError('INVALID_DATE', "To'y sanasi kelajakda bo'lishi kerak."));
     }
 
-    const baseSlug = Slug.fromNames(input.groomName, input.brideName);
-    if (!baseSlug.ok) return baseSlug;
-
-    const uniqueSlug = await this.resolveUniqueSlug(baseSlug.value);
+    const uniqueSlug = await this.resolveUniqueSlug(input.groomName, input.brideName);
     if (!uniqueSlug.ok) return uniqueSlug;
 
     const assembled = createInvitation({
@@ -71,17 +68,31 @@ export class CreateInvitationUseCase {
     return ok(published);
   }
 
-  private async resolveUniqueSlug(base: Slug): Promise<Result<string, DomainError>> {
-    if (!(await this.deps.invitations.existsBySlug(base.value))) {
-      return ok(base.value);
-    }
-    for (let n = 2; n < MAX_SLUG_ATTEMPTS; n += 1) {
-      const candidate = base.withSuffix(n);
+  /**
+   * Noyob slug: `kuyov-kelin-<kod>`. Kod har urinishда yangi (IdGenerator asosida)
+   * — kolliziya bo'lsa qayta generatsiya qilinadi (deyarli hech qachon bo'lmaydi).
+   */
+  private async resolveUniqueSlug(
+    groom: string,
+    bride: string,
+  ): Promise<Result<string, DomainError>> {
+    for (let attempt = 0; attempt < MAX_SLUG_ATTEMPTS; attempt += 1) {
+      const code = this.shortCode();
+      const candidate = Slug.fromNamesWithCode(groom, bride, code);
       if (!candidate.ok) return candidate;
       if (!(await this.deps.invitations.existsBySlug(candidate.value.value))) {
         return ok(candidate.value.value);
       }
     }
-    return err(new DomainError('SLUG_TAKEN', 'Slug band — boshqa ism tanlang.'));
+    return err(new DomainError('SLUG_TAKEN', "Noyob havola yasab bo'lmadi — qayta urinib ko'ring."));
+  }
+
+  /** IdGenerator (uuid) dan taxmin qilib bo'lmaydigan 7 belgili kod (base36). */
+  private shortCode(): string {
+    return this.deps.ids
+      .generate()
+      .replace(/[^a-z0-9]/gi, '')
+      .toLowerCase()
+      .slice(0, 7);
   }
 }
