@@ -17,10 +17,11 @@ interface RoyalBodyProps {
   readonly invitation: Invitation;
 }
 
-/** Royal sarlavha — oltin serif + gulli mini-ajratgich. */
+/** Royal sarlavha — tepasida oltin barg aksenti (flower-6), oltin serif + shimmer chiziq. */
 function Heading({ children }: { readonly children: ReactNode }): ReactNode {
   return (
     <div className="mb-8 flex flex-col items-center text-center">
+      <Bloom n={6} className="mb-1 h-10 w-16 opacity-90" />
       <h2 className="font-display text-3xl tracking-[0.12em] text-gold sm:text-4xl">{children}</h2>
       <span className="gold-shimmer mt-3 h-px w-16 bg-gold" />
     </div>
@@ -140,7 +141,7 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
         </Wrap>
       ) : null}
 
-      <RoyalDivider />
+      <RoyalDivider variant="fleur" />
 
       {/* Ziyofat + kalendar + Add-to-Calendar + countdown */}
       <Wrap>

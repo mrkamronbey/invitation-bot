@@ -12,7 +12,8 @@ import type { CSSProperties, ReactNode } from 'react';
  *   3 — gorizontal gulli ajratgich (simmetrik, kalta) — bo'limlar orasida
  *   4 — keng lavr-gulchambar (footer / sarlavha ostida)
  *   5 — baland vertikal shox (bo'lim chetidagi urg'u)
- *   6, 7 — qo'shimcha (keyinroq: yana ikki burchak / urg'u)
+ *   6 — oltin barg shoxchasi (sarlavha tepasidagi kichik aksent)
+ *   7 — oltin fleur-ajratgich (ikkinchi xil bo'lim ajratgichi)
  *
  * Fayl bo'lmasa — background-image hech narsa chizmaydi; render/build buzilmaydi
  * (broken-image ikonkasi chiqmaydi, chunki <img> emas, background ishlatiladi).
