@@ -1,8 +1,11 @@
 import type {
+  GiftInfo,
   Invitation,
   InvitationStatus,
   MusicSource,
+  Parents,
   Rsvp,
+  ScheduleItem,
   TemplateId,
   User,
   Venue,
@@ -25,6 +28,9 @@ export interface InvitationRow {
   location_lng: number | null;
   story: string | null;
   dress_code: string | null;
+  parents: Parents | null;
+  schedule: ScheduleItem[] | null;
+  gift: GiftInfo | null;
   cover_image_url: string | null;
   gallery: string[] | null;
   music_url: string | null;
@@ -81,6 +87,9 @@ export function rowToInvitation(row: InvitationRow): Invitation {
     venue,
     story: row.story ?? undefined,
     dressCode: row.dress_code ?? undefined,
+    parents: row.parents ?? undefined,
+    schedule: row.schedule ?? undefined,
+    gift: row.gift ?? undefined,
     coverImageUrl: row.cover_image_url ?? undefined,
     gallery: row.gallery ?? [],
     musicUrl: row.music_url ?? undefined,
@@ -133,6 +142,9 @@ export function invitationToRow(inv: Invitation): InvitationRow {
     location_lng: inv.venue?.geo?.lng ?? null,
     story: inv.story ?? null,
     dress_code: inv.dressCode ?? null,
+    parents: inv.parents ?? null,
+    schedule: inv.schedule ? [...inv.schedule] : null,
+    gift: inv.gift ?? null,
     cover_image_url: inv.coverImageUrl ?? null,
     gallery: [...inv.gallery],
     music_url: inv.musicUrl ?? null,

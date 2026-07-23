@@ -17,6 +17,31 @@ export interface Venue {
   readonly geo?: GeoLocation;
 }
 
+/** Bir tomon ota-onasi (kuyov yoki kelin). */
+export interface ParentNames {
+  readonly father?: string;
+  readonly mother?: string;
+}
+
+/** Ikki tomon ota-onalari (marosim bo'limida ko'rsatiladi). */
+export interface Parents {
+  readonly groom?: ParentNames;
+  readonly bride?: ParentNames;
+}
+
+/** Kun tartibidagi bitta band. */
+export interface ScheduleItem {
+  readonly time: string; // "16:30" yoki erkin matn
+  readonly title: string;
+}
+
+/** Sovg'a (karta) ma'lumoti. */
+export interface GiftInfo {
+  readonly cardNumber?: string;
+  readonly cardHolder?: string;
+  readonly note?: string;
+}
+
 /**
  * Invitation — validatsiyadan o'tgan taklifnoma holati (domain entity).
  * Ma'lumot primitiv ko'rinishda saqlanadi (DB va DTO'ga oson map bo'lishi uchun);
@@ -34,6 +59,9 @@ export interface Invitation {
   readonly venue?: Venue;
   readonly story?: string;
   readonly dressCode?: string;
+  readonly parents?: Parents;
+  readonly schedule?: readonly ScheduleItem[];
+  readonly gift?: GiftInfo;
   readonly coverImageUrl?: string;
   readonly gallery: readonly string[];
   readonly musicUrl?: string;

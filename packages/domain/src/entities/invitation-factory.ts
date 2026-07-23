@@ -6,8 +6,11 @@ import { GeoPoint } from '../value-objects/geo-point';
 import { Slug } from '../value-objects/slug';
 import {
   type GeoLocation,
+  type GiftInfo,
   type Invitation,
   type MusicSource,
+  type Parents,
+  type ScheduleItem,
   type TemplateId,
   type Venue,
   isTemplateId,
@@ -35,11 +38,43 @@ export interface CreateInvitationInput {
   readonly location?: { readonly lat: number; readonly lng: number };
   readonly story?: string;
   readonly dressCode?: string;
+  readonly parents?: Parents;
+  readonly schedule?: readonly ScheduleItem[];
+  readonly gift?: GiftInfo;
   readonly coverImageUrl?: string;
   readonly gallery?: readonly string[];
   readonly musicUrl?: string;
   readonly musicSource?: MusicSource;
   readonly locale?: string;
+}
+
+/** parents/schedule/gift ni tozalaydi (bo'sh qiymatlarni olib tashlaydi). */
+function cleanParents(p: Parents | undefined): Parents | undefined {
+  if (!p) return undefined;
+  const side = (s: { father?: string; mother?: string } | undefined) => {
+    const father = cleanOptional(s?.father);
+    const mother = cleanOptional(s?.mother);
+    return father || mother ? { father, mother } : undefined;
+  };
+  const groom = side(p.groom);
+  const bride = side(p.bride);
+  return groom || bride ? { groom, bride } : undefined;
+}
+
+function cleanSchedule(items: readonly ScheduleItem[] | undefined): readonly ScheduleItem[] | undefined {
+  if (!items) return undefined;
+  const cleaned = items
+    .map((it) => ({ time: (it.time ?? '').trim(), title: (it.title ?? '').trim() }))
+    .filter((it) => it.time.length > 0 || it.title.length > 0);
+  return cleaned.length > 0 ? cleaned : undefined;
+}
+
+function cleanGift(g: GiftInfo | undefined): GiftInfo | undefined {
+  if (!g) return undefined;
+  const cardNumber = cleanOptional(g.cardNumber);
+  const cardHolder = cleanOptional(g.cardHolder);
+  const note = cleanOptional(g.note);
+  return cardNumber || cardHolder || note ? { cardNumber, cardHolder, note } : undefined;
 }
 
 /**
@@ -95,6 +130,9 @@ export function createInvitation(input: CreateInvitationInput): Result<Invitatio
     venue,
     story: cleanOptional(input.story),
     dressCode: cleanOptional(input.dressCode),
+    parents: cleanParents(input.parents),
+    schedule: cleanSchedule(input.schedule),
+    gift: cleanGift(input.gift),
     coverImageUrl: cleanOptional(input.coverImageUrl),
     gallery: input.gallery ?? [],
     musicUrl: musicSource === 'none' ? undefined : cleanOptional(input.musicUrl),
