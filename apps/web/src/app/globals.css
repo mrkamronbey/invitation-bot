@@ -180,3 +180,27 @@ body {
     opacity: 0;
   }
 }
+
+/* Royal — oltin uchqun-yulduzchalar (fonda sekin miltillaydi) */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.royal-star {
+  animation: twinkle 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .royal-star {
+    animation: none;
+    opacity: 0.5;
+  }
+}
