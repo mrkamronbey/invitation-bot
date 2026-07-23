@@ -17,6 +17,7 @@
     "@invitation/i18n": "workspace:*",
     "@invitation/infrastructure": "workspace:*",
     "framer-motion": "^11.15.0",
+    "jose": "^6.2.4",
     "lucide-react": "^1.24.0",
     "next": "^15.1.4",
     "react": "^19.0.0",
