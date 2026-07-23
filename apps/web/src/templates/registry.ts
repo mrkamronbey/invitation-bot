@@ -1,28 +1,19 @@
 import type { TemplateMeta } from './types';
-import { classicTemplate } from './classic';
-import { modernTemplate } from './modern';
-import { minimalTemplate } from './minimal';
-import { floralTemplate } from './floral';
-import { parallaxTemplate } from './parallax';
-import { emeraldTemplate } from './emerald';
 import { royalTemplate } from './royal';
 
 /**
  * Shablon registry (plagin — Open/Closed). Yangi shablon = shu yerga bitta yozuv,
  * mavjud kod o'zgarmaydi. Bot ham shu ro'yxatdan preview+tanlov quradi.
+ *
+ * NB: hozircha faqat `royal` faol. Web platforma tayyor bo'lgach boshqa shablonlar
+ * shu yerga qayta qo'shiladi (tizim ko'p-shablonli — o'zgarmaydi).
  */
 export const templates: Record<string, TemplateMeta> = {
-  classic: classicTemplate,
-  modern: modernTemplate,
-  minimal: minimalTemplate,
-  floral: floralTemplate,
-  parallax: parallaxTemplate,
-  emerald: emeraldTemplate,
   royal: royalTemplate,
 };
 
 export function getTemplate(id: string): TemplateMeta {
-  return templates[id] ?? classicTemplate;
+  return templates[id] ?? royalTemplate;
 }
 
 export function allTemplates(): TemplateMeta[] {
