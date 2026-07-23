@@ -80,3 +80,24 @@ body {
     0 0,
     14px 14px;
 }
+
+/* Parallax — suzuvchi barg (petal) yengil tebranishi */
+@keyframes petal-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+.petal-float {
+  animation: petal-float 6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .petal-float {
+    animation: none;
+  }
+}

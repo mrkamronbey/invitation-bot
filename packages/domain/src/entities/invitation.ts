@@ -1,5 +1,11 @@
-export type TemplateId = 'classic' | 'modern' | 'minimal' | 'floral';
-export const TEMPLATE_IDS: readonly TemplateId[] = ['classic', 'modern', 'minimal', 'floral'];
+export type TemplateId = 'classic' | 'modern' | 'minimal' | 'floral' | 'parallax';
+export const TEMPLATE_IDS: readonly TemplateId[] = [
+  'classic',
+  'modern',
+  'minimal',
+  'floral',
+  'parallax',
+];
 
 export type InvitationStatus = 'draft' | 'published';
 export type MusicSource = 'none' | 'default' | 'custom';

@@ -3,6 +3,7 @@ import { classicTemplate } from './classic';
 import { modernTemplate } from './modern';
 import { minimalTemplate } from './minimal';
 import { floralTemplate } from './floral';
+import { parallaxTemplate } from './parallax';
 
 /**
  * Shablon registry (plagin — Open/Closed). Yangi shablon = shu yerga bitta yozuv,
@@ -13,6 +14,7 @@ export const templates: Record<string, TemplateMeta> = {
   modern: modernTemplate,
   minimal: minimalTemplate,
   floral: floralTemplate,
+  parallax: parallaxTemplate,
 };
 
 export function getTemplate(id: string): TemplateMeta {

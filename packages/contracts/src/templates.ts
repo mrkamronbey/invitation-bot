@@ -33,4 +33,5 @@ export const TEMPLATE_CATALOG: readonly TemplateCatalogItem[] = [
     previewImage:
       'https://czeuszszsdprclplmyee.supabase.co/storage/v1/object/public/invitations/templates/frame-floral.png',
   },
+  // 'parallax' — web shabloni tayyor; DB cheklovi + preview tayyor bo'lgach bot katalogiga qo'shiladi.
 ];
