@@ -25,11 +25,11 @@ function Petal({ s, r, o }: { s: number; r: number; o: number }): ReactNode {
     <g transform={`scale(${s}) rotate(${r})`} opacity={o}>
       <path
         d="M0 -16 C 9 -10, 9 8, 0 16 C -9 8, -9 -10, 0 -16 Z"
-        fill="#efe3d8"
-        stroke="#b08d57"
+        fill="#f2cdb2"
+        stroke="#c98f6a"
         strokeWidth="0.8"
       />
-      <path d="M0 -13 L0 13" stroke="#b08d57" strokeWidth="0.5" opacity="0.6" />
+      <path d="M0 -13 L0 13" stroke="#b8794f" strokeWidth="0.5" opacity="0.5" />
     </g>
   );
 }
