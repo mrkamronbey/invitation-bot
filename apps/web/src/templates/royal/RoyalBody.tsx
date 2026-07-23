@@ -50,8 +50,8 @@ function SideSpray({ side }: { readonly side: 'left' | 'right' }): ReactNode {
  * Royal taklifnoma tanasi (to'q zumrad, oltin+oq atirgul mavzu — royal-v2-green).
  * Anatomiya: marosim (ota-onalar) → album (2×2) → hikoya → ziyofat
  * (kalendar+countdown) → dress-code → kun tartibi → tilaklar → RSVP → sovg'a → footer.
- * NB: ota-ona ismlari, kun tartibi va sovg'a kartasi hozircha namuna — 2-bosqichda
- * bot orqali to'ldiriladigan bo'ladi.
+ * NB: ota-onalar, kun tartibi va sovg'a — data-driven: faqat ma'lumot kiritilgan
+ * bo'lsa ko'rsatiladi (aks holda bo'lim yashiriladi, soxta ma'lumot chiqmaydi).
  */
 export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNode> {
   const m = getMessages(invitation.locale).web;
@@ -78,15 +78,18 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
       : 'Farzandlarimiz to‘yini quvonch bilan e’lon qilamiz',
     groomSide: ru ? 'Жених' : 'Kuyov',
     brideSide: ru ? 'Невеста' : 'Kelin',
+    parentsGroom: ru ? 'Родители жениха' : 'Kuyov ota-onasi',
+    parentsBride: ru ? 'Родители невесты' : 'Kelin ota-onasi',
   };
 
-  // Namuna kun tartibi (2-bosqichda ma'lumotdan keladi)
-  const schedule: ReadonlyArray<readonly [string, string]> = [
-    ['16:30', ru ? 'Встреча гостей' : 'Mehmonlarni kutib olish'],
-    [invitation.eventTime ?? '17:00', ru ? 'Церемония' : 'Nikoh marosimi'],
-    ['18:30', ru ? 'Банкет' : 'Ziyofat'],
-    ['21:00', ru ? 'Завершение' : 'Yakuniy qism'],
-  ];
+  // Data-driven bo'limlar — faqat ma'lumot bo'lsa ko'rsatiladi
+  const parents = invitation.parents;
+  const hasGroomParents = Boolean(parents?.groom?.father || parents?.groom?.mother);
+  const hasBrideParents = Boolean(parents?.bride?.father || parents?.bride?.mother);
+  const hasParents = hasGroomParents || hasBrideParents;
+  const schedule = invitation.schedule ?? [];
+  const gift = invitation.gift;
+  const hasGift = Boolean(gift?.cardNumber || gift?.cardHolder || gift?.note);
 
   return (
     <div className="text-ivory">
@@ -116,6 +119,35 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
             <p className="mt-2 font-display text-4xl text-ivory sm:text-5xl">
               {invitation.brideName}
             </p>
+
+            {/* Ota-onalar (bor bo'lsa) — ikki ustun */}
+            {hasParents ? (
+              <div className="mx-auto mt-8 grid max-w-md grid-cols-2 gap-6">
+                <div>
+                  <p className="text-[0.6rem] uppercase tracking-[0.22em] text-gold-light/70">
+                    {t.parentsGroom}
+                  </p>
+                  {parents?.groom?.father ? (
+                    <p className="mt-1 text-sm text-ivory/85">{parents.groom.father}</p>
+                  ) : null}
+                  {parents?.groom?.mother ? (
+                    <p className="text-sm text-ivory/85">{parents.groom.mother}</p>
+                  ) : null}
+                </div>
+                <div>
+                  <p className="text-[0.6rem] uppercase tracking-[0.22em] text-gold-light/70">
+                    {t.parentsBride}
+                  </p>
+                  {parents?.bride?.father ? (
+                    <p className="mt-1 text-sm text-ivory/85">{parents.bride.father}</p>
+                  ) : null}
+                  {parents?.bride?.mother ? (
+                    <p className="text-sm text-ivory/85">{parents.bride.mother}</p>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
             {/* Sana bloki — HAFTA-KUNI | KUN | OY / YIL */}
             <div className="mt-7 flex items-center justify-center gap-4 text-ivory/90">
               <span className="text-[0.65rem] uppercase tracking-[0.28em] sm:text-xs">
@@ -226,28 +258,31 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
         </Wrap>
       ) : null}
 
-      <RoyalDivider />
-
-      {/* Kun tartibi (timeline) */}
-      <Wrap>
-        <SideSpray side="right" />
-        <Reveal>
-          <Heading>{t.schedule}</Heading>
-        </Reveal>
-        <div className="mx-auto max-w-sm">
-          {schedule.map(([time, ev], i) => (
-            <Reveal key={time + ev} delay={i * 60} variant="left">
-              <div className="flex items-center gap-4 border-l border-gold-light/30 pb-6 pl-5 last:pb-0">
-                <span className="relative -ml-[1.6rem] flex h-3 w-3 shrink-0 rounded-full bg-gold-light">
-                  <span className="absolute inset-0 animate-ping rounded-full bg-gold-light/50" />
-                </span>
-                <span className="w-16 font-display text-xl text-gold-light">{time}</span>
-                <span className="text-ivory/85">{ev}</span>
-              </div>
+      {/* Kun tartibi (timeline) — faqat ma'lumot bo'lsa */}
+      {schedule.length > 0 ? (
+        <>
+          <RoyalDivider />
+          <Wrap>
+            <SideSpray side="right" />
+            <Reveal>
+              <Heading>{t.schedule}</Heading>
             </Reveal>
-          ))}
-        </div>
-      </Wrap>
+            <div className="mx-auto max-w-sm">
+              {schedule.map((item, i) => (
+                <Reveal key={item.time + item.title + i} delay={i * 60} variant="left">
+                  <div className="flex items-center gap-4 border-l border-gold-light/30 pb-6 pl-5 last:pb-0">
+                    <span className="relative -ml-[1.6rem] flex h-3 w-3 shrink-0 rounded-full bg-gold-light">
+                      <span className="absolute inset-0 animate-ping rounded-full bg-gold-light/50" />
+                    </span>
+                    <span className="w-16 font-display text-xl text-gold-light">{item.time}</span>
+                    <span className="text-ivory/85">{item.title}</span>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Wrap>
+        </>
+      ) : null}
 
       {/* Tilaklar (to'q mavzuga moslash) */}
       <div className="[&_blockquote]:text-ivory/90 [&_figure]:!border-gold-light/20 [&_figure]:!bg-white/[0.04] [&_h2]:!text-gold-light">
@@ -262,20 +297,22 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
         </Reveal>
       </Wrap>
 
-      {/* Sovg'a qutisi */}
-      <Wrap>
-        <Reveal variant="scale">
-          <GiftBox
-            title={t.gift}
-            hint={t.giftHint}
-            note={t.giftNote}
-            cardNumber="8600 1234 5678 9010"
-            cardHolder={`${invitation.groomName} ${invitation.brideName}`}
-            copyLabel={t.copy}
-            copiedLabel={t.copied}
-          />
-        </Reveal>
-      </Wrap>
+      {/* Sovg'a qutisi — faqat karta ma'lumoti bo'lsa */}
+      {hasGift && gift?.cardNumber ? (
+        <Wrap>
+          <Reveal variant="scale">
+            <GiftBox
+              title={t.gift}
+              hint={t.giftHint}
+              note={gift.note ?? t.giftNote}
+              cardNumber={gift.cardNumber}
+              cardHolder={gift.cardHolder ?? `${invitation.groomName} ${invitation.brideName}`}
+              copyLabel={t.copy}
+              copiedLabel={t.copied}
+            />
+          </Reveal>
+        </Wrap>
+      ) : null}
 
       {/* Footer — lavr gulchambar + rahmat */}
       <footer className="flex flex-col items-center px-6 pb-12 pt-4 text-center">

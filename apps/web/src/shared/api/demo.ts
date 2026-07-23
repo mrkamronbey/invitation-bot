@@ -21,6 +21,21 @@ export const demoInvitation: Invitation = {
   story:
     'Ikki yurak bir bo‘ldi. Eng baxtli kunimizda siz — aziz mehmonimizni ko‘rishdan mamnun bo‘lamiz.',
   dressCode: 'Rasmiy kiyim',
+  parents: {
+    groom: { father: 'Karim aka', mother: 'Zulfiya opa' },
+    bride: { father: 'Rustam aka', mother: 'Nodira opa' },
+  },
+  schedule: [
+    { time: '16:30', title: 'Mehmonlarni kutib olish' },
+    { time: '17:00', title: 'Nikoh marosimi' },
+    { time: '18:30', title: 'Ziyofat' },
+    { time: '21:00', title: 'Yakuniy qism' },
+  ],
+  gift: {
+    cardNumber: '8600 1234 5678 9010',
+    cardHolder: 'Aziz Karimov',
+    note: 'Ishtirokingizning o‘zi biz uchun eng katta sovg‘a. Xohlasangiz, quyidagi kartaga o‘tkazishingiz mumkin.',
+  },
   coverImageUrl: '/images/floral-cover.jpg',
   gallery: [
     'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80',
