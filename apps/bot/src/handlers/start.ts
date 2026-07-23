@@ -70,7 +70,9 @@ async function sendTemplateChooser(ctx: BotContext): Promise<void> {
   } catch {
     // Preview yuklanmasa ham tanlovni ko'rsatamiz.
   }
-  await ctx.reply(m.chooseTemplate, { reply_markup: templatesKeyboard('tpl') });
+  await ctx.reply(m.chooseTemplate, {
+    reply_markup: templatesKeyboard('tpl', m.continueTemplate),
+  });
 }
 
 /** Shablonni belgilaydi va yaratish oqimiga kiradi (foydalanuvchini ta'minlab). */
@@ -176,12 +178,8 @@ export function registerStart(bot: Bot<BotContext>): void {
   // Inline "Yaratish / Yana yaratish" tugmasi
   bot.callbackQuery('menu:new', async (ctx) => {
     await ctx.answerCallbackQuery();
-    // Bitta shablon bo'lsa — tanlash qadamini o'tkazib, to'g'ridan-to'g'ri
-    // yaratishga kiramiz. Shablonlar ko'paysa — tanlov qayta ochiladi.
-    if (TEMPLATE_CATALOG.length === 1) {
-      await enterCreate(ctx, TEMPLATE_CATALOG[0]!.id);
-      return;
-    }
+    // Tanlov ekrani doim ko'rsatiladi (bitta shablon bo'lsa ham — "Davom etish"
+    // tugmasi bilan). Shablonlar ko'paysa — to'liq tanlov ko'rinadi.
     await sendTemplateChooser(ctx);
   });
 

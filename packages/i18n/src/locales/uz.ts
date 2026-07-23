@@ -96,6 +96,7 @@ export const uz = {
       '/cancel — bekor qilish',
     ].join('\n'),
     chooseTemplate: 'Yoqqan shablonni tanlang: 🎨',
+    continueTemplate: 'Davom etish ➡️',
     step: (n: number, total: number): string => `${n}/${total}`,
     askNames: 'Kuyov va kelin ismi?\n(masalan: Aziz va Malika)',
     invalidNames: '❗️ Ikkala ismni yozing. Masalan: Aziz va Malika',

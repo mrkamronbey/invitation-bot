@@ -113,6 +113,7 @@ export const ru: Messages = {
       '/cancel — отмена',
     ].join('\n'),
     chooseTemplate: 'Выберите понравившийся шаблон: 🎨',
+    continueTemplate: 'Продолжить ➡️',
     step: (n: number, total: number): string => `${n}/${total}`,
     askNames: 'Имена жениха и невесты?\n(например: Азиз и Малика)',
     invalidNames: '❗️ Укажите оба имени. Например: Азиз и Малика',
