@@ -9,9 +9,9 @@ import { AddToCalendar } from '@/widgets/calendar/AddToCalendar';
 import { GiftBox } from '@/widgets/gift/GiftBox';
 import { WishesWall } from '@/widgets/wishes/WishesWall';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
-import { formatEventDate, formatEventTime } from '@/shared/lib/format';
 import { Bloom } from './RoyalFlora';
 import { RoyalDivider } from './RoyalDivider';
+import { dateParts } from './royalDate';
 
 interface RoyalBodyProps {
   readonly invitation: Invitation;
@@ -56,9 +56,7 @@ function SideSpray({ side }: { readonly side: 'left' | 'right' }): ReactNode {
 export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNode> {
   const m = getMessages(invitation.locale).web;
   const ru = invitation.locale === 'ru';
-  const dateLine = [formatEventDate(invitation.eventDate), formatEventTime(invitation.eventTime)]
-    .filter(Boolean)
-    .join(' · ');
+  const dp = dateParts(invitation.eventDate, invitation.locale);
 
   const t = {
     ceremony: ru ? 'Церемония' : 'Nikoh marosimi',
@@ -118,9 +116,24 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
             <p className="mt-2 font-display text-4xl text-ivory sm:text-5xl">
               {invitation.brideName}
             </p>
-            <p className="mt-6 text-sm uppercase tracking-[0.25em] text-ivory/75">{dateLine}</p>
+            {/* Sana bloki — HAFTA-KUNI | KUN | OY / YIL */}
+            <div className="mt-7 flex items-center justify-center gap-4 text-ivory/90">
+              <span className="text-[0.65rem] uppercase tracking-[0.28em] sm:text-xs">
+                {dp.weekday}
+              </span>
+              <span className="h-9 w-px bg-gold-light/50" />
+              <span className="font-display text-4xl text-gold-light">{dp.day}</span>
+              <span className="h-9 w-px bg-gold-light/50" />
+              <span className="text-[0.65rem] uppercase tracking-[0.28em] sm:text-xs">
+                {dp.month}
+              </span>
+            </div>
+            <p className="mt-1 text-sm tracking-[0.3em] text-ivory/70">
+              {dp.year}
+              {invitation.eventTime ? ` · ${invitation.eventTime}` : ''}
+            </p>
             {invitation.venue?.name ? (
-              <p className="mt-2 text-lg text-gold-light">{invitation.venue.name}</p>
+              <p className="mt-3 text-lg text-gold-light">{invitation.venue.name}</p>
             ) : null}
             {invitation.venue?.address ? (
               <p className="mt-1 text-sm text-ivory/55">{invitation.venue.address}</p>
