@@ -21,7 +21,7 @@ import type { CSSProperties, ReactNode } from 'react';
 const DIR = '/images/royal';
 
 export function royalFlower(n: number): string {
-  return `${DIR}/flower-${n}.png`;
+  return `${DIR}/flower-${n}.webp`;
 }
 
 interface BloomProps {
