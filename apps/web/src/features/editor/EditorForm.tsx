@@ -69,6 +69,27 @@ export function EditorForm({ mode, invitationId, initial }: EditorFormProps): Re
   const [f, setF] = useState<EditorInput>({ ...empty, ...initial });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  async function uploadFiles(files: FileList | null): Promise<void> {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const added: string[] = [];
+    for (const file of Array.from(files)) {
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const json = (await res.json()) as { url?: string; error?: string };
+        if (json.url) added.push(json.url);
+        else if (json.error) setError(json.error);
+      } catch {
+        setError('Rasm yuklashda xatolik.');
+      }
+    }
+    if (added.length > 0) setF((prev) => ({ ...prev, gallery: [...(prev.gallery ?? []), ...added] }));
+    setUploading(false);
+  }
 
   const set = <K extends keyof EditorInput>(key: K, value: EditorInput[K]): void =>
     setF((prev) => ({ ...prev, [key]: value }));
@@ -284,14 +305,42 @@ export function EditorForm({ mode, invitationId, initial }: EditorFormProps): Re
         </Section>
 
         <Section title="Galereya (ixtiyoriy)">
-          <Field label="Rasm URL manzillari — har biri yangi qatorda">
-            <Textarea
-              rows={4}
-              value={(f.gallery ?? []).join('\n')}
-              onChange={(e) => set('gallery', e.target.value.split('\n'))}
-              placeholder="https://...jpg"
-            />
-          </Field>
+          <div className="flex items-center gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-border px-5 py-2 text-sm font-medium transition-colors hover:bg-accent/10">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => void uploadFiles(e.target.files)}
+              />
+              {uploading ? 'Yuklanmoqda…' : '+ Rasm yuklash'}
+            </label>
+            <span className="text-xs text-muted-foreground">JPG/PNG, har biri 6MB gacha</span>
+          </div>
+
+          {(f.gallery ?? []).length > 0 ? (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {(f.gallery ?? []).map((src, i) => (
+                <div key={src + i} className="group relative overflow-hidden rounded-lg border border-border">
+                  <img src={src} alt="" className="aspect-square w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      set(
+                        'gallery',
+                        (f.gallery ?? []).filter((_, j) => j !== i),
+                      )
+                    }
+                    className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-sm text-destructive shadow"
+                    aria-label="O‘chirish"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </Section>
 
         {error ? (
