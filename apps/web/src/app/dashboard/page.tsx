@@ -9,6 +9,7 @@ import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { CopyLinkButton } from '@/features/dashboard/CopyLinkButton';
 import { DeleteInvitationButton } from '@/features/dashboard/DeleteInvitationButton';
+import { QrButton } from '@/features/dashboard/QrButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,8 +118,12 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                       </Button>
                       <CopyLinkButton url={link} />
                       <Button asChild size="sm" variant="ghost">
+                        <Link href={`/dashboard/${inv.id}/guests`}>Mehmonlar</Link>
+                      </Button>
+                      <Button asChild size="sm" variant="ghost">
                         <Link href={`/dashboard/${inv.id}/edit`}>Tahrir</Link>
                       </Button>
+                      <QrButton url={link} name={`${inv.groomName}-${inv.brideName}`} />
                       <DeleteInvitationButton id={inv.id} label="O‘chirish" />
                     </div>
                   </CardContent>
