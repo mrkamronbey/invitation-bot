@@ -24,24 +24,26 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
   if (!invitation) notFound();
   const stats = await getMyStats(id, session.sub);
   const lang = await getSiteLang();
+  const dict = getSiteDict(lang);
+  const g = dict.guests;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} lang={lang} logoutLabel={getSiteDict(lang).dash.logout} />
+      <SiteHeader userName={session.name} lang={lang} logoutLabel={dict.dash.logout} />
       <main className="mx-auto max-w-3xl px-6 py-10">
         <Button asChild variant="ghost" size="sm">
-          <Link href="/dashboard">← Orqaga</Link>
+          <Link href="/dashboard">{g.back}</Link>
         </Button>
         <h1 className="mt-3 font-display text-3xl">
-          {invitation.groomName} &amp; {invitation.brideName} — mehmonlar
+          {invitation.groomName} &amp; {invitation.brideName} — {g.suffix}
         </h1>
 
         {stats ? (
           <div className="mt-6 grid grid-cols-3 gap-4">
             {[
-              { n: stats.responses, l: 'javob' },
-              { n: stats.attendingResponses, l: 'keladi' },
-              { n: stats.totalGuests, l: 'jami mehmon' },
+              { n: stats.responses, l: g.responses },
+              { n: stats.attendingResponses, l: g.coming },
+              { n: stats.totalGuests, l: g.totalGuests },
             ].map((s) => (
               <Card key={s.l}>
                 <CardContent className="py-5 text-center">
@@ -55,27 +57,29 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
 
         {stats && stats.entries.length > 0 ? (
           <div className="mt-6 space-y-3">
-            {stats.entries.map((g, i) => (
+            {stats.entries.map((entry, i) => (
               <Card key={i}>
                 <CardContent className="flex items-start justify-between gap-4 py-4">
                   <div>
-                    <p className="font-medium">{g.name}</p>
-                    {g.message ? (
-                      <p className="mt-1 text-sm text-muted-foreground">“{g.message}”</p>
+                    <p className="font-medium">{entry.name}</p>
+                    {entry.message ? (
+                      <p className="mt-1 text-sm text-muted-foreground">“{entry.message}”</p>
                     ) : null}
                   </div>
                   <div className="shrink-0 text-right">
                     <span
                       className={`rounded-full px-2.5 py-0.5 text-xs ${
-                        g.attending
+                        entry.attending
                           ? 'bg-primary/15 text-primary'
                           : 'bg-destructive/10 text-destructive'
                       }`}
                     >
-                      {g.attending ? 'Keladi' : 'Kelmaydi'}
+                      {entry.attending ? g.comingBadge : g.notComing}
                     </span>
-                    {g.attending ? (
-                      <p className="mt-1 text-xs text-muted-foreground">{g.guestsCount} kishi</p>
+                    {entry.attending ? (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {entry.guestsCount} {g.people}
+                      </p>
                     ) : null}
                   </div>
                 </CardContent>
@@ -84,10 +88,7 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
           </div>
         ) : (
           <Card className="mt-6">
-            <CardContent className="py-12 text-center text-muted-foreground">
-              Hozircha javoblar yo‘q. Mehmonlar taklifnomada javob berganda shu yerda
-              ko‘rinadi.
-            </CardContent>
+            <CardContent className="py-12 text-center text-muted-foreground">{g.empty}</CardContent>
           </Card>
         )}
       </main>

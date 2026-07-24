@@ -28,6 +28,21 @@ export interface SiteDict {
     responses: string; guestsWord: string; view: string; copy: string; copied: string;
     guests: string; edit: string; del: string; logout: string;
   };
+  editor: {
+    newEyebrow: string; newTitle: string; editEyebrow: string;
+    secMain: string; secVenue: string; secDetails: string; secParents: string;
+    secSchedule: string; secGift: string; secGallery: string;
+    groom: string; bride: string; date: string; time: string;
+    venueName: string; address: string; story: string; dressCode: string;
+    groomFather: string; groomMother: string; brideFather: string; brideMother: string;
+    addBand: string; cardNumber: string; cardHolder: string; note: string;
+    upload: string; uploading: string; uploadHint: string;
+    create: string; save: string; saving: string; cancel: string;
+  };
+  guests: {
+    back: string; suffix: string; responses: string; coming: string; totalGuests: string;
+    comingBadge: string; notComing: string; people: string; empty: string;
+  };
 }
 
 const uz: SiteDict = {
@@ -126,6 +141,52 @@ const uz: SiteDict = {
     del: 'O‘chirish',
     logout: 'Chiqish',
   },
+  editor: {
+    newEyebrow: 'Yangi',
+    newTitle: 'Taklifnoma yaratish',
+    editEyebrow: 'Tahrir',
+    secMain: 'Asosiy',
+    secVenue: 'To‘yxona / joy',
+    secDetails: 'Tafsilotlar',
+    secParents: 'Ota-onalar (ixtiyoriy)',
+    secSchedule: 'Kun tartibi (ixtiyoriy)',
+    secGift: 'Sovg‘a (ixtiyoriy)',
+    secGallery: 'Galereya (ixtiyoriy)',
+    groom: 'Kuyov ismi',
+    bride: 'Kelin ismi',
+    date: 'Sana',
+    time: 'Vaqt (ixtiyoriy)',
+    venueName: 'To‘yxona nomi',
+    address: 'Manzil',
+    story: 'Qisqa hikoya / taklif matni',
+    dressCode: 'Dress-code (ixtiyoriy)',
+    groomFather: 'Kuyov otasi',
+    groomMother: 'Kuyov onasi',
+    brideFather: 'Kelin otasi',
+    brideMother: 'Kelin onasi',
+    addBand: '+ Band qo‘shish',
+    cardNumber: 'Karta raqami',
+    cardHolder: 'Karta egasi',
+    note: 'Izoh',
+    upload: '+ Rasm yuklash',
+    uploading: 'Yuklanmoqda…',
+    uploadHint: 'JPG/PNG, har biri 6MB gacha',
+    create: 'Yaratish',
+    save: 'Saqlash',
+    saving: 'Saqlanmoqda…',
+    cancel: 'Bekor qilish',
+  },
+  guests: {
+    back: '← Orqaga',
+    suffix: 'mehmonlar',
+    responses: 'javob',
+    coming: 'keladi',
+    totalGuests: 'jami mehmon',
+    comingBadge: 'Keladi',
+    notComing: 'Kelmaydi',
+    people: 'kishi',
+    empty: 'Hozircha javoblar yo‘q. Mehmonlar javob berganda shu yerda ko‘rinadi.',
+  },
 };
 
 const ru: SiteDict = {
@@ -223,6 +284,52 @@ const ru: SiteDict = {
     edit: 'Изменить',
     del: 'Удалить',
     logout: 'Выйти',
+  },
+  editor: {
+    newEyebrow: 'Новое',
+    newTitle: 'Создать приглашение',
+    editEyebrow: 'Изменить',
+    secMain: 'Основное',
+    secVenue: 'Место',
+    secDetails: 'Детали',
+    secParents: 'Родители (необязательно)',
+    secSchedule: 'Программа дня (необязательно)',
+    secGift: 'Подарок (необязательно)',
+    secGallery: 'Галерея (необязательно)',
+    groom: 'Имя жениха',
+    bride: 'Имя невесты',
+    date: 'Дата',
+    time: 'Время (необязательно)',
+    venueName: 'Название места',
+    address: 'Адрес',
+    story: 'Короткий текст / история',
+    dressCode: 'Дресс-код (необязательно)',
+    groomFather: 'Отец жениха',
+    groomMother: 'Мать жениха',
+    brideFather: 'Отец невесты',
+    brideMother: 'Мать невесты',
+    addBand: '+ Добавить пункт',
+    cardNumber: 'Номер карты',
+    cardHolder: 'Владелец карты',
+    note: 'Примечание',
+    upload: '+ Загрузить фото',
+    uploading: 'Загрузка…',
+    uploadHint: 'JPG/PNG, до 6MB каждое',
+    create: 'Создать',
+    save: 'Сохранить',
+    saving: 'Сохранение…',
+    cancel: 'Отмена',
+  },
+  guests: {
+    back: '← Назад',
+    suffix: 'гости',
+    responses: 'ответов',
+    coming: 'придут',
+    totalGuests: 'всего гостей',
+    comingBadge: 'Придёт',
+    notComing: 'Не придёт',
+    people: 'чел.',
+    empty: 'Пока нет ответов. Ответы гостей появятся здесь.',
   },
 };
 
