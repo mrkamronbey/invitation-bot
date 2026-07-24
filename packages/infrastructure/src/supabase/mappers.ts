@@ -24,6 +24,7 @@ export interface InvitationRow {
   event_time: string | null;
   venue_name: string | null;
   venue_address: string | null;
+  venue_map_url: string | null;
   location_lat: number | null;
   location_lng: number | null;
   story: string | null;
@@ -64,10 +65,11 @@ export interface UserRow {
 
 export function rowToInvitation(row: InvitationRow): Invitation {
   const venue: Venue | undefined =
-    row.venue_name || row.venue_address || row.location_lat !== null
+    row.venue_name || row.venue_address || row.venue_map_url || row.location_lat !== null
       ? {
           name: row.venue_name ?? undefined,
           address: row.venue_address ?? undefined,
+          mapUrl: row.venue_map_url ?? undefined,
           geo:
             row.location_lat !== null && row.location_lng !== null
               ? { lat: row.location_lat, lng: row.location_lng }
@@ -138,6 +140,7 @@ export function invitationToRow(inv: Invitation): InvitationRow {
     event_time: inv.eventTime ?? null,
     venue_name: inv.venue?.name ?? null,
     venue_address: inv.venue?.address ?? null,
+    venue_map_url: inv.venue?.mapUrl ?? null,
     location_lat: inv.venue?.geo?.lat ?? null,
     location_lng: inv.venue?.geo?.lng ?? null,
     story: inv.story ?? null,

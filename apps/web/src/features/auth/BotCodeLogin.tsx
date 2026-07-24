@@ -4,15 +4,29 @@ import { type ReactNode, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Send, X } from 'lucide-react';
 import type { SiteDict } from '@/shared/i18n/site';
-import { Button } from '@/shared/ui/button';
+import { Button, type ButtonProps } from '@/shared/ui/button';
 
 interface Props {
   readonly botUsername: string;
   readonly t: SiteDict['login'];
+  /** Ochuvchi tugma ko'rinishi (nav "Kirish", CTA va h.k. uchun moslash). */
+  readonly triggerLabel?: string;
+  readonly triggerVariant?: ButtonProps['variant'];
+  readonly triggerSize?: ButtonProps['size'];
+  readonly triggerFullWidth?: boolean;
+  readonly triggerIcon?: boolean;
 }
 
 /** Bot orqali bir martalik kod bilan kirish (telefon raqamisiz — ishonchli). */
-export function BotCodeLogin({ botUsername, t }: Props): ReactNode {
+export function BotCodeLogin({
+  botUsername,
+  t,
+  triggerLabel,
+  triggerVariant = 'default',
+  triggerSize = 'lg',
+  triggerFullWidth = true,
+  triggerIcon = true,
+}: Props): ReactNode {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState('');
@@ -49,9 +63,14 @@ export function BotCodeLogin({ botUsername, t }: Props): ReactNode {
 
   return (
     <>
-      <Button size="lg" className="w-full" onClick={() => setOpen(true)}>
-        <Send className="h-4 w-4" strokeWidth={2} />
-        {t.button}
+      <Button
+        variant={triggerVariant}
+        size={triggerSize}
+        className={triggerFullWidth ? 'w-full' : undefined}
+        onClick={() => setOpen(true)}
+      >
+        {triggerIcon ? <Send className="h-4 w-4" strokeWidth={2} /> : null}
+        {triggerLabel ?? t.button}
       </Button>
 
       {open ? (

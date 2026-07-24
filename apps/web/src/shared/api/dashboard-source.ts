@@ -104,6 +104,7 @@ function toPayload(input: EditorInput): Record<string, unknown> {
     eventTime: s(input.eventTime),
     venueName: s(input.venueName),
     venueAddress: s(input.venueAddress),
+    venueMapUrl: s(input.venueMapUrl),
     story: s(input.story),
     dressCode: s(input.dressCode),
     parents,

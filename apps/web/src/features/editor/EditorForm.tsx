@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { EditorInput, ScheduleRow } from '@/shared/api/editor-types';
 import type { SiteDict } from '@/shared/i18n/site';
@@ -10,6 +10,11 @@ import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { toast } from '@/shared/ui/toast';
+
+/** Majburiy maydonlar — bo'sh/xato bo'lsa scroll + highlight qilinadi. */
+type FieldKey = 'groomName' | 'brideName' | 'eventDate' | 'venueMapUrl';
+const invalidRing = 'border-destructive ring-2 ring-destructive/40';
 
 interface EditorFormProps {
   readonly mode: 'create' | 'edit';
@@ -70,8 +75,23 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
   const router = useRouter();
   const [f, setF] = useState<EditorInput>({ ...empty, ...initial });
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [invalid, setInvalid] = useState<ReadonlySet<FieldKey>>(new Set());
   const [uploading, setUploading] = useState(false);
+
+  const fieldRefs = useRef<Record<FieldKey, HTMLInputElement | null>>({
+    groomName: null,
+    brideName: null,
+    eventDate: null,
+    venueMapUrl: null,
+  });
+
+  const clearInvalid = (key: FieldKey): void =>
+    setInvalid((prev) => {
+      if (!prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.delete(key);
+      return next;
+    });
 
   async function uploadFiles(files: FileList | null): Promise<void> {
     if (!files || files.length === 0) return;
@@ -84,9 +104,9 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
         const res = await fetch('/api/upload', { method: 'POST', body: fd });
         const json = (await res.json()) as { url?: string; error?: string };
         if (json.url) added.push(json.url);
-        else if (json.error) setError(json.error);
+        else if (json.error) toast.error(json.error);
       } catch {
-        setError('Rasm yuklashda xatolik.');
+        toast.error('Rasm yuklashda xatolik.');
       }
     }
     if (added.length > 0) setF((prev) => ({ ...prev, gallery: [...(prev.gallery ?? []), ...added] }));
@@ -118,9 +138,30 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
     return `${d}.${m}.${y}${f.eventTime ? ` · ${f.eventTime}` : ''}`;
   }, [f.eventDate, f.eventTime]);
 
+  /** Majburiy maydonlarni tekshiradi; xato bo'lsa birinchisiga scroll + fokus. */
+  function validate(): boolean {
+    const bad: FieldKey[] = [];
+    if (!f.groomName.trim()) bad.push('groomName');
+    if (!f.brideName.trim()) bad.push('brideName');
+    if (!f.eventDate) bad.push('eventDate');
+    if (!/^https?:\/\/.+/.test((f.venueMapUrl ?? '').trim())) bad.push('venueMapUrl');
+
+    const firstKey = bad[0];
+    if (firstKey) {
+      setInvalid(new Set(bad));
+      toast.error(t.errFix);
+      const first = fieldRefs.current[firstKey];
+      first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.setTimeout(() => first?.focus({ preventScroll: true }), 300);
+      return false;
+    }
+    setInvalid(new Set());
+    return true;
+  }
+
   async function submit(): Promise<void> {
+    if (!validate()) return;
     setBusy(true);
-    setError(null);
     const galleryClean = (f.gallery ?? []).map((g) => g.trim()).filter(Boolean);
     const payload: EditorInput = { ...f, gallery: galleryClean };
     const res =
@@ -130,7 +171,7 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
     if (res.ok) {
       router.push('/dashboard?saved=1');
     } else {
-      setError(res.error);
+      toast.error(res.error);
       setBusy(false);
     }
   }
@@ -143,23 +184,47 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t.groom}>
               <Input
+                ref={(el) => {
+                  fieldRefs.current.groomName = el;
+                }}
                 value={f.groomName}
-                onChange={(e) => set('groomName', e.target.value)}
+                onChange={(e) => {
+                  set('groomName', e.target.value);
+                  clearInvalid('groomName');
+                }}
                 placeholder="Aziz"
+                aria-invalid={invalid.has('groomName')}
+                className={invalid.has('groomName') ? invalidRing : undefined}
               />
             </Field>
             <Field label={t.bride}>
               <Input
+                ref={(el) => {
+                  fieldRefs.current.brideName = el;
+                }}
                 value={f.brideName}
-                onChange={(e) => set('brideName', e.target.value)}
+                onChange={(e) => {
+                  set('brideName', e.target.value);
+                  clearInvalid('brideName');
+                }}
                 placeholder="Malika"
+                aria-invalid={invalid.has('brideName')}
+                className={invalid.has('brideName') ? invalidRing : undefined}
               />
             </Field>
             <Field label={t.date}>
               <Input
+                ref={(el) => {
+                  fieldRefs.current.eventDate = el;
+                }}
                 type="date"
                 value={f.eventDate}
-                onChange={(e) => set('eventDate', e.target.value)}
+                onChange={(e) => {
+                  set('eventDate', e.target.value);
+                  clearInvalid('eventDate');
+                }}
+                aria-invalid={invalid.has('eventDate')}
+                className={invalid.has('eventDate') ? invalidRing : undefined}
               />
             </Field>
             <Field label={t.time}>
@@ -187,6 +252,27 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
               placeholder="Toshkent sh., Chilonzor tumani"
             />
           </Field>
+          <div className="space-y-1.5">
+            <Label>
+              {t.venueMap} <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              ref={(el) => {
+                fieldRefs.current.venueMapUrl = el;
+              }}
+              type="url"
+              inputMode="url"
+              value={f.venueMapUrl ?? ''}
+              onChange={(e) => {
+                set('venueMapUrl', e.target.value);
+                clearInvalid('venueMapUrl');
+              }}
+              placeholder="https://yandex.uz/maps/-/..."
+              aria-invalid={invalid.has('venueMapUrl')}
+              className={invalid.has('venueMapUrl') ? invalidRing : undefined}
+            />
+            <p className="text-xs leading-relaxed text-muted-foreground">{t.venueMapHint}</p>
+          </div>
         </Section>
 
         <Section title={t.secDetails}>
@@ -344,12 +430,6 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
             </div>
           ) : null}
         </Section>
-
-        {error ? (
-          <p className="rounded-lg bg-destructive/15 px-4 py-3 text-sm text-destructive-foreground">
-            {error}
-          </p>
-        ) : null}
 
         <div className="flex gap-3">
           <Button onClick={submit} disabled={busy} size="lg">

@@ -51,6 +51,23 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
           <p className="mt-6 rounded-lg bg-primary/15 px-4 py-3 text-sm text-primary">{d.saved}</p>
         ) : null}
 
+        {/* Onboarding — foydalanuvchiga keyingi qadamlarni ko'rsatadi */}
+        <div className="mt-8 rounded-2xl border border-border bg-card/60 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/80">
+            {d.guideTitle}
+          </p>
+          <ol className="mt-4 grid gap-4 sm:grid-cols-3">
+            {[d.guide1, d.guide2, d.guide3].map((step, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                  {i + 1}
+                </span>
+                <span className="text-sm leading-relaxed text-muted-foreground">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
         {invitations.length === 0 ? (
           <Card className="mt-10">
             <CardContent className="py-14 text-center">
@@ -120,7 +137,14 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                         <Link href={`/dashboard/${inv.id}/edit`}>{d.edit}</Link>
                       </Button>
                       <QrButton url={link} name={`${inv.groomName}-${inv.brideName}`} />
-                      <DeleteInvitationButton id={inv.id} label={d.del} />
+                      <DeleteInvitationButton
+                        id={inv.id}
+                        label={d.del}
+                        confirmTitle={d.delConfirmTitle}
+                        confirmText={d.delConfirmText}
+                        confirmYes={d.delYes}
+                        confirmNo={d.delNo}
+                      />
                     </div>
                   </CardContent>
                 </Card>

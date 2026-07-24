@@ -35,6 +35,7 @@ export interface CreateInvitationInput {
   readonly eventTime?: string;
   readonly venueName?: string;
   readonly venueAddress?: string;
+  readonly venueMapUrl?: string;
   readonly location?: { readonly lat: number; readonly lng: number };
   readonly story?: string;
   readonly dressCode?: string;
@@ -113,8 +114,11 @@ export function createInvitation(input: CreateInvitationInput): Result<Invitatio
 
   const venueName = cleanOptional(input.venueName);
   const venueAddress = cleanOptional(input.venueAddress);
+  const venueMapUrl = cleanOptional(input.venueMapUrl);
   const venue: Venue | undefined =
-    venueName || venueAddress || geo ? { name: venueName, address: venueAddress, geo } : undefined;
+    venueName || venueAddress || geo || venueMapUrl
+      ? { name: venueName, address: venueAddress, geo, mapUrl: venueMapUrl }
+      : undefined;
 
   const musicSource: MusicSource = input.musicSource ?? 'none';
 

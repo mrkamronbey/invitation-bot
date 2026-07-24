@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { Cormorant_Garamond, Playfair_Display } from 'next/font/google';
 import './globals.css';
+import { Toaster } from '@/shared/ui/toast';
 
 // Nafis serif — kuyov-kelin ismi va katta sarlavhalar uchun. Tana esa Gilroy.
 const display = Cormorant_Garamond({
@@ -38,7 +39,10 @@ export default async function RootLayout({
       lang={lang}
       className={`${display.variable} ${royalSerif.variable}${dark ? ' dark' : ''}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

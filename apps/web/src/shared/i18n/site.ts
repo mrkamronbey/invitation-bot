@@ -32,17 +32,21 @@ export interface SiteDict {
     empty: string; emptyHint: string; nashr: string; qoralama: string;
     responses: string; guestsWord: string; view: string; copy: string; copied: string;
     guests: string; edit: string; del: string; logout: string;
+    guideTitle: string; guide1: string; guide2: string; guide3: string;
+    delConfirmTitle: string; delConfirmText: string; delYes: string; delNo: string;
   };
   editor: {
     newEyebrow: string; newTitle: string; editEyebrow: string;
     secMain: string; secVenue: string; secDetails: string; secParents: string;
     secSchedule: string; secGift: string; secGallery: string;
     groom: string; bride: string; date: string; time: string;
-    venueName: string; address: string; story: string; dressCode: string;
+    venueName: string; address: string; venueMap: string; venueMapHint: string;
+    story: string; dressCode: string;
     groomFather: string; groomMother: string; brideFather: string; brideMother: string;
     addBand: string; cardNumber: string; cardHolder: string; note: string;
     upload: string; uploading: string; uploadHint: string;
     create: string; save: string; saving: string; cancel: string;
+    errFix: string;
   };
   guests: {
     back: string; suffix: string; responses: string; coming: string; totalGuests: string;
@@ -154,6 +158,14 @@ const uz: SiteDict = {
     edit: 'Tahrir',
     del: 'O‘chirish',
     logout: 'Chiqish',
+    guideTitle: 'Keyingi qadamlar',
+    guide1: 'Taklifnoma yarating yoki mavjudini tahrirlang.',
+    guide2: 'Noyob havolani nusxalab mehmonlarga ulashing.',
+    guide3: '“Mehmonlar” bo‘limida kim kelishini kuzatib boring.',
+    delConfirmTitle: 'Taklifnomani o‘chirasizmi?',
+    delConfirmText: 'Bu amalni qaytarib bo‘lmaydi. Taklifnoma va unga kelgan barcha javoblar butunlay o‘chiriladi.',
+    delYes: 'Ha, o‘chirish',
+    delNo: 'Bekor qilish',
   },
   editor: {
     newEyebrow: 'Yangi',
@@ -172,8 +184,10 @@ const uz: SiteDict = {
     time: 'Vaqt (ixtiyoriy)',
     venueName: 'To‘yxona nomi',
     address: 'Manzil',
+    venueMap: 'Yandex Xarita havolasi',
+    venueMapHint: 'Majburiy — Yandex Xaritada to‘yxonani toping, “Ulashish” havolasini nusxalab shu yerga joylang. Mehmonlar aniq manzilni ko‘radi.',
     story: 'Qisqa hikoya / taklif matni',
-    dressCode: 'Dress-code (ixtiyoriy)',
+    dressCode: 'Dress-code — kiyinish uslubi (ixtiyoriy)',
     groomFather: 'Kuyov otasi',
     groomMother: 'Kuyov onasi',
     brideFather: 'Kelin otasi',
@@ -189,6 +203,7 @@ const uz: SiteDict = {
     save: 'Saqlash',
     saving: 'Saqlanmoqda…',
     cancel: 'Bekor qilish',
+    errFix: 'Iltimos, belgilangan maydonlarni to‘g‘ri to‘ldiring.',
   },
   guests: {
     back: '← Orqaga',
@@ -307,6 +322,14 @@ const ru: SiteDict = {
     edit: 'Изменить',
     del: 'Удалить',
     logout: 'Выйти',
+    guideTitle: 'Дальнейшие шаги',
+    guide1: 'Создайте приглашение или отредактируйте существующее.',
+    guide2: 'Скопируйте уникальную ссылку и отправьте гостям.',
+    guide3: 'Следите, кто придёт, в разделе «Гости».',
+    delConfirmTitle: 'Удалить приглашение?',
+    delConfirmText: 'Это действие необратимо. Приглашение и все полученные ответы будут удалены навсегда.',
+    delYes: 'Да, удалить',
+    delNo: 'Отмена',
   },
   editor: {
     newEyebrow: 'Новое',
@@ -325,8 +348,10 @@ const ru: SiteDict = {
     time: 'Время (необязательно)',
     venueName: 'Название места',
     address: 'Адрес',
+    venueMap: 'Ссылка на Яндекс Карту',
+    venueMapHint: 'Обязательно — найдите место в Яндекс Картах, скопируйте ссылку «Поделиться» и вставьте сюда. Гости увидят точный адрес.',
     story: 'Короткий текст / история',
-    dressCode: 'Дресс-код (необязательно)',
+    dressCode: 'Дресс-код — стиль одежды (необязательно)',
     groomFather: 'Отец жениха',
     groomMother: 'Мать жениха',
     brideFather: 'Отец невесты',
@@ -342,6 +367,7 @@ const ru: SiteDict = {
     save: 'Сохранить',
     saving: 'Сохранение…',
     cancel: 'Отмена',
+    errFix: 'Пожалуйста, правильно заполните отмеченные поля.',
   },
   guests: {
     back: '← Назад',

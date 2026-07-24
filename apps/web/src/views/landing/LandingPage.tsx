@@ -18,6 +18,7 @@ import {
 import type { SiteDict, SiteLang } from '@/shared/i18n/site';
 import { Reveal } from '@/shared/ui/Reveal';
 import { Button } from '@/shared/ui/button';
+import { BotCodeLogin } from '@/features/auth/BotCodeLogin';
 import { LangSwitcher } from '@/features/i18n/LangSwitcher';
 import { ThemeToggle } from '@/features/theme/ThemeToggle';
 
@@ -54,6 +55,7 @@ interface LandingProps {
 }
 
 export function LandingPage({ lang, dict: d }: LandingProps): ReactNode {
+  const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ?? '';
   return (
     <main className="bg-background text-foreground">
       {/* Nav */}
@@ -64,9 +66,21 @@ export function LandingPage({ lang, dict: d }: LandingProps): ReactNode {
         <div className="flex items-center gap-3">
           <ThemeToggle />
           <LangSwitcher current={lang} />
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/login">{d.nav.login}</Link>
-          </Button>
+          {botUsername ? (
+            <BotCodeLogin
+              botUsername={botUsername}
+              t={d.login}
+              triggerLabel={d.nav.login}
+              triggerVariant="ghost"
+              triggerSize="sm"
+              triggerFullWidth={false}
+              triggerIcon={false}
+            />
+          ) : (
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">{d.nav.login}</Link>
+            </Button>
+          )}
           <Button asChild size="sm">
             <a href={BOT_URL} target="_blank" rel="noreferrer">
               {d.nav.start}
@@ -242,9 +256,21 @@ export function LandingPage({ lang, dict: d }: LandingProps): ReactNode {
                   {d.cta.tg}
                 </a>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/login">{d.cta.site}</Link>
-              </Button>
+              {botUsername ? (
+                <BotCodeLogin
+                  botUsername={botUsername}
+                  t={d.login}
+                  triggerLabel={d.cta.site}
+                  triggerVariant="outline"
+                  triggerSize="lg"
+                  triggerFullWidth={false}
+                  triggerIcon={false}
+                />
+              ) : (
+                <Button asChild size="lg" variant="outline">
+                  <Link href="/login">{d.cta.site}</Link>
+                </Button>
+              )}
             </div>
           </div>
         </Reveal>

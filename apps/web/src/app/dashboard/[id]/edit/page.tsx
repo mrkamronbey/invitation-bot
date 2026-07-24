@@ -23,6 +23,7 @@ function toEditorInput(inv: Invitation): EditorInput {
     eventTime: inv.eventTime ?? '',
     venueName: inv.venue?.name ?? '',
     venueAddress: inv.venue?.address ?? '',
+    venueMapUrl: inv.venue?.mapUrl ?? '',
     story: inv.story ?? '',
     dressCode: inv.dressCode ?? '',
     parents: {

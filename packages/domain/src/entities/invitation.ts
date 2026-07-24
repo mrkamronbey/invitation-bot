@@ -15,6 +15,8 @@ export interface Venue {
   readonly name?: string;
   readonly address?: string;
   readonly geo?: GeoLocation;
+  /** Yandex Maps (yoki boshqa) xarita havolasi — aniq manzil uchun. */
+  readonly mapUrl?: string;
 }
 
 /** Bir tomon ota-onasi (kuyov yoki kelin). */

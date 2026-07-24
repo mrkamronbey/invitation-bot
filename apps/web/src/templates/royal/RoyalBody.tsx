@@ -252,21 +252,42 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
         </div>
       </Wrap>
 
-      {/* Manzil + xarita (geo bo'lsa) */}
-      {invitation.venue?.geo ? (
+      {/* Manzil + xarita (geo yoki Yandex havola bo'lsa) */}
+      {invitation.venue?.geo || invitation.venue?.mapUrl ? (
         <Wrap>
           <Reveal>
             <Heading>{t.location}</Heading>
           </Reveal>
-          <Reveal variant="scale">
-            <MapBlock
-              lat={invitation.venue.geo.lat}
-              lng={invitation.venue.geo.lng}
-              venueName={invitation.venue.name}
-              address={invitation.venue.address}
-              directionsLabel={t.directions}
-            />
-          </Reveal>
+          {invitation.venue?.name ? (
+            <Reveal>
+              <p className="mb-5 text-center text-lg text-gold-light">{invitation.venue.name}</p>
+            </Reveal>
+          ) : null}
+          {invitation.venue?.geo ? (
+            <Reveal variant="scale">
+              <MapBlock
+                lat={invitation.venue.geo.lat}
+                lng={invitation.venue.geo.lng}
+                venueName={invitation.venue.name}
+                address={invitation.venue.address}
+                directionsLabel={t.directions}
+              />
+            </Reveal>
+          ) : null}
+          {invitation.venue?.mapUrl ? (
+            <Reveal>
+              <div className="mt-6 flex justify-center">
+                <a
+                  href={invitation.venue.mapUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-gold-light/50 bg-gold-light/10 px-7 py-3 text-sm uppercase tracking-[0.18em] text-gold-light transition-colors hover:bg-gold-light/20"
+                >
+                  {t.directions}
+                </a>
+              </div>
+            </Reveal>
+          ) : null}
         </Wrap>
       ) : null}
 

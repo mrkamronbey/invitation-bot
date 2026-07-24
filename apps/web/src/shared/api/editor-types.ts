@@ -11,6 +11,7 @@ export interface EditorInput {
   eventTime?: string; // HH:mm
   venueName?: string;
   venueAddress?: string;
+  venueMapUrl?: string;
   story?: string;
   dressCode?: string;
   parents?: {
