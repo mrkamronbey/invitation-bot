@@ -1,6 +1,7 @@
 'use client';
 
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 
@@ -26,6 +27,9 @@ export function ConfirmDialog({
   onCancel,
   busy = false,
 }: ConfirmDialogProps): ReactNode {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent): void => {
@@ -35,9 +39,9 @@ export function ConfirmDialog({
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onCancel]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
       className="animate-overlay-in fixed inset-0 z-[90] flex items-center justify-center bg-black/50 px-6 backdrop-blur-sm"
       onClick={onCancel}
@@ -66,6 +70,7 @@ export function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
