@@ -8,6 +8,8 @@ import { CalendarCard } from '@/widgets/calendar/CalendarCard';
 import { AddToCalendar } from '@/widgets/calendar/AddToCalendar';
 import { GiftBox } from '@/widgets/gift/GiftBox';
 import { WishesWall } from '@/widgets/wishes/WishesWall';
+import { MapBlock } from '@/widgets/map/MapBlock';
+import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { Bloom } from './RoyalFlora';
 import { RoyalDivider } from './RoyalDivider';
@@ -80,7 +82,13 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
     brideSide: ru ? 'Невеста' : 'Kelin',
     parentsGroom: ru ? 'Родители жениха' : 'Kuyov ota-onasi',
     parentsBride: ru ? 'Родители невесты' : 'Kelin ota-onasi',
+    location: ru ? 'Как добраться' : 'Manzil',
+    directions: ru ? 'Маршрут' : 'Yo‘l ko‘rsatish',
+    share: ru ? 'Поделиться' : 'Ulashing',
   };
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+  const inviteUrl = `${siteUrl}/i/${invitation.slug}`;
 
   // Data-driven bo'limlar — faqat ma'lumot bo'lsa ko'rsatiladi
   const parents = invitation.parents;
@@ -244,6 +252,24 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
         </div>
       </Wrap>
 
+      {/* Manzil + xarita (geo bo'lsa) */}
+      {invitation.venue?.geo ? (
+        <Wrap>
+          <Reveal>
+            <Heading>{t.location}</Heading>
+          </Reveal>
+          <Reveal variant="scale">
+            <MapBlock
+              lat={invitation.venue.geo.lat}
+              lng={invitation.venue.geo.lng}
+              venueName={invitation.venue.name}
+              address={invitation.venue.address}
+              directionsLabel={t.directions}
+            />
+          </Reveal>
+        </Wrap>
+      ) : null}
+
       {/* Dress code */}
       {invitation.dressCode ? (
         <Wrap>
@@ -313,6 +339,21 @@ export async function RoyalBody({ invitation }: RoyalBodyProps): Promise<ReactNo
           </Reveal>
         </Wrap>
       ) : null}
+
+      {/* Ulashish */}
+      <Wrap>
+        <Reveal>
+          <p className="mb-5 text-center text-xs uppercase tracking-[0.3em] text-gold-light/80">
+            {t.share}
+          </p>
+          <ShareButtons
+            url={inviteUrl}
+            title={`${invitation.groomName} & ${invitation.brideName}`}
+            copyLabel={t.copy}
+            copiedLabel={t.copied}
+          />
+        </Reveal>
+      </Wrap>
 
       {/* Footer — lavr gulchambar + rahmat */}
       <footer className="flex flex-col items-center px-6 pb-12 pt-4 text-center">

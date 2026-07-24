@@ -4,6 +4,7 @@ import { formatEventDate, formatEventTime } from '@/shared/lib/format';
 import { RoyalCover } from './RoyalCover';
 import { RoyalHero } from './RoyalHero';
 import { RoyalBody } from './RoyalBody';
+import { MusicToggle } from '@/widgets/music/MusicToggle';
 
 /**
  * Royal — to'q zumrad + oltin + oq atirgul premium shablon (chungdoi
@@ -41,6 +42,9 @@ export function RoyalTemplate({ invitation }: TemplateProps): ReactNode {
         <div className="pattern-soft-dark">
           <RoyalBody invitation={invitation} />
         </div>
+        {invitation.musicSource !== 'none' && invitation.musicUrl ? (
+          <MusicToggle src={invitation.musicUrl} />
+        ) : null}
       </main>
     </RoyalCover>
     </div>
