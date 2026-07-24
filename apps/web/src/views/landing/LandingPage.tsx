@@ -19,6 +19,7 @@ import type { SiteDict, SiteLang } from '@/shared/i18n/site';
 import { Reveal } from '@/shared/ui/Reveal';
 import { Button } from '@/shared/ui/button';
 import { LangSwitcher } from '@/features/i18n/LangSwitcher';
+import { ThemeToggle } from '@/features/theme/ThemeToggle';
 
 const BOT_URL = 'https://t.me/weddingiinvitation_bot';
 const DEMO_URL = '/i/aziz-va-malika';
@@ -61,6 +62,7 @@ export function LandingPage({ lang, dict: d }: LandingProps): ReactNode {
           taklif<span className="text-primary">.uz</span>
         </span>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <LangSwitcher current={lang} />
           <Button asChild variant="ghost" size="sm">
             <Link href="/login">{d.nav.login}</Link>

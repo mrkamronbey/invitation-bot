@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { SiteLang } from '@/shared/i18n/site';
 import { Button } from '@/shared/ui/button';
 import { LangSwitcher } from '@/features/i18n/LangSwitcher';
+import { ThemeToggle } from '@/features/theme/ThemeToggle';
 
 interface SiteHeaderProps {
   readonly userName?: string;
@@ -19,6 +20,7 @@ export function SiteHeader({ userName, lang, logoutLabel }: SiteHeaderProps): Re
           taklif<span className="text-primary">.uz</span>
         </Link>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <LangSwitcher current={lang} />
           {userName ? (
             <span className="hidden text-sm text-muted-foreground sm:inline">{userName}</span>

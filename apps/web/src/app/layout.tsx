@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { cookies } from 'next/headers';
 import { Cormorant_Garamond, Playfair_Display } from 'next/font/google';
 import './globals.css';
 
@@ -25,9 +26,18 @@ export const metadata: Metadata = {
   description: 'Telegram orqali yaratiladigan chiroyli to‘y taklifnomalari.',
 };
 
-export default function RootLayout({ children }: { readonly children: ReactNode }): ReactNode {
+export default async function RootLayout({
+  children,
+}: {
+  readonly children: ReactNode;
+}): Promise<ReactNode> {
+  const dark = (await cookies()).get('site_theme')?.value === 'dark';
+  const lang = (await cookies()).get('site_lang')?.value === 'ru' ? 'ru' : 'uz';
   return (
-    <html lang="uz" className={`${display.variable} ${royalSerif.variable}`}>
+    <html
+      lang={lang}
+      className={`${display.variable} ${royalSerif.variable}${dark ? ' dark' : ''}`}
+    >
       <body>{children}</body>
     </html>
   );

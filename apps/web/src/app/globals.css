@@ -64,6 +64,30 @@
   --radius: 0.75rem;
 }
 
+/* Dark tema — issiq grafit + oltin (sayt UI uchun; taklifnoma o'zi doim to'q) */
+:root.dark {
+  color-scheme: dark;
+  --background: 30 9% 10%;
+  --foreground: 40 30% 92%;
+  --card: 30 8% 13%;
+  --card-foreground: 40 30% 92%;
+  --popover: 30 8% 13%;
+  --popover-foreground: 40 30% 92%;
+  --primary: 41 52% 66%;
+  --primary-foreground: 30 20% 12%;
+  --secondary: 30 8% 18%;
+  --secondary-foreground: 40 30% 92%;
+  --muted: 30 8% 18%;
+  --muted-foreground: 35 12% 62%;
+  --accent: 41 45% 58%;
+  --accent-foreground: 30 20% 12%;
+  --destructive: 0 55% 52%;
+  --destructive-foreground: 40 30% 95%;
+  --border: 30 8% 22%;
+  --input: 30 8% 22%;
+  --ring: 41 52% 66%;
+}
+
 html,
 body {
   padding: 0;
@@ -71,8 +95,8 @@ body {
 }
 
 body {
-  background-color: theme('colors.cream');
-  color: theme('colors.ink');
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-family: theme('fontFamily.sans');
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
