@@ -62,7 +62,7 @@ export default async function EditInvitationPage({ params }: PageProps): Promise
       <SiteHeader userName={session.name} lang={lang} logoutLabel={dict.dash.logout} />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <p className="text-xs uppercase tracking-[0.3em] text-primary/80">{dict.editor.editEyebrow}</p>
-        <h1 className="mb-8 mt-2 font-display text-4xl">
+        <h1 className="mb-8 mt-2 text-4xl font-bold tracking-tight">
           {invitation.groomName} &amp; {invitation.brideName}
         </h1>
         <EditorForm mode="edit" invitationId={id} initial={toEditorInput(invitation)} t={dict.editor} />

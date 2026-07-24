@@ -39,7 +39,7 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-primary/80">Dashboard</p>
-            <h1 className="mt-2 font-display text-4xl">{d.title}</h1>
+            <h1 className="mt-2 text-4xl font-bold tracking-tight">{d.title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{d.hello(session.name)}</p>
           </div>
           <Button asChild>
@@ -54,7 +54,7 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
         {invitations.length === 0 ? (
           <Card className="mt-10">
             <CardContent className="py-14 text-center">
-              <p className="font-display text-2xl text-primary">{d.empty}</p>
+              <p className="text-2xl font-bold text-primary">{d.empty}</p>
               <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">{d.emptyHint}</p>
             </CardContent>
           </Card>
@@ -90,11 +90,11 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                     {st ? (
                       <div className="flex gap-4 text-sm">
                         <span>
-                          <span className="font-display text-xl text-primary">{st.responses}</span>{' '}
+                          <span className="text-xl font-bold text-primary">{st.responses}</span>{' '}
                           <span className="text-muted-foreground">{d.responses}</span>
                         </span>
                         <span>
-                          <span className="font-display text-xl text-primary">
+                          <span className="text-xl font-bold text-primary">
                             {st.totalGuests}
                           </span>{' '}
                           <span className="text-muted-foreground">{d.guestsWord}</span>

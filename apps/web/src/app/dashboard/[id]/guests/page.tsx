@@ -34,7 +34,7 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
         <Button asChild variant="ghost" size="sm">
           <Link href="/dashboard">{g.back}</Link>
         </Button>
-        <h1 className="mt-3 font-display text-3xl">
+        <h1 className="mt-3 text-3xl font-bold tracking-tight">
           {invitation.groomName} &amp; {invitation.brideName} — {g.suffix}
         </h1>
 
@@ -47,7 +47,7 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
             ].map((s) => (
               <Card key={s.l}>
                 <CardContent className="py-5 text-center">
-                  <p className="font-display text-3xl text-primary">{s.n}</p>
+                  <p className="text-3xl font-bold tracking-tight text-primary">{s.n}</p>
                   <p className="text-xs text-muted-foreground">{s.l}</p>
                 </CardContent>
               </Card>
