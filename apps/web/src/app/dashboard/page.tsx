@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSession } from '@/shared/auth/current-user';
 import { getMyStats, listMyInvitations } from '@/shared/api/dashboard-source';
+import { getSiteDict, getSiteLang } from '@/shared/i18n/site';
 import { formatEventDate } from '@/shared/lib/format';
 import { SiteHeader } from '@/widgets/site-header/SiteHeader';
 import { Button } from '@/shared/ui/button';
@@ -23,6 +24,8 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
   if (!session) redirect('/login');
 
   const { saved } = await searchParams;
+  const lang = await getSiteLang();
+  const d = getSiteDict(lang).dash;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
   const invitations = await listMyInvitations(session.sub);
   const stats = await Promise.all(
@@ -31,35 +34,28 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} />
+      <SiteHeader userName={session.name} lang={lang} logoutLabel={d.logout} />
       <main className="mx-auto max-w-5xl px-6 py-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-primary/80">Dashboard</p>
-            <h1 className="mt-2 font-display text-4xl">Taklifnomalarim</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Salom, {session.name}! Bu yerda taklifnomalaringizni boshqarasiz.
-            </p>
+            <h1 className="mt-2 font-display text-4xl">{d.title}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{d.hello(session.name)}</p>
           </div>
           <Button asChild>
-            <Link href="/dashboard/new">+ Yangi taklifnoma</Link>
+            <Link href="/dashboard/new">{d.newBtn}</Link>
           </Button>
         </div>
 
         {saved ? (
-          <p className="mt-6 rounded-lg bg-primary/15 px-4 py-3 text-sm text-primary">
-            ✓ Saqlandi! Taklifnoma tayyor — havolani nusxalab ulashishingiz mumkin.
-          </p>
+          <p className="mt-6 rounded-lg bg-primary/15 px-4 py-3 text-sm text-primary">{d.saved}</p>
         ) : null}
 
         {invitations.length === 0 ? (
           <Card className="mt-10">
             <CardContent className="py-14 text-center">
-              <p className="font-display text-2xl text-primary">Hozircha taklifnoma yo‘q</p>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
-                Telegram bot orqali birinchi taklifnomangizni yarating — u shu yerda
-                paydo bo‘ladi.
-              </p>
+              <p className="font-display text-2xl text-primary">{d.empty}</p>
+              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">{d.emptyHint}</p>
             </CardContent>
           </Card>
         ) : (
@@ -81,7 +77,7 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                             : 'bg-muted text-muted-foreground'
                         }`}
                       >
-                        {inv.status === 'published' ? 'Nashr' : 'Qoralama'}
+                        {inv.status === 'published' ? d.nashr : d.qoralama}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -95,13 +91,13 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                       <div className="flex gap-4 text-sm">
                         <span>
                           <span className="font-display text-xl text-primary">{st.responses}</span>{' '}
-                          <span className="text-muted-foreground">javob</span>
+                          <span className="text-muted-foreground">{d.responses}</span>
                         </span>
                         <span>
                           <span className="font-display text-xl text-primary">
                             {st.totalGuests}
                           </span>{' '}
-                          <span className="text-muted-foreground">mehmon</span>
+                          <span className="text-muted-foreground">{d.guestsWord}</span>
                         </span>
                       </div>
                     ) : null}
@@ -113,18 +109,18 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
                     <div className="flex flex-wrap gap-2">
                       <Button asChild size="sm" variant="outline">
                         <Link href={`/i/${inv.slug}`} target="_blank" rel="noreferrer">
-                          Ko‘rish
+                          {d.view}
                         </Link>
                       </Button>
-                      <CopyLinkButton url={link} />
+                      <CopyLinkButton url={link} copyLabel={d.copy} copiedLabel={d.copied} />
                       <Button asChild size="sm" variant="ghost">
-                        <Link href={`/dashboard/${inv.id}/guests`}>Mehmonlar</Link>
+                        <Link href={`/dashboard/${inv.id}/guests`}>{d.guests}</Link>
                       </Button>
                       <Button asChild size="sm" variant="ghost">
-                        <Link href={`/dashboard/${inv.id}/edit`}>Tahrir</Link>
+                        <Link href={`/dashboard/${inv.id}/edit`}>{d.edit}</Link>
                       </Button>
                       <QrButton url={link} name={`${inv.groomName}-${inv.brideName}`} />
-                      <DeleteInvitationButton id={inv.id} label="O‘chirish" />
+                      <DeleteInvitationButton id={inv.id} label={d.del} />
                     </div>
                   </CardContent>
                 </Card>

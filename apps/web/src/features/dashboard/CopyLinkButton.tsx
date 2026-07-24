@@ -3,8 +3,14 @@
 import { type ReactNode, useState } from 'react';
 import { Button } from '@/shared/ui/button';
 
+interface Props {
+  readonly url: string;
+  readonly copyLabel: string;
+  readonly copiedLabel: string;
+}
+
 /** Taklifnoma havolasini clipboard'ga nusxalaydi. */
-export function CopyLinkButton({ url }: { readonly url: string }): ReactNode {
+export function CopyLinkButton({ url, copyLabel, copiedLabel }: Props): ReactNode {
   const [copied, setCopied] = useState(false);
 
   async function copy(): Promise<void> {
@@ -19,7 +25,7 @@ export function CopyLinkButton({ url }: { readonly url: string }): ReactNode {
 
   return (
     <Button type="button" variant="secondary" size="sm" onClick={copy}>
-      {copied ? 'Nusxalandi ✓' : 'Havolani nusxalash'}
+      {copied ? copiedLabel : copyLabel}
     </Button>
   );
 }

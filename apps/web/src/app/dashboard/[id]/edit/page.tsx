@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import type { Invitation } from '@invitation/domain';
 import { getSession } from '@/shared/auth/current-user';
 import { getMyInvitation } from '@/shared/api/dashboard-source';
+import { getSiteDict, getSiteLang } from '@/shared/i18n/site';
 import type { EditorInput } from '@/shared/api/editor-types';
 import { SiteHeader } from '@/widgets/site-header/SiteHeader';
 import { EditorForm } from '@/features/editor/EditorForm';
@@ -53,10 +54,11 @@ export default async function EditInvitationPage({ params }: PageProps): Promise
   const { id } = await params;
   const invitation = await getMyInvitation(id, session.sub);
   if (!invitation) notFound();
+  const lang = await getSiteLang();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} />
+      <SiteHeader userName={session.name} lang={lang} logoutLabel={getSiteDict(lang).dash.logout} />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <p className="text-xs uppercase tracking-[0.3em] text-primary/80">Tahrir</p>
         <h1 className="mb-8 mt-2 font-display text-4xl">

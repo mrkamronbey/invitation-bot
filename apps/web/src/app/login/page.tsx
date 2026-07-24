@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getSession } from '@/shared/auth/current-user';
+import { getSiteDict, getSiteLang } from '@/shared/i18n/site';
 import { TelegramLoginButton } from '@/features/auth/TelegramLoginButton';
 import { Card, CardContent } from '@/shared/ui/card';
 
@@ -15,6 +16,7 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
   if (session) redirect('/dashboard');
 
   const { error } = await searchParams;
+  const d = getSiteDict(await getSiteLang()).login;
   const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ?? '';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
   const authUrl = `${siteUrl}/api/auth/telegram`;
@@ -31,16 +33,12 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
 
         <Card>
           <CardContent className="px-8 py-10">
-            <h1 className="text-2xl font-bold tracking-tight">Xush kelibsiz</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Taklifnomalaringizni boshqarish uchun Telegram orqali kiring.
-            </p>
+            <h1 className="text-2xl font-bold tracking-tight">{d.title}</h1>
+            <p className="mt-2 text-sm text-muted-foreground">{d.subtitle}</p>
 
             {error ? (
               <p className="mt-5 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                {error === 'server'
-                  ? 'Serverda xatolik. Birozdan so‘ng qayta urinib ko‘ring.'
-                  : 'Kirish tasdiqlanmadi. Qayta urinib ko‘ring.'}
+                {error === 'server' ? d.errServer : d.errAuth}
               </p>
             ) : null}
 
@@ -48,17 +46,13 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
               {botUsername ? (
                 <TelegramLoginButton botUsername={botUsername} authUrl={authUrl} />
               ) : (
-                <p className="text-xs text-muted-foreground">
-                  Login sozlanmagan (NEXT_PUBLIC_TELEGRAM_BOT_USERNAME kerak).
-                </p>
+                <p className="text-xs text-muted-foreground">{d.notConfigured}</p>
               )}
             </div>
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-xs text-muted-foreground">
-          Botda ro‘yxatdan o‘tgan bo‘lsangiz — o‘sha akkaunt bilan kiraverasiz.
-        </p>
+        <p className="mt-6 text-xs text-muted-foreground">{d.hint}</p>
       </div>
     </main>
   );

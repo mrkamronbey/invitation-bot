@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { getSession } from '@/shared/auth/current-user';
 import { getMyInvitation, getMyStats } from '@/shared/api/dashboard-source';
+import { getSiteDict, getSiteLang } from '@/shared/i18n/site';
 import { SiteHeader } from '@/widgets/site-header/SiteHeader';
 import { Card, CardContent } from '@/shared/ui/card';
 import { Button } from '@/shared/ui/button';
@@ -22,10 +23,11 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
   const invitation = await getMyInvitation(id, session.sub);
   if (!invitation) notFound();
   const stats = await getMyStats(id, session.sub);
+  const lang = await getSiteLang();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} />
+      <SiteHeader userName={session.name} lang={lang} logoutLabel={getSiteDict(lang).dash.logout} />
       <main className="mx-auto max-w-3xl px-6 py-10">
         <Button asChild variant="ghost" size="sm">
           <Link href="/dashboard">← Orqaga</Link>
