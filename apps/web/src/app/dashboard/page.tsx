@@ -34,7 +34,7 @@ export default async function DashboardPage({ searchParams }: PageProps): Promis
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} lang={lang} logoutLabel={d.logout} />
+      <SiteHeader userName={session.name} lang={lang} d={d} />
       <main className="mx-auto max-w-5xl px-6 py-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

@@ -34,6 +34,20 @@ export interface SiteDict {
     guests: string; edit: string; del: string; logout: string;
     guideTitle: string; guide1: string; guide2: string; guide3: string;
     delConfirmTitle: string; delConfirmText: string; delYes: string; delNo: string;
+    navDashboard: string; navStats: string; navProfile: string;
+    logoutConfirmTitle: string; logoutConfirmText: string;
+  };
+  stats: {
+    eyebrow: string; title: string; subtitle: string;
+    totalInvites: string; totalResponses: string; totalAttending: string;
+    totalGuests: string; declining: string; responseRate: string;
+    perInvite: string; empty: string; emptyHint: string; view: string; guests: string;
+  };
+  profile: {
+    eyebrow: string; title: string; subtitle: string;
+    account: string; name: string; telegramId: string; invitesCount: string;
+    prefs: string; language: string; theme: string;
+    botCard: string; botText: string; openBot: string;
   };
   editor: {
     newEyebrow: string; newTitle: string; editEyebrow: string;
@@ -166,6 +180,42 @@ const uz: SiteDict = {
     delConfirmText: 'Bu amalni qaytarib bo‘lmaydi. Taklifnoma va unga kelgan barcha javoblar butunlay o‘chiriladi.',
     delYes: 'Ha, o‘chirish',
     delNo: 'Bekor qilish',
+    navDashboard: 'Taklifnomalar',
+    navStats: 'Statistika',
+    navProfile: 'Profil',
+    logoutConfirmTitle: 'Hisobdan chiqasizmi?',
+    logoutConfirmText: 'Siz hisobingizdan chiqasiz. Qayta kirish uchun bot orqali yangi kod olishingiz kerak bo‘ladi.',
+  },
+  stats: {
+    eyebrow: 'Umumiy ko‘rsatkichlar',
+    title: 'Statistika',
+    subtitle: 'Barcha taklifnomalaringiz bo‘yicha yig‘ma ma’lumot.',
+    totalInvites: 'Taklifnomalar',
+    totalResponses: 'Jami javoblar',
+    totalAttending: 'Kelaman deganlar',
+    totalGuests: 'Jami mehmonlar',
+    declining: 'Kelmaydiganlar',
+    responseRate: 'O‘rtacha javob (bitta taklifnomaga)',
+    perInvite: 'Taklifnomalar kesimida',
+    empty: 'Hozircha ma’lumot yo‘q',
+    emptyHint: 'Birinchi taklifnomangizni yaratganingizdan so‘ng statistika shu yerda paydo bo‘ladi.',
+    view: 'Ko‘rish',
+    guests: 'Mehmonlar',
+  },
+  profile: {
+    eyebrow: 'Hisob',
+    title: 'Profil',
+    subtitle: 'Hisobingiz ma’lumotlari va sozlamalar.',
+    account: 'Hisob ma’lumotlari',
+    name: 'Ism',
+    telegramId: 'Telegram ID',
+    invitesCount: 'Taklifnomalar soni',
+    prefs: 'Sozlamalar',
+    language: 'Til',
+    theme: 'Mavzu (och / to‘q)',
+    botCard: 'Telegram bot',
+    botText: 'Taklifnoma yaratish, tahrirlash va mehmon xabarlarini olish uchun botdan ham foydalanishingiz mumkin.',
+    openBot: 'Botni ochish',
   },
   editor: {
     newEyebrow: 'Yangi',
@@ -330,6 +380,42 @@ const ru: SiteDict = {
     delConfirmText: 'Это действие необратимо. Приглашение и все полученные ответы будут удалены навсегда.',
     delYes: 'Да, удалить',
     delNo: 'Отмена',
+    navDashboard: 'Приглашения',
+    navStats: 'Статистика',
+    navProfile: 'Профиль',
+    logoutConfirmTitle: 'Выйти из аккаунта?',
+    logoutConfirmText: 'Вы выйдете из аккаунта. Для повторного входа понадобится новый код из бота.',
+  },
+  stats: {
+    eyebrow: 'Общие показатели',
+    title: 'Статистика',
+    subtitle: 'Сводные данные по всем вашим приглашениям.',
+    totalInvites: 'Приглашений',
+    totalResponses: 'Всего ответов',
+    totalAttending: 'Придут',
+    totalGuests: 'Всего гостей',
+    declining: 'Не придут',
+    responseRate: 'В среднем ответов (на приглашение)',
+    perInvite: 'По приглашениям',
+    empty: 'Пока нет данных',
+    emptyHint: 'Статистика появится здесь после создания первого приглашения.',
+    view: 'Открыть',
+    guests: 'Гости',
+  },
+  profile: {
+    eyebrow: 'Аккаунт',
+    title: 'Профиль',
+    subtitle: 'Данные аккаунта и настройки.',
+    account: 'Данные аккаунта',
+    name: 'Имя',
+    telegramId: 'Telegram ID',
+    invitesCount: 'Количество приглашений',
+    prefs: 'Настройки',
+    language: 'Язык',
+    theme: 'Тема (светлая / тёмная)',
+    botCard: 'Telegram-бот',
+    botText: 'Вы также можете использовать бот для создания, редактирования приглашений и получения ответов гостей.',
+    openBot: 'Открыть бот',
   },
   editor: {
     newEyebrow: 'Новое',

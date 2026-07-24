@@ -29,7 +29,7 @@ export default async function GuestsPage({ params }: PageProps): Promise<ReactNo
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} lang={lang} logoutLabel={dict.dash.logout} />
+      <SiteHeader userName={session.name} lang={lang} d={dict.dash} />
       <main className="mx-auto max-w-3xl px-6 py-10">
         <Button asChild variant="ghost" size="sm">
           <Link href="/dashboard">{g.back}</Link>

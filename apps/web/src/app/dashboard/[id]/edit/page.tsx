@@ -60,7 +60,7 @@ export default async function EditInvitationPage({ params }: PageProps): Promise
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader userName={session.name} lang={lang} logoutLabel={dict.dash.logout} />
+      <SiteHeader userName={session.name} lang={lang} d={dict.dash} />
       <main className="mx-auto max-w-5xl px-6 py-10">
         <p className="text-xs uppercase tracking-[0.3em] text-primary/80">{dict.editor.editEyebrow}</p>
         <h1 className="mb-8 mt-2 text-4xl font-bold tracking-tight">
