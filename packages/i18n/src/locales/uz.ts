@@ -97,6 +97,8 @@ export const uz = {
     ].join('\n'),
     chooseTemplate: 'Yoqqan shablonni tanlang: 🎨',
     continueTemplate: 'Davom etish ➡️',
+    loginCode: (code: string): string =>
+      `🔐 Saytga kirish kodingiz:\n\n<b>${code}</b>\n\nUni taklif.uz saytidagi kirish oynasiga kiriting. Kod 5 daqiqa amal qiladi.`,
     step: (n: number, total: number): string => `${n}/${total}`,
     askNames: 'Kuyov va kelin ismi?\n(masalan: Aziz va Malika)',
     invalidNames: '❗️ Ikkala ismni yozing. Masalan: Aziz va Malika',

@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Heart } from 'lucide-react';
 import { getSession } from '@/shared/auth/current-user';
 import { getSiteDict, getSiteLang } from '@/shared/i18n/site';
-import { TelegramLoginButton } from '@/features/auth/TelegramLoginButton';
+import { BotCodeLogin } from '@/features/auth/BotCodeLogin';
 import { LangSwitcher } from '@/features/i18n/LangSwitcher';
 import { ThemeToggle } from '@/features/theme/ThemeToggle';
 import { Card, CardContent } from '@/shared/ui/card';
@@ -22,8 +22,6 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
   const lang = await getSiteLang();
   const d = getSiteDict(lang).login;
   const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME ?? '';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
-  const authUrl = `${siteUrl}/api/auth/telegram`;
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 text-foreground">
@@ -53,7 +51,7 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
               <Heart className="h-7 w-7" strokeWidth={1.6} />
             </span>
 
-            <h1 className="font-display text-3xl tracking-tight">{d.title}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{d.title}</h1>
             <p className="mx-auto mt-2 max-w-[16rem] text-sm leading-relaxed text-muted-foreground">
               {d.subtitle}
             </p>
@@ -64,9 +62,9 @@ export default async function LoginPage({ searchParams }: PageProps): Promise<Re
               </p>
             ) : null}
 
-            <div className="mt-7 flex min-h-[48px] justify-center">
+            <div className="mt-7">
               {botUsername ? (
-                <TelegramLoginButton botUsername={botUsername} authUrl={authUrl} />
+                <BotCodeLogin botUsername={botUsername} t={d} />
               ) : (
                 <p className="text-xs text-muted-foreground">{d.notConfigured}</p>
               )}

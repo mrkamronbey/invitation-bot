@@ -114,6 +114,8 @@ export const ru: Messages = {
     ].join('\n'),
     chooseTemplate: 'Выберите понравившийся шаблон: 🎨',
     continueTemplate: 'Продолжить ➡️',
+    loginCode: (code: string): string =>
+      `🔐 Ваш код для входа на сайт:\n\n<b>${code}</b>\n\nВведите его в окне входа на сайте taklif.uz. Код действует 5 минут.`,
     step: (n: number, total: number): string => `${n}/${total}`,
     askNames: 'Имена жениха и невесты?\n(например: Азиз и Малика)',
     invalidNames: '❗️ Укажите оба имени. Например: Азиз и Малика',

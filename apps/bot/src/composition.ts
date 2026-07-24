@@ -8,6 +8,7 @@ import {
 import {
   CryptoIdGenerator,
   SupabaseInvitationRepository,
+  SupabaseLoginCodeRepository,
   SupabaseRsvpRepository,
   SupabaseStorage,
   SupabaseUserRepository,
@@ -27,6 +28,7 @@ function buildContainer() {
   const invitations = new SupabaseInvitationRepository(db);
   const rsvps = new SupabaseRsvpRepository(db);
   const users = new SupabaseUserRepository(db);
+  const loginCodes = new SupabaseLoginCodeRepository(db);
   const storage = new SupabaseStorage(db);
   const ids = new CryptoIdGenerator();
   const clock = new SystemClock();
@@ -35,6 +37,7 @@ function buildContainer() {
     env,
     db,
     users,
+    loginCodes,
     storage,
     ids,
     createInvitation: new CreateInvitationUseCase({ invitations, ids, clock }),

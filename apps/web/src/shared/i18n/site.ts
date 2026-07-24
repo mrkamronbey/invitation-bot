@@ -21,7 +21,12 @@ export interface SiteDict {
   faq: { title: string; items: Array<{ q: string; a: string }> };
   cta: { title: string; text: string; tg: string; site: string };
   footer: string;
-  login: { title: string; subtitle: string; notConfigured: string; hint: string; errServer: string; errAuth: string };
+  login: {
+    title: string; subtitle: string; notConfigured: string; hint: string;
+    errServer: string; errAuth: string;
+    button: string; modalTitle: string; step1: string; openBot: string;
+    step2: string; codePlaceholder: string; submit: string; submitting: string; codeError: string;
+  };
   dash: {
     title: string; hello: (n: string) => string; newBtn: string; saved: string;
     empty: string; emptyHint: string; nashr: string; qoralama: string;
@@ -118,9 +123,18 @@ const uz: SiteDict = {
     title: 'Xush kelibsiz',
     subtitle: 'Taklifnomalaringizni boshqarish uchun Telegram orqali kiring.',
     notConfigured: 'Login sozlanmagan (NEXT_PUBLIC_TELEGRAM_BOT_USERNAME kerak).',
-    hint: 'Botda ro‘yxatdan o‘tgan bo‘lsangiz — o‘sha akkaunt bilan kiraverasiz.',
+    hint: 'Xavfsiz: telefon raqami emas, faqat bot bergan bir martalik kod.',
     errServer: 'Serverda xatolik. Birozdan so‘ng qayta urinib ko‘ring.',
     errAuth: 'Kirish tasdiqlanmadi. Qayta urinib ko‘ring.',
+    button: 'Telegram orqali kirish',
+    modalTitle: 'Telegram orqali kirish',
+    step1: '1. Botni oching va kod oling',
+    openBot: 'Botni ochish',
+    step2: '2. Bot bergan 6 xonali kodni kiriting',
+    codePlaceholder: '––––––',
+    submit: 'Kirish',
+    submitting: 'Tekshirilmoqda…',
+    codeError: 'Kod noto‘g‘ri yoki muddati o‘tgan.',
   },
   dash: {
     title: 'Taklifnomalarim',
@@ -262,9 +276,18 @@ const ru: SiteDict = {
     title: 'Добро пожаловать',
     subtitle: 'Войдите через Telegram, чтобы управлять приглашениями.',
     notConfigured: 'Вход не настроен (нужен NEXT_PUBLIC_TELEGRAM_BOT_USERNAME).',
-    hint: 'Если вы регистрировались в боте — входите тем же аккаунтом.',
+    hint: 'Безопасно: не номер телефона, а одноразовый код из бота.',
     errServer: 'Ошибка сервера. Попробуйте чуть позже.',
     errAuth: 'Вход не подтверждён. Попробуйте снова.',
+    button: 'Войти через Telegram',
+    modalTitle: 'Вход через Telegram',
+    step1: '1. Откройте бот и получите код',
+    openBot: 'Открыть бот',
+    step2: '2. Введите 6-значный код из бота',
+    codePlaceholder: '––––––',
+    submit: 'Войти',
+    submitting: 'Проверка…',
+    codeError: 'Неверный код или срок истёк.',
   },
   dash: {
     title: 'Мои приглашения',

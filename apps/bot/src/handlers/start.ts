@@ -98,9 +98,17 @@ async function applyLanguage(ctx: BotContext, lang: Locale): Promise<void> {
 
 export function registerStart(bot: Bot<BotContext>): void {
   bot.command('start', async (ctx) => {
+    // Deep-link: `?start=login` — saytga kirish uchun bir martalik kod beramiz.
+    const param = (ctx.match ?? '').trim();
+    const user = await ensureUser(ctx);
+    if (param === 'login' && user) {
+      const code = await container.loginCodes.issue(user.id);
+      await ctx.reply(botText(ctx).loginCode(code), { parse_mode: 'HTML' });
+      return;
+    }
+
     // Qaytgan userni oldindan aniqlaymiz (profilida tili bo'lishi mumkin).
     const existing = ctx.from ? await container.users.findByTelegramId(ctx.from.id) : null;
-    await ensureUser(ctx);
 
     // Til: sessiya → profil (qaytgan user) → yangi user'dan so'raymiz.
     if (!ctx.session.lang) {
