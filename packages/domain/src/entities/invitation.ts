@@ -1,7 +1,7 @@
-// Hozircha faqat 'royal' faol. Yangi shablon qo'shishda shu union'ga va
-// TEMPLATE_IDS'ga bitta id qo'shiladi (tizim ko'p-shablonli qoladi).
-export type TemplateId = 'royal';
-export const TEMPLATE_IDS: readonly TemplateId[] = ['royal'];
+// Ko'p-shablonli tizim. Yangi shablon qo'shishda shu union'ga va
+// TEMPLATE_IDS'ga bitta id qo'shiladi.
+export type TemplateId = 'royal' | 'chateau';
+export const TEMPLATE_IDS: readonly TemplateId[] = ['chateau', 'royal'];
 
 export type InvitationStatus = 'draft' | 'published';
 export type MusicSource = 'none' | 'default' | 'custom';

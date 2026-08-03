@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-// Hozircha faqat 'royal' faol. Yangi shablon qo'shishda shu enum'ga id qo'shiladi.
-export const templateIdSchema = z.enum(['royal']);
+// Ko'p-shablonli. Yangi shablon qo'shishda shu enum'ga id qo'shiladi.
+export const templateIdSchema = z.enum(['royal', 'chateau']);
 export const musicSourceSchema = z.enum(['none', 'default', 'custom']);
 
 export const locationSchema = z.object({

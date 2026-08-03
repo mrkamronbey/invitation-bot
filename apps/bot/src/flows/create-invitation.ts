@@ -527,7 +527,7 @@ export async function createInvitationFlow(
   ctx: BotContext,
 ): Promise<void> {
   const m = loc(ctx);
-  const templateId = ctx.session.templateId ?? 'royal';
+  const templateId = ctx.session.templateId ?? 'chateau';
   const ownerId = ctx.session.ownerId;
   if (!ownerId) {
     await ctx.reply(getMessages(localeOf(ctx)).common.error);

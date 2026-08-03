@@ -13,10 +13,13 @@ export interface TemplateCatalogItem {
  */
 export const TEMPLATE_CATALOG: readonly TemplateCatalogItem[] = [
   {
+    id: 'chateau',
+    name: 'Chateau 🌿',
+    previewImage: '/images/chateau/chateau.webp',
+  },
+  {
     id: 'royal',
     name: 'Royal 🤍',
     previewImage: '/images/royal/preview.png',
   },
-  // Hozircha faqat Royal faol. Web platforma tayyor bo'lgach boshqa shablonlar
-  // shu ro'yxatga qayta qo'shiladi (Open/Closed — tizim ko'p-shablonli).
 ];

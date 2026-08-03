@@ -252,6 +252,11 @@ body {
   }
 }
 
+/* Chateau shablon — nafis high-contrast serif (Playfair) */
+.chateau-serif {
+  font-family: var(--font-royal), 'Playfair Display', Georgia, serif;
+}
+
 /* Toast — yuqori-o'ngdan yumshoq kirish */
 @keyframes toast-in {
   from {
