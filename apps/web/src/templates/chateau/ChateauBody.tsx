@@ -12,25 +12,19 @@ import { MapBlock } from '@/widgets/map/MapBlock';
 import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { dateParts } from '../royal/royalDate';
-import { ChateauHero } from './ChateauHero';
 
 interface ChateauBodyProps {
   readonly invitation: Invitation;
 }
 
-/** Chateau bo'lim sarlavhasi — yashil serif katta harflar + kichik strelka bezak. */
+/** Sodda bo'lim sarlavhasi — yashil serif + nozik chiziq. */
 function Heading({ children }: { readonly children: ReactNode }): ReactNode {
   return (
     <div className="mb-8 flex flex-col items-center text-center">
-      <h2 className="chateau-serif text-2xl uppercase tracking-[0.22em] text-[#3a5a2c] sm:text-3xl">
+      <h2 className="chateau-serif text-2xl uppercase tracking-[0.2em] text-[#3a5a2c] sm:text-3xl">
         {children}
       </h2>
-      <img
-        src="/images/chateau/divider-arrow.webp"
-        alt=""
-        aria-hidden
-        className="mt-3 h-2 w-24 opacity-70"
-      />
+      <span className="mt-3 block h-px w-14 bg-[#7da55c]/60" />
     </div>
   );
 }
@@ -39,19 +33,18 @@ function Wrap({ children }: { readonly children: ReactNode }): ReactNode {
   return <section className="relative mx-auto w-full max-w-xl px-6 py-14">{children}</section>;
 }
 
-/** Ornament divider (chateau ornament.webp). */
+/** Bo'limlar orasidagi nozik ajratgich. */
 function Divider(): ReactNode {
   return (
     <div className="flex justify-center py-2">
-      <img src="/images/chateau/ornament.webp" alt="" aria-hidden className="h-10 opacity-80" />
+      <span className="block h-px w-24 bg-[#7da55c]/35" />
     </div>
   );
 }
 
 /**
- * Chateau taklifnoma tanasi (chungdoi chateau-green — "European Garden"):
- * och/oq fon, akvarel shato hero, yashil nafis serif, dala gullari aksenti.
- * Bo'limlar Royal bilan bir xil, faqat och bog' uslubida qayta bo'yalgan.
+ * Chateau taklifnoma tanasi — hozircha SODDA variant (dizayn keyin qayta ishlanadi):
+ * och fon, yashil nafis serif, bezaksiz toza tipografiya.
  * Data-driven: ota-onalar / kun tartibi / sovg'a faqat ma'lumot bo'lsa chiqadi.
  */
 export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
@@ -99,12 +92,20 @@ export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
 
   return (
     <div className="relative text-[#33472a]">
-      {/* ── Hero: parallax bulutlar + akvarel shato ── */}
-      <ChateauHero
-        groom={invitation.groomName}
-        bride={invitation.brideName}
-        welcome={t.welcome}
-      />
+      {/* ── Sodda hero: xush kelibsiz + ismlar ── */}
+      <header className="px-6 pb-4 pt-16 text-center">
+        <Reveal>
+          <p className="text-[0.68rem] uppercase tracking-[0.28em] text-[#7da55c]">{t.welcome}</p>
+          <h1 className="chateau-serif mt-8 uppercase leading-tight tracking-[0.04em] text-[#3a5a2c]">
+            <span className="block text-4xl sm:text-5xl">{invitation.groomName}</span>
+            <span className="my-4 block text-xl italic normal-case tracking-normal text-[#7da55c]">
+              &amp;
+            </span>
+            <span className="block text-4xl sm:text-5xl">{invitation.brideName}</span>
+          </h1>
+          <span className="mx-auto mt-8 block h-px w-16 bg-[#7da55c]/50" />
+        </Reveal>
+      </header>
 
       {/* ── Marosim + ota-onalar ── */}
       <Wrap>
@@ -143,19 +144,6 @@ export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
             </div>
           </Reveal>
         ) : null}
-
-        {/* Katta kalligrafik nomlar */}
-        <Reveal>
-          <div className="mt-10 text-center">
-            <p className="chateau-serif text-4xl text-[#3a5a2c] sm:text-5xl">
-              {invitation.groomName}
-            </p>
-            <span className="chateau-serif my-2 block text-2xl italic text-[#7da55c]">&amp;</span>
-            <p className="chateau-serif text-4xl text-[#3a5a2c] sm:text-5xl">
-              {invitation.brideName}
-            </p>
-          </div>
-        </Reveal>
 
         {/* Joy + vaqt + sana */}
         <Reveal>
@@ -381,8 +369,8 @@ export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
 
       {/* ── Footer ── */}
       <footer className="flex flex-col items-center px-6 pb-14 pt-4 text-center">
-        <img src="/images/chateau/hoanho3-1.webp" alt="" aria-hidden className="h-28 opacity-90" />
-        <p className="chateau-serif mt-4 text-2xl italic text-[#3a5a2c]">
+        <span className="block h-px w-16 bg-[#7da55c]/50" />
+        <p className="chateau-serif mt-6 text-2xl italic text-[#3a5a2c]">
           {ru ? 'Ждём вас!' : 'Sizni kutamiz!'}
         </p>
         {!invitation.isPremium ? (
