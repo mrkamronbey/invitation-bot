@@ -8,7 +8,7 @@ export const demoInvitation: Invitation = {
   id: '00000000-0000-0000-0000-000000000001',
   ownerId: '00000000-0000-0000-0000-000000000000',
   slug: 'aziz-va-malika',
-  templateId: 'chateau',
+  templateId: 'milliy',
   groomName: 'Aziz',
   brideName: 'Malika',
   eventDate: '2026-09-15',

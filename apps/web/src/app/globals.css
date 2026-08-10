@@ -252,8 +252,8 @@ body {
   }
 }
 
-/* Chateau shablon — nafis high-contrast serif (Playfair) */
-.chateau-serif {
+/* Milliy shablon — nafis high-contrast serif (Playfair) */
+.uz-serif {
   font-family: var(--font-royal), 'Playfair Display', Georgia, serif;
 }
 

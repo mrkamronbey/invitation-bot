@@ -122,7 +122,7 @@ export async function createInvitationForOwner(
 ): Promise<EditorResult> {
   const parsed = createInvitationSchema.safeParse({
     ownerId,
-    templateId: 'chateau',
+    templateId: 'milliy',
     ...toPayload(input),
   });
   if (!parsed.success) {

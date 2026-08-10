@@ -13,9 +13,9 @@ export interface TemplateCatalogItem {
  */
 export const TEMPLATE_CATALOG: readonly TemplateCatalogItem[] = [
   {
-    id: 'chateau',
-    name: 'Chateau 🌿',
-    previewImage: '/images/chateau/chateau.webp',
+    id: 'milliy',
+    name: 'Milliy 🕌',
+    previewImage: '/images/milliy/preview.png',
   },
   {
     id: 'royal',
