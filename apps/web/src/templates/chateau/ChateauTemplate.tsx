@@ -25,7 +25,7 @@ export function ChateauTemplate({ invitation }: TemplateProps): ReactNode {
       invitedLabel={ru ? 'Вы приглашены' : 'Siz taklif qilinasiz'}
       invitedPrefix={ru ? 'Уважаемый(ая)' : 'Hurmatli'}
     >
-      <main className="min-h-screen bg-[#f7f9f1] text-[#33472a]">
+      <main className="min-h-screen bg-[#fdfdfa] text-[#33472a]">
         <ChateauBody invitation={invitation} />
         {invitation.musicSource !== 'none' && invitation.musicUrl ? (
           <MusicToggle src={invitation.musicUrl} />

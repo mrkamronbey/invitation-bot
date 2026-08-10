@@ -12,6 +12,7 @@ import { MapBlock } from '@/widgets/map/MapBlock';
 import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { dateParts } from '../royal/royalDate';
+import { ChateauHero } from './ChateauHero';
 
 interface ChateauBodyProps {
   readonly invitation: Invitation;
@@ -59,6 +60,7 @@ export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
   const dp = dateParts(invitation.eventDate, invitation.locale);
 
   const t = {
+    welcome: ru ? 'Добро пожаловать на нашу свадьбу' : 'To‘yimizga xush kelibsiz',
     ceremony: ru ? 'О церемонии' : 'Nikoh marosimi',
     reception: ru ? 'Торжество' : 'Ziyofat',
     story: ru ? 'Наша история' : 'Bizning tariximiz',
@@ -97,31 +99,12 @@ export function ChateauBody({ invitation }: ChateauBodyProps): ReactNode {
 
   return (
     <div className="relative text-[#33472a]">
-      {/* ── Hero: akvarel shato sahna ── */}
-      <header className="relative overflow-hidden">
-        <div className="mx-auto max-w-xl px-6 pt-14 text-center">
-          <Reveal>
-            <p className="text-xs uppercase tracking-[0.35em] text-[#5a8040]">
-              {ru ? 'Приглашение на свадьбу' : 'To‘y taklifnomasi'}
-            </p>
-            <h1 className="chateau-serif mt-4 text-4xl uppercase leading-tight tracking-[0.06em] text-[#3a5a2c] sm:text-5xl">
-              {invitation.groomName}
-              <span className="my-1 block text-2xl italic tracking-normal text-[#7da55c]">
-                &amp;
-              </span>
-              {invitation.brideName}
-            </h1>
-          </Reveal>
-        </div>
-        <Reveal variant="scale">
-          <img
-            src="/images/chateau/chateau.webp"
-            alt=""
-            aria-hidden
-            className="mx-auto mt-2 w-full max-w-2xl"
-          />
-        </Reveal>
-      </header>
+      {/* ── Hero: parallax bulutlar + akvarel shato ── */}
+      <ChateauHero
+        groom={invitation.groomName}
+        bride={invitation.brideName}
+        welcome={t.welcome}
+      />
 
       {/* ── Marosim + ota-onalar ── */}
       <Wrap>
