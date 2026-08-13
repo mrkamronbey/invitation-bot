@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArchFrame, GirihBackdrop, GirihStar, OrnamentDivider, UZ } from './UzOrnaments';
+import { ArchFrame, GirihBackdrop, GirihRamka, Rozetka, Tasma, UZ } from './UzOrnaments';
 
 interface MilliyCoverProps {
   readonly groom: string;
@@ -79,8 +79,11 @@ export function MilliyCover({
                 color={UZ.gold}
               />
 
+              {/* haqiqiy girih yulduz ramkasi — ismlar ortida nozik suv belgisi */}
+              <GirihRamka className="pointer-events-none absolute left-1/2 top-1/2 w-[19rem] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.13]" />
+
               <div className="relative">
-                <GirihStar className="mx-auto h-11 w-11" color={UZ.gold} />
+                <Rozetka className="mx-auto h-12 w-12" />
 
                 <p
                   className="mt-5 text-[0.6rem] uppercase tracking-[0.3em]"
@@ -103,7 +106,7 @@ export function MilliyCover({
                   {bride}
                 </h1>
 
-                <OrnamentDivider className="mx-auto mt-5 h-5 w-44" color={UZ.gold} />
+                <Tasma className="mx-auto mt-5 w-44 opacity-90" />
 
                 {dateLine ? (
                   <p className="uz-serif mt-5 text-lg" style={{ color: UZ.ink }}>

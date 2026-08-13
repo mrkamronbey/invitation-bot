@@ -12,24 +12,24 @@ import { MapBlock } from '@/widgets/map/MapBlock';
 import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { dateParts } from '../royal/royalDate';
-import { GirihBackdrop, GirihStar, IslimiCorner, OrnamentDivider, UZ } from './UzOrnaments';
+import { GirihBackdrop, IslimiRozetka, Rozetka, Tasma, UZ } from './UzOrnaments';
 
 interface MilliyBodyProps {
   readonly invitation: Invitation;
 }
 
-/** Bo'lim sarlavhasi — girih yulduz + firuza serif + oltin ajratgich. */
+/** Bo'lim sarlavhasi — koshin rozetkasi + firuza serif + naqsh lentasi. */
 function Heading({ children }: { readonly children: ReactNode }): ReactNode {
   return (
     <div className="mb-9 flex flex-col items-center text-center">
-      <GirihStar className="h-8 w-8" color={UZ.gold} />
+      <Rozetka className="h-9 w-9" />
       <h2
         className="uz-serif mt-3 text-2xl uppercase tracking-[0.2em] sm:text-3xl"
         style={{ color: UZ.tealDeep }}
       >
         {children}
       </h2>
-      <OrnamentDivider className="mt-3 h-4 w-40" color={UZ.gold} />
+      <Tasma className="mt-3 w-36 opacity-85" />
     </div>
   );
 }
@@ -38,11 +38,11 @@ function Wrap({ children }: { readonly children: ReactNode }): ReactNode {
   return <section className="relative mx-auto w-full max-w-xl px-6 py-14">{children}</section>;
 }
 
-/** Bo'limlar orasidagi naqshli ajratgich. */
+/** Bo'limlar orasidagi naqsh lentasi. */
 function Divider(): ReactNode {
   return (
     <div className="flex justify-center py-1">
-      <OrnamentDivider className="h-5 w-52 opacity-70" color={UZ.gold} />
+      <Tasma className="w-52 opacity-70" />
     </div>
   );
 }
@@ -97,21 +97,16 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
 
   return (
     <div className="relative" style={{ color: UZ.ink }}>
-      {/* ── Hero: islimiy burchaklar + ismlar ── */}
-      <header className="relative overflow-hidden px-6 pb-6 pt-16 text-center">
-        <IslimiCorner
-          className="pointer-events-none absolute -left-2 top-2 h-28 w-28 opacity-45 sm:h-36 sm:w-36"
-          color={UZ.gold}
-        />
-        <IslimiCorner
-          flipX
-          className="pointer-events-none absolute -right-2 top-2 h-28 w-28 opacity-45 sm:h-36 sm:w-36"
-          color={UZ.gold}
-        />
+      {/* ── Hero: islimiy rozetka suv belgisi + ismlar ── */}
+      <header className="relative overflow-hidden px-6 pb-6 pt-14 text-center">
+        {/* ismlar ortida nozik islimiy rozetka */}
+        <IslimiRozetka className="pointer-events-none absolute left-1/2 top-24 w-[21rem] max-w-none -translate-x-1/2 opacity-[0.16] sm:w-[26rem]" />
 
         <Reveal>
+          <Rozetka className="mx-auto h-14 w-14" />
+
           <p
-            className="text-[0.65rem] uppercase tracking-[0.3em]"
+            className="mt-5 text-[0.65rem] uppercase tracking-[0.3em]"
             style={{ color: UZ.teal }}
           >
             {t.welcome}
@@ -131,7 +126,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
             <span className="block text-4xl sm:text-6xl">{invitation.brideName}</span>
           </h1>
 
-          <OrnamentDivider className="mx-auto mt-9 h-5 w-56" color={UZ.gold} />
+          <Tasma className="relative mx-auto mt-9 w-56" />
         </Reveal>
       </header>
 
@@ -466,21 +461,10 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
         </Reveal>
       </Wrap>
 
-      {/* ── Footer: islimiy burchaklar + rahmat ── */}
+      {/* ── Footer: islimiy rozetka + rahmat ── */}
       <footer className="relative overflow-hidden px-6 pb-14 pt-6 text-center">
-        <IslimiCorner
-          flipY
-          className="pointer-events-none absolute -left-2 bottom-2 h-24 w-24 opacity-40"
-          color={UZ.gold}
-        />
-        <IslimiCorner
-          flipX
-          flipY
-          className="pointer-events-none absolute -right-2 bottom-2 h-24 w-24 opacity-40"
-          color={UZ.gold}
-        />
         <div className="relative">
-          <GirihStar className="mx-auto h-9 w-9" color={UZ.gold} />
+          <IslimiRozetka className="mx-auto h-24 w-24 opacity-80" />
           <p className="uz-serif mt-4 text-2xl italic" style={{ color: UZ.tealDeep }}>
             {ru ? 'Ждём вас!' : 'Sizni kutamiz!'}
           </p>
