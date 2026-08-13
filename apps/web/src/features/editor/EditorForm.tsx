@@ -2,6 +2,7 @@
 
 import { type ReactNode, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { TEMPLATE_CATALOG } from '@invitation/contracts';
 import type { EditorInput, ScheduleRow } from '@/shared/api/editor-types';
 import type { SiteDict } from '@/shared/i18n/site';
 import { createInvitationAction, updateInvitationAction } from '@/app/dashboard/editor-actions';
@@ -24,6 +25,7 @@ interface EditorFormProps {
 }
 
 const empty: EditorInput = {
+  templateId: TEMPLATE_CATALOG[0]?.id,
   groomName: '',
   brideName: '',
   eventDate: '',
@@ -180,6 +182,39 @@ export function EditorForm({ mode, invitationId, initial, t }: EditorFormProps):
     <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
       {/* ── Forma ── */}
       <div className="space-y-6">
+        {/* Shablon tanlash — preview kartochkalari */}
+        <Section title={t.secTemplate}>
+          <p className="text-sm text-muted-foreground">{t.templateHint}</p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {TEMPLATE_CATALOG.map((tpl) => {
+              const active = (f.templateId ?? TEMPLATE_CATALOG[0]?.id) === tpl.id;
+              return (
+                <button
+                  key={tpl.id}
+                  type="button"
+                  onClick={() => set('templateId', tpl.id)}
+                  aria-pressed={active}
+                  className={`overflow-hidden rounded-xl border-2 text-left transition-colors ${
+                    active
+                      ? 'border-primary ring-2 ring-primary/25'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <img
+                    src={tpl.previewImage}
+                    alt=""
+                    className="aspect-[3/5] w-full bg-muted object-cover object-top"
+                  />
+                  <span className="flex items-center justify-between gap-2 px-3 py-2 text-sm font-medium">
+                    {tpl.name}
+                    {active ? <span className="text-primary">✓</span> : null}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </Section>
+
         <Section title={t.secMain}>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t.groom}>

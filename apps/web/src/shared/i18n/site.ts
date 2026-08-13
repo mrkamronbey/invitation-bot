@@ -61,6 +61,7 @@ export interface SiteDict {
     upload: string; uploading: string; uploadHint: string;
     create: string; save: string; saving: string; cancel: string;
     errFix: string;
+    secTemplate: string; templateHint: string; preview: string;
   };
   guests: {
     back: string; suffix: string; responses: string; coming: string; totalGuests: string;
@@ -254,6 +255,9 @@ const uz: SiteDict = {
     saving: 'Saqlanmoqda…',
     cancel: 'Bekor qilish',
     errFix: 'Iltimos, belgilangan maydonlarni to‘g‘ri to‘ldiring.',
+    secTemplate: 'Shablon',
+    templateHint: 'Taklifnoma qanday ko‘rinishda bo‘lishini tanlang.',
+    preview: 'Ko‘rish',
   },
   guests: {
     back: '← Orqaga',
@@ -454,6 +458,9 @@ const ru: SiteDict = {
     saving: 'Сохранение…',
     cancel: 'Отмена',
     errFix: 'Пожалуйста, правильно заполните отмеченные поля.',
+    secTemplate: 'Шаблон',
+    templateHint: 'Выберите, как будет выглядеть приглашение.',
+    preview: 'Посмотреть',
   },
   guests: {
     back: '← Назад',

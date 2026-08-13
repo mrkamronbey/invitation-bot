@@ -17,6 +17,7 @@ interface PageProps {
 /** Invitation entity'ni editor kirishiga o'giradi (tahrir formasi uchun). */
 function toEditorInput(inv: Invitation): EditorInput {
   return {
+    templateId: inv.templateId,
     groomName: inv.groomName,
     brideName: inv.brideName,
     eventDate: inv.eventDate,

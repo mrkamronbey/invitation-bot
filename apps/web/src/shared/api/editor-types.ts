@@ -5,6 +5,8 @@ export interface ScheduleRow {
 }
 
 export interface EditorInput {
+  /** Tanlangan shablon (bo'sh bo'lsa standart olinadi). */
+  templateId?: string;
   groomName: string;
   brideName: string;
   eventDate: string; // YYYY-MM-DD

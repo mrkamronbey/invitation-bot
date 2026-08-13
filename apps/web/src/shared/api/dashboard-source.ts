@@ -8,7 +8,7 @@ import {
   ListOwnerInvitationsUseCase,
   UpdateInvitationUseCase,
 } from '@invitation/application';
-import { createInvitationSchema, updateInvitationSchema } from '@invitation/contracts';
+import { TEMPLATE_CATALOG, createInvitationSchema, updateInvitationSchema } from '@invitation/contracts';
 import {
   CryptoIdGenerator,
   SupabaseInvitationRepository,
@@ -98,6 +98,7 @@ function toPayload(input: EditorInput): Record<string, unknown> {
   const gallery = (input.gallery ?? []).map((g) => g.trim()).filter(Boolean);
 
   return {
+    templateId: s(input.templateId),
     groomName: input.groomName?.trim(),
     brideName: input.brideName?.trim(),
     eventDate: input.eventDate,
@@ -120,10 +121,12 @@ export async function createInvitationForOwner(
   ownerId: string,
   input: EditorInput,
 ): Promise<EditorResult> {
+  const payload = toPayload(input);
   const parsed = createInvitationSchema.safeParse({
+    ...payload,
     ownerId,
-    templateId: 'milliy',
-    ...toPayload(input),
+    // Tanlanmagan bo'lsa — katalogdagi birinchi (standart) shablon.
+    templateId: payload.templateId ?? TEMPLATE_CATALOG[0]?.id,
   });
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Ma'lumot noto'g'ri." };
