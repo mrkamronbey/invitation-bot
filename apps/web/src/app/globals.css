@@ -262,6 +262,28 @@ body {
   font-family: var(--font-script), 'Pinyon Script', cursive;
 }
 
+/* Pastga suring — nozik pulsatsiyalanuvchi chiziq */
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+.uz-scroll-hint {
+  transform-origin: top;
+  animation: scroll-hint 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .uz-scroll-hint {
+    animation: none;
+  }
+}
+
 /* Nozik qog'oz to'qimasi — och fon uchun (rasm emas, gradient) */
 .uz-paper {
   background-image:

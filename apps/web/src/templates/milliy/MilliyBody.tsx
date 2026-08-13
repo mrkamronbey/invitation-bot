@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Invitation } from '@invitation/domain';
 import { getMessages } from '@invitation/i18n';
-import { Reveal } from '@/shared/ui/Reveal';
 import { DressSwatches } from '@/shared/ui/DressSwatches';
 import { Countdown } from '@/widgets/countdown/Countdown';
 import { CalendarCard } from '@/widgets/calendar/CalendarCard';
@@ -12,7 +11,7 @@ import { MapBlock } from '@/widgets/map/MapBlock';
 import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { dateParts } from '../royal/royalDate';
-import { CornerFlourish, GirihBackdrop, Rozetka, Tasma, UZ } from './UzOrnaments';
+import { CornerFlourish, GirihBackdrop, IslimiRozetka, Rozetka, UZ } from './UzOrnaments';
 
 interface MilliyBodyProps {
   readonly invitation: Invitation;
@@ -23,12 +22,17 @@ function Heading({ children }: { readonly children: ReactNode }): ReactNode {
   return (
     <div className="mb-10 flex flex-col items-center text-center">
       <h2
+        data-anim="letters"
         className="uz-serif text-xl uppercase tracking-[0.26em] sm:text-2xl"
         style={{ color: UZ.tealDeep }}
       >
         {children}
       </h2>
-      <span className="mt-4 block h-px w-12" style={{ background: `${UZ.gold}99` }} />
+      <span
+        data-anim="line"
+        className="mt-4 block h-px w-12"
+        style={{ background: `${UZ.gold}99` }}
+      />
     </div>
   );
 }
@@ -37,11 +41,17 @@ function Wrap({ children }: { readonly children: ReactNode }): ReactNode {
   return <section className="relative mx-auto w-full max-w-xl px-6 py-14">{children}</section>;
 }
 
-/** Bo'limlar orasidagi naqsh lentasi. */
+/** Bo'limlar orasidagi ajratgich — chiziq markazdan yoyiladi + kichik romb. */
 function Divider(): ReactNode {
   return (
-    <div className="flex justify-center py-1">
-      <Tasma className="w-52 opacity-70" />
+    <div className="flex items-center justify-center gap-3 py-3">
+      <span data-anim="line" className="block h-px w-16" style={{ background: `${UZ.gold}66` }} />
+      <span
+        data-anim="zoom"
+        className="block h-1.5 w-1.5 rotate-45"
+        style={{ background: UZ.gold }}
+      />
+      <span data-anim="line" className="block h-px w-16" style={{ background: `${UZ.gold}66` }} />
     </div>
   );
 }
@@ -58,6 +68,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
 
   const t = {
     and: ru ? 'и' : 'va',
+    scroll: ru ? 'листайте' : 'pastga suring',
     welcome: ru ? 'Добро пожаловать на нашу свадьбу' : 'To‘yimizga xush kelibsiz',
     ceremony: ru ? 'Никох' : 'Nikoh to‘yi',
     reception: ru ? 'Торжество' : 'Ziyofat',
@@ -98,56 +109,94 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
   return (
     // Butun taklifnoma nafis serifda — sayt UI shrifti (Gilroy) bu yerga tushmaydi
     <div className="uz-serif relative text-[1.05rem]" style={{ color: UZ.ink }}>
-      {/* ── Hero: burchak bezaklari + nafis tipografiya ── */}
-      <header className="relative overflow-hidden px-8 pb-10 pt-16 text-center">
-        <CornerFlourish className="absolute left-4 top-4 h-14 w-14 opacity-60" color={UZ.gold} />
+      {/* ── Hero: aylanuvchi girih medalyon + chizilib chiquvchi naqshlar ── */}
+      <header className="relative min-h-[92svh] overflow-hidden px-8 pb-14 pt-20 text-center">
+        {/* orqa fon: katta girih rozetka — scroll bilan sekin aylanadi */}
+        <div
+          data-spin="22"
+          data-parallax="0.12"
+          className="pointer-events-none absolute left-1/2 top-[18%] w-[30rem] max-w-none -translate-x-1/2 opacity-[0.09]"
+        >
+          <IslimiRozetka className="w-full" />
+        </div>
+
+        {/* burchak bezaklari — o'zini chizadi */}
+        <CornerFlourish
+          data-anim="draw"
+          className="absolute left-4 top-4 h-16 w-16"
+          color={UZ.gold}
+        />
         <CornerFlourish
           flipX
-          className="absolute right-4 top-4 h-14 w-14 opacity-60"
+          data-anim="draw"
+          className="absolute right-4 top-4 h-16 w-16"
           color={UZ.gold}
         />
 
-        <Reveal>
-          <Rozetka className="mx-auto h-11 w-11 opacity-95" />
+        <div className="relative">
+          <div data-anim="zoom">
+            <Rozetka className="mx-auto h-12 w-12" />
+          </div>
 
           <p
-            className="uz-serif mt-6 text-[0.64rem] uppercase tracking-[0.32em]"
+            data-anim="rise"
+            className="uz-serif mt-7 text-[0.64rem] uppercase tracking-[0.32em]"
             style={{ color: UZ.teal }}
           >
             {t.welcome}
           </p>
 
           <h1
-            className="uz-serif mt-10 uppercase leading-[1.2] tracking-[0.12em]"
+            className="uz-serif mt-12 uppercase leading-[1.2] tracking-[0.12em]"
             style={{ color: UZ.tealDeep }}
           >
-            <span className="block text-[2.4rem] sm:text-6xl">{invitation.groomName}</span>
+            <span data-anim="letters" className="block text-[2.5rem] sm:text-6xl">
+              {invitation.groomName}
+            </span>
             <span
+              data-anim="zoom"
               className="uz-script my-3 block text-4xl normal-case tracking-normal sm:text-5xl"
               style={{ color: UZ.gold }}
             >
               {t.and}
             </span>
-            <span className="block text-[2.4rem] sm:text-6xl">{invitation.brideName}</span>
+            <span data-anim="letters" className="block text-[2.5rem] sm:text-6xl">
+              {invitation.brideName}
+            </span>
           </h1>
 
-          <span className="mx-auto mt-9 block h-px w-16" style={{ background: `${UZ.gold}99` }} />
-        </Reveal>
+          <span
+            data-anim="line"
+            className="mx-auto mt-10 block h-px w-20"
+            style={{ background: `${UZ.gold}99` }}
+          />
+
+          {/* pastga ishora — nozik pulsatsiya */}
+          <div data-anim="rise" className="mt-14 flex flex-col items-center gap-2">
+            <span
+              className="uz-serif text-[0.58rem] uppercase tracking-[0.3em]"
+              style={{ color: `${UZ.teal}aa` }}
+            >
+              {t.scroll}
+            </span>
+            <span className="uz-scroll-hint block h-8 w-px" style={{ background: `${UZ.gold}88` }} />
+          </div>
+        </div>
       </header>
 
       {/* ── Nikoh to'yi: ota-onalar + sana ── */}
       <Wrap>
-        <Reveal>
+        <div data-anim="rise">
           <Heading>{t.ceremony}</Heading>
-        </Reveal>
-        <Reveal>
+        </div>
+        <div data-anim="rise">
           <p className="text-center text-sm" style={{ color: UZ.teal }}>
             {t.withJoy}
           </p>
-        </Reveal>
+        </div>
 
         {hasParents ? (
-          <Reveal>
+          <div data-anim="rise">
             <div className="mx-auto mt-8 grid max-w-md grid-cols-2 gap-6 text-center">
               <div>
                 <p
@@ -186,10 +235,10 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                 ) : null}
               </div>
             </div>
-          </Reveal>
+          </div>
         ) : null}
 
-        <Reveal>
+        <div data-anim="rise">
           <div className="mt-10 text-center">
             {invitation.venue?.name ? (
               <p className="uz-serif text-2xl" style={{ color: UZ.tealDeep }}>
@@ -237,7 +286,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
               {dp.year}
             </p>
           </div>
-        </Reveal>
+        </div>
       </Wrap>
 
       {/* ── Albom ── */}
@@ -245,16 +294,15 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
         <>
           <Divider />
           <Wrap>
-            <Reveal>
+            <div data-anim="rise">
               <Heading>{t.story}</Heading>
-            </Reveal>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {gallery.slice(0, 6).map((src, i) => (
-                <Reveal
+                <div
                   key={`${src}-${i}`}
-                  delay={i * 60}
-                  variant={i % 2 === 0 ? 'left' : 'right'}
-                  className={i === 0 ? 'col-span-2' : ''}
+                  data-anim="zoom"
+                  className={i === 0 ? 'col-span-2' : undefined}
                 >
                   <div
                     className="overflow-hidden rounded-lg border"
@@ -266,7 +314,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                       className={`w-full object-cover ${i === 0 ? 'aspect-[16/10]' : 'aspect-[4/5]'}`}
                     />
                   </div>
-                </Reveal>
+                </div>
               ))}
             </div>
           </Wrap>
@@ -276,14 +324,14 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
       {/* ── Hikoya ── */}
       {invitation.story ? (
         <Wrap>
-          <Reveal>
+          <div data-anim="rise">
             <p
               className="uz-serif text-center text-2xl italic leading-relaxed sm:text-3xl"
               style={{ color: UZ.tealDeep }}
             >
               “{invitation.story}”
             </p>
-          </Reveal>
+          </div>
         </Wrap>
       ) : null}
 
@@ -291,14 +339,14 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
 
       {/* ── Ziyofat: kalendar + countdown ── */}
       <Wrap>
-        <Reveal>
+        <div data-anim="rise">
           <Heading>{t.reception}</Heading>
-        </Reveal>
-        <Reveal variant="scale">
+        </div>
+        <div data-anim="zoom">
           <CalendarCard eventDate={invitation.eventDate} locale={invitation.locale} tone="light" />
-        </Reveal>
+        </div>
         <div className="mt-6">
-          <Reveal>
+          <div data-anim="rise">
             <AddToCalendar
               title={`${invitation.groomName} & ${invitation.brideName}`}
               eventDate={invitation.eventDate}
@@ -308,10 +356,10 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
               label={t.addCal}
               tone="light"
             />
-          </Reveal>
+          </div>
         </div>
         <div className="mt-10">
-          <Reveal>
+          <div data-anim="rise">
             <p
               className="mb-5 text-center text-xs uppercase tracking-[0.3em]"
               style={{ color: UZ.turquoise }}
@@ -323,18 +371,18 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
               eventTime={invitation.eventTime}
               locale={invitation.locale}
             />
-          </Reveal>
+          </div>
         </div>
       </Wrap>
 
       {/* ── Manzil ── */}
       {invitation.venue?.geo || invitation.venue?.mapUrl ? (
         <Wrap>
-          <Reveal>
+          <div data-anim="rise">
             <Heading>{t.location}</Heading>
-          </Reveal>
+          </div>
           {invitation.venue?.geo ? (
-            <Reveal variant="scale">
+            <div data-anim="zoom">
               {/* nom/manzil yuqorida ko'rsatilgan — bu yerda faqat xarita
                   (MapBlock matnlari to'q mavzu uchun, och fonda o'qilmaydi) */}
               <MapBlock
@@ -342,10 +390,10 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                 lng={invitation.venue.geo.lng}
                 directionsLabel={t.directions}
               />
-            </Reveal>
+            </div>
           ) : null}
           {invitation.venue?.mapUrl ? (
-            <Reveal>
+            <div data-anim="rise">
               <div className="mt-6 flex justify-center">
                 <a
                   href={invitation.venue.mapUrl}
@@ -357,7 +405,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                   {t.directions}
                 </a>
               </div>
-            </Reveal>
+            </div>
           ) : null}
         </Wrap>
       ) : null}
@@ -365,14 +413,14 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
       {/* ── Kiyim uslubi ── */}
       {invitation.dressCode ? (
         <Wrap>
-          <Reveal>
+          <div data-anim="rise">
             <DressSwatches
               label={t.dress}
               text={invitation.dressCode}
               colors={[UZ.ivoryWarm, UZ.goldLight, UZ.teal]}
               tone="light"
             />
-          </Reveal>
+          </div>
         </Wrap>
       ) : null}
 
@@ -381,12 +429,12 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
         <>
           <Divider />
           <Wrap>
-            <Reveal>
+            <div data-anim="rise">
               <Heading>{t.schedule}</Heading>
-            </Reveal>
+            </div>
             <div className="mx-auto max-w-sm">
               {schedule.map((item, i) => (
-                <Reveal key={item.time + item.title + i} delay={i * 60} variant="left">
+                <div key={item.time + item.title + i} data-anim="rise">
                   <div
                     className="flex items-center gap-4 border-l pb-6 pl-5 last:pb-0"
                     style={{ borderColor: `${UZ.gold}55` }}
@@ -400,7 +448,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                     </span>
                     <span style={{ color: UZ.ink }}>{item.title}</span>
                   </div>
-                </Reveal>
+                </div>
               ))}
             </div>
           </Wrap>
@@ -412,16 +460,16 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
 
       {/* ── RSVP ── */}
       <Wrap>
-        <Reveal>
+        <div data-anim="rise">
           <Heading>{m.rsvpTitle}</Heading>
           <RsvpForm slug={invitation.slug} locale={invitation.locale} />
-        </Reveal>
+        </div>
       </Wrap>
 
       {/* ── Sovg'a — to'q firuza panel (koshin uslubi urg'usi) ── */}
       {hasGift && gift?.cardNumber ? (
         <Wrap>
-          <Reveal variant="scale">
+          <div data-anim="zoom">
             <div
               className="relative overflow-hidden rounded-2xl border px-6 py-10"
               style={{ background: UZ.tealDeep, borderColor: `${UZ.gold}55` }}
@@ -444,13 +492,13 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
                 />
               </div>
             </div>
-          </Reveal>
+          </div>
         </Wrap>
       ) : null}
 
       {/* ── Ulashish ── */}
       <Wrap>
-        <Reveal>
+        <div data-anim="rise">
           <p
             className="mb-5 text-center text-xs uppercase tracking-[0.3em]"
             style={{ color: UZ.turquoise }}
@@ -463,7 +511,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
             copyLabel={t.copy}
             copiedLabel={t.copied}
           />
-        </Reveal>
+        </div>
       </Wrap>
 
       {/* ── Footer: nozik rozetka + rahmat ── */}

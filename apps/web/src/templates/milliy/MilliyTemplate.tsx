@@ -4,6 +4,7 @@ import { formatEventDate, formatEventTime } from '@/shared/lib/format';
 import { MusicToggle } from '@/widgets/music/MusicToggle';
 import { MilliyCover } from './MilliyCover';
 import { MilliyBody } from './MilliyBody';
+import { MilliyMotion } from './MilliyMotion';
 import { GirihBackdrop, UZ } from './UzOrnaments';
 
 /**
@@ -36,7 +37,9 @@ export function MilliyTemplate({ invitation }: TemplateProps): ReactNode {
           opacity={0.03}
         />
         <div className="relative">
-          <MilliyBody invitation={invitation} />
+          <MilliyMotion>
+            <MilliyBody invitation={invitation} />
+          </MilliyMotion>
         </div>
         {invitation.musicSource !== 'none' && invitation.musicUrl ? (
           <MusicToggle src={invitation.musicUrl} />

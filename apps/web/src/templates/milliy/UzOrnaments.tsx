@@ -115,11 +115,16 @@ export function CornerFlourish({
   color = UZ.gold,
   flipX = false,
   flipY = false,
-}: ArtProps & { readonly color?: string; readonly flipX?: boolean; readonly flipY?: boolean }): ReactNode {
+  ...rest
+}: ArtProps & {
+  readonly color?: string;
+  readonly flipX?: boolean;
+  readonly flipY?: boolean;
+} & Record<`data-${string}`, string | undefined>): ReactNode {
   const sx = flipX ? -1 : 1;
   const sy = flipY ? -1 : 1;
   return (
-    <svg viewBox="0 0 90 90" className={className} aria-hidden fill="none" stroke={color}>
+    <svg viewBox="0 0 90 90" className={className} aria-hidden fill="none" stroke={color} {...rest}>
       <g
         strokeWidth="1.1"
         strokeLinecap="round"
