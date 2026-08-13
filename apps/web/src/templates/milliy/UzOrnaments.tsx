@@ -107,6 +107,82 @@ export function Tasma({ className }: ArtProps): ReactNode {
 }
 
 /**
+ * Nozik burchak bezagi — ikki qavat yoy + barg va tomchi (islimiy uslub).
+ * Standart holat: chap-yuqori burchak. `flipX`/`flipY` bilan aylantiriladi.
+ */
+export function CornerFlourish({
+  className,
+  color = UZ.gold,
+  flipX = false,
+  flipY = false,
+}: ArtProps & { readonly color?: string; readonly flipX?: boolean; readonly flipY?: boolean }): ReactNode {
+  const sx = flipX ? -1 : 1;
+  const sy = flipY ? -1 : 1;
+  return (
+    <svg viewBox="0 0 90 90" className={className} aria-hidden fill="none" stroke={color}>
+      <g
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        transform={flipX || flipY ? `translate(45,45) scale(${sx},${sy}) translate(-45,-45)` : undefined}
+      >
+        {/* ikki qavat burchak yoyi */}
+        <path d="M4,44 C4,21 21,4 44,4" />
+        <path d="M4,32 C4,16 16,4 32,4" opacity="0.55" />
+        {/* barg */}
+        <path d="M24,24 C16,19 15,10 22,7 C27,13 28,21 24,24 Z" strokeWidth="1" />
+        {/* g'uncha tomchilari */}
+        <circle cx="44" cy="9" r="1.8" fill={color} stroke="none" />
+        <circle cx="9" cy="44" r="1.8" fill={color} stroke="none" />
+      </g>
+    </svg>
+  );
+}
+
+interface FrameProps {
+  readonly className?: string;
+  readonly color?: string;
+  /** Burchak bezaklarini ko'rsatish. */
+  readonly corners?: boolean;
+}
+
+/**
+ * Perimetr ramka — ikki qavat nozik chiziq + to'rt burchakda islimiy bezak.
+ * Taklifnomaga "tugallangan karta" ko'rinishini beradi (minimalistik).
+ */
+export function OrnateFrame({
+  className,
+  color = UZ.gold,
+  corners = true,
+}: FrameProps): ReactNode {
+  const c = 'pointer-events-none absolute h-9 w-9 sm:h-11 sm:w-11';
+  return (
+    <div aria-hidden className={`pointer-events-none absolute inset-0 ${className ?? ''}`}>
+      <div
+        className="absolute inset-3 border sm:inset-5"
+        style={{ borderColor: `${color}88` }}
+      />
+      <div
+        className="absolute inset-[1.15rem] border sm:inset-[1.85rem]"
+        style={{ borderColor: `${color}3d` }}
+      />
+      {corners ? (
+        <>
+          <CornerFlourish color={color} className={`${c} left-3 top-3 sm:left-5 sm:top-5`} />
+          <CornerFlourish flipX color={color} className={`${c} right-3 top-3 sm:right-5 sm:top-5`} />
+          <CornerFlourish flipY color={color} className={`${c} bottom-3 left-3 sm:bottom-5 sm:left-5`} />
+          <CornerFlourish
+            flipX
+            flipY
+            color={color}
+            className={`${c} bottom-3 right-3 sm:bottom-5 sm:right-5`}
+          />
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+/**
  * Mehrob (Temuriy o'tkir ravoq) ramkasi — Registon peshtoqlari uslubi.
  * Geometrik shakl bo'lgani uchun aniq o'lchamga moslab chiziladi.
  */

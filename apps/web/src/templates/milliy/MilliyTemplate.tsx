@@ -22,17 +22,18 @@ export function MilliyTemplate({ invitation }: TemplateProps): ReactNode {
       groom={invitation.groomName}
       bride={invitation.brideName}
       dateLine={dateLine}
-      openLabel={ru ? 'Таклифномани очиш' : 'Taklifnomani ochish'}
+      openLabel={ru ? 'Открыть' : 'Ochish'}
       invitedLabel={ru ? 'Приглашение на свадьбу' : 'To‘y taklifnomasi'}
       invitedPrefix={ru ? 'Уважаемый(ая)' : 'Hurmatli'}
+      andWord={ru ? 'и' : 'va'}
     >
-      <main className="relative min-h-screen" style={{ background: UZ.ivory }}>
+      <main className="uz-paper relative min-h-screen" style={{ background: UZ.ivory }}>
         {/* nozik girih fon to'qimasi — butun sahifa bo'ylab */}
         <GirihBackdrop
           id="page-girih"
           className="pointer-events-none fixed inset-0"
           color={UZ.teal}
-          opacity={0.04}
+          opacity={0.03}
         />
         <div className="relative">
           <MilliyBody invitation={invitation} />

@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArchFrame, GirihBackdrop, GirihRamka, Rozetka, Tasma, UZ } from './UzOrnaments';
+import { ArchFrame, GirihBackdrop, OrnateFrame, Rozetka, UZ } from './UzOrnaments';
 
 interface MilliyCoverProps {
   readonly groom: string;
@@ -12,12 +12,13 @@ interface MilliyCoverProps {
   readonly openLabel: string;
   readonly invitedLabel: string;
   readonly invitedPrefix: string;
+  readonly andWord: string;
   readonly children: ReactNode;
 }
 
 /**
- * Milliy konvert — to'q firuza fon (girih naqshi bilan), oltin ramkali
- * nog'ora-oq karta va mehrob ravog'i. "Ochish" bosilganda ko'tarilib yo'qoladi.
+ * Milliy konvert — minimalistik: to'q firuza fon (nozik girih naqshi),
+ * nog'ora-oq karta, perimetr ramka + mehrob ravog'i, nafis serif + kalligrafiya.
  * `?g=Ism` — mehmon ismi.
  */
 export function MilliyCover({
@@ -27,6 +28,7 @@ export function MilliyCover({
   openLabel,
   invitedLabel,
   invitedPrefix,
+  andWord,
   children,
 }: MilliyCoverProps): ReactNode {
   const [open, setOpen] = useState(false);
@@ -53,76 +55,82 @@ export function MilliyCover({
             initial={false}
             exit={reduce ? { opacity: 0 } : { y: '-100%', opacity: 0 }}
             transition={{ duration: 0.95, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden px-6"
+            className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden px-5"
             style={{
-              background: `radial-gradient(ellipse at 50% 10%, ${UZ.teal} 0%, ${UZ.tealDeep} 60%, #072F32 100%)`,
+              background: `radial-gradient(ellipse at 50% 12%, ${UZ.teal} 0%, ${UZ.tealDeep} 62%, #072F32 100%)`,
             }}
           >
-            {/* girih naqshli fon */}
             <GirihBackdrop
               id="cover-girih"
               className="absolute inset-0"
               color={UZ.goldLight}
-              opacity={0.12}
+              opacity={0.1}
             />
 
             <motion.div
-              initial={reduce ? false : { opacity: 0, y: 22, scale: 0.97 }}
+              initial={reduce ? false : { opacity: 0, y: 20, scale: 0.975 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.12 }}
-              className="relative w-full max-w-sm overflow-hidden rounded-[1.25rem] border px-8 pb-10 pt-12 text-center shadow-[0_30px_80px_-24px_rgba(0,0,0,0.65)]"
-              style={{ background: UZ.ivory, borderColor: `${UZ.gold}66` }}
+              transition={{ duration: 0.75, delay: 0.1 }}
+              className="uz-paper relative w-full max-w-[22rem] overflow-hidden rounded-sm px-9 pb-11 pt-12 text-center shadow-[0_28px_70px_-22px_rgba(0,0,0,0.6)]"
+              style={{ background: UZ.ivory }}
             >
-              {/* mehrob ravog'i — yulduz ostidan boshlanadi, kontentni ramkalaydi */}
+              {/* perimetr ramka + burchak bezaklari */}
+              <OrnateFrame color={UZ.gold} />
+
+              {/* mehrob ravog'i — ismlarni ramkalaydi */}
               <ArchFrame
-                className="pointer-events-none absolute inset-x-4 bottom-3 top-[4.75rem] opacity-25"
+                className="pointer-events-none absolute inset-x-9 bottom-16 top-[6.5rem] opacity-[0.22]"
                 color={UZ.gold}
               />
 
-              {/* haqiqiy girih yulduz ramkasi — ismlar ortida nozik suv belgisi */}
-              <GirihRamka className="pointer-events-none absolute left-1/2 top-1/2 w-[19rem] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-[0.13]" />
-
               <div className="relative">
-                <Rozetka className="mx-auto h-12 w-12" />
+                <Rozetka className="mx-auto h-9 w-9 opacity-95" />
 
                 <p
-                  className="mt-5 text-[0.6rem] uppercase tracking-[0.3em]"
+                  className="uz-serif mt-6 text-[0.62rem] uppercase tracking-[0.34em]"
                   style={{ color: UZ.teal }}
                 >
                   {invitedLabel}
                 </p>
 
                 <h1
-                  className="uz-serif mt-6 text-3xl uppercase leading-snug tracking-[0.05em]"
+                  className="uz-serif mt-8 text-[1.85rem] uppercase leading-[1.25] tracking-[0.14em]"
                   style={{ color: UZ.tealDeep }}
                 >
                   {groom}
                   <span
-                    className="my-2 block text-xl italic normal-case tracking-normal"
+                    className="uz-script my-1.5 block text-3xl normal-case tracking-normal"
                     style={{ color: UZ.gold }}
                   >
-                    &amp;
+                    {andWord}
                   </span>
                   {bride}
                 </h1>
 
-                <Tasma className="mx-auto mt-5 w-44 opacity-90" />
-
                 {dateLine ? (
-                  <p className="uz-serif mt-5 text-lg" style={{ color: UZ.ink }}>
-                    {dateLine}
-                  </p>
+                  <>
+                    <span
+                      className="mx-auto mt-7 block h-px w-14"
+                      style={{ background: `${UZ.gold}99` }}
+                    />
+                    <p
+                      className="uz-serif mt-6 text-[0.72rem] uppercase tracking-[0.26em]"
+                      style={{ color: UZ.ink }}
+                    >
+                      {dateLine}
+                    </p>
+                  </>
                 ) : null}
 
                 {guest ? (
-                  <div className="mt-5">
-                    <p
-                      className="text-[0.6rem] uppercase tracking-[0.22em]"
-                      style={{ color: UZ.teal }}
-                    >
+                  <div className="mt-6">
+                    <p className="uz-script text-xl" style={{ color: UZ.gold }}>
                       {invitedPrefix}
                     </p>
-                    <p className="uz-serif mt-1 text-xl" style={{ color: UZ.tealDeep }}>
+                    <p
+                      className="uz-serif mt-0.5 text-lg uppercase tracking-[0.12em]"
+                      style={{ color: UZ.tealDeep }}
+                    >
                       {guest}
                     </p>
                   </div>
@@ -131,7 +139,7 @@ export function MilliyCover({
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
-                  className="uz-serif mt-8 w-full rounded-full px-8 py-3 text-base tracking-wide text-white transition-opacity hover:opacity-90"
+                  className="uz-serif mt-9 rounded-full px-9 py-2.5 text-[0.72rem] uppercase tracking-[0.24em] text-white transition-opacity hover:opacity-90"
                   style={{ background: UZ.teal }}
                 >
                   {openLabel}

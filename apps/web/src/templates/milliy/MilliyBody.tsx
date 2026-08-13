@@ -12,24 +12,23 @@ import { MapBlock } from '@/widgets/map/MapBlock';
 import { ShareButtons } from '@/widgets/share/ShareButtons';
 import { RsvpForm } from '@/features/submit-rsvp/RsvpForm';
 import { dateParts } from '../royal/royalDate';
-import { GirihBackdrop, IslimiRozetka, Rozetka, Tasma, UZ } from './UzOrnaments';
+import { CornerFlourish, GirihBackdrop, Rozetka, Tasma, UZ } from './UzOrnaments';
 
 interface MilliyBodyProps {
   readonly invitation: Invitation;
 }
 
-/** Bo'lim sarlavhasi — koshin rozetkasi + firuza serif + naqsh lentasi. */
+/** Bo'lim sarlavhasi — minimalistik: nozik serif + qisqa oltin chiziq. */
 function Heading({ children }: { readonly children: ReactNode }): ReactNode {
   return (
-    <div className="mb-9 flex flex-col items-center text-center">
-      <Rozetka className="h-9 w-9" />
+    <div className="mb-10 flex flex-col items-center text-center">
       <h2
-        className="uz-serif mt-3 text-2xl uppercase tracking-[0.2em] sm:text-3xl"
+        className="uz-serif text-xl uppercase tracking-[0.26em] sm:text-2xl"
         style={{ color: UZ.tealDeep }}
       >
         {children}
       </h2>
-      <Tasma className="mt-3 w-36 opacity-85" />
+      <span className="mt-4 block h-px w-12" style={{ background: `${UZ.gold}99` }} />
     </div>
   );
 }
@@ -58,6 +57,7 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
   const dp = dateParts(invitation.eventDate, invitation.locale);
 
   const t = {
+    and: ru ? 'и' : 'va',
     welcome: ru ? 'Добро пожаловать на нашу свадьбу' : 'To‘yimizga xush kelibsiz',
     ceremony: ru ? 'Никох' : 'Nikoh to‘yi',
     reception: ru ? 'Торжество' : 'Ziyofat',
@@ -96,37 +96,42 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
   const gallery = invitation.gallery;
 
   return (
-    <div className="relative" style={{ color: UZ.ink }}>
-      {/* ── Hero: islimiy rozetka suv belgisi + ismlar ── */}
-      <header className="relative overflow-hidden px-6 pb-6 pt-14 text-center">
-        {/* ismlar ortida nozik islimiy rozetka */}
-        <IslimiRozetka className="pointer-events-none absolute left-1/2 top-24 w-[21rem] max-w-none -translate-x-1/2 opacity-[0.16] sm:w-[26rem]" />
+    // Butun taklifnoma nafis serifda — sayt UI shrifti (Gilroy) bu yerga tushmaydi
+    <div className="uz-serif relative text-[1.05rem]" style={{ color: UZ.ink }}>
+      {/* ── Hero: burchak bezaklari + nafis tipografiya ── */}
+      <header className="relative overflow-hidden px-8 pb-10 pt-16 text-center">
+        <CornerFlourish className="absolute left-4 top-4 h-14 w-14 opacity-60" color={UZ.gold} />
+        <CornerFlourish
+          flipX
+          className="absolute right-4 top-4 h-14 w-14 opacity-60"
+          color={UZ.gold}
+        />
 
         <Reveal>
-          <Rozetka className="mx-auto h-14 w-14" />
+          <Rozetka className="mx-auto h-11 w-11 opacity-95" />
 
           <p
-            className="mt-5 text-[0.65rem] uppercase tracking-[0.3em]"
+            className="uz-serif mt-6 text-[0.64rem] uppercase tracking-[0.32em]"
             style={{ color: UZ.teal }}
           >
             {t.welcome}
           </p>
 
           <h1
-            className="uz-serif mt-10 uppercase leading-tight tracking-[0.04em]"
+            className="uz-serif mt-10 uppercase leading-[1.2] tracking-[0.12em]"
             style={{ color: UZ.tealDeep }}
           >
-            <span className="block text-4xl sm:text-6xl">{invitation.groomName}</span>
+            <span className="block text-[2.4rem] sm:text-6xl">{invitation.groomName}</span>
             <span
-              className="my-4 block text-2xl italic normal-case tracking-normal"
+              className="uz-script my-3 block text-4xl normal-case tracking-normal sm:text-5xl"
               style={{ color: UZ.gold }}
             >
-              &amp;
+              {t.and}
             </span>
-            <span className="block text-4xl sm:text-6xl">{invitation.brideName}</span>
+            <span className="block text-[2.4rem] sm:text-6xl">{invitation.brideName}</span>
           </h1>
 
-          <Tasma className="relative mx-auto mt-9 w-56" />
+          <span className="mx-auto mt-9 block h-px w-16" style={{ background: `${UZ.gold}99` }} />
         </Reveal>
       </header>
 
@@ -330,11 +335,11 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
           </Reveal>
           {invitation.venue?.geo ? (
             <Reveal variant="scale">
+              {/* nom/manzil yuqorida ko'rsatilgan — bu yerda faqat xarita
+                  (MapBlock matnlari to'q mavzu uchun, och fonda o'qilmaydi) */}
               <MapBlock
                 lat={invitation.venue.geo.lat}
                 lng={invitation.venue.geo.lng}
-                venueName={invitation.venue.name}
-                address={invitation.venue.address}
                 directionsLabel={t.directions}
               />
             </Reveal>
@@ -461,10 +466,21 @@ export function MilliyBody({ invitation }: MilliyBodyProps): ReactNode {
         </Reveal>
       </Wrap>
 
-      {/* ── Footer: islimiy rozetka + rahmat ── */}
-      <footer className="relative overflow-hidden px-6 pb-14 pt-6 text-center">
+      {/* ── Footer: nozik rozetka + rahmat ── */}
+      <footer className="relative overflow-hidden px-6 pb-16 pt-8 text-center">
+        <CornerFlourish
+          flipY
+          className="absolute bottom-4 left-4 h-14 w-14 opacity-55"
+          color={UZ.gold}
+        />
+        <CornerFlourish
+          flipX
+          flipY
+          className="absolute bottom-4 right-4 h-14 w-14 opacity-55"
+          color={UZ.gold}
+        />
         <div className="relative">
-          <IslimiRozetka className="mx-auto h-24 w-24 opacity-80" />
+          <Rozetka className="mx-auto h-10 w-10 opacity-95" />
           <p className="uz-serif mt-4 text-2xl italic" style={{ color: UZ.tealDeep }}>
             {ru ? 'Ждём вас!' : 'Sizni kutamiz!'}
           </p>

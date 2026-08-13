@@ -252,9 +252,21 @@ body {
   }
 }
 
-/* Milliy shablon — nafis high-contrast serif (Playfair) */
+/* Milliy shablon — nafis Garamond serif (ismlar, sarlavhalar) */
 .uz-serif {
-  font-family: var(--font-royal), 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display), 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Milliy shablon — kalligrafik aksent ("va", "hurmatli") */
+.uz-script {
+  font-family: var(--font-script), 'Pinyon Script', cursive;
+}
+
+/* Nozik qog'oz to'qimasi — och fon uchun (rasm emas, gradient) */
+.uz-paper {
+  background-image:
+    radial-gradient(at 20% 15%, rgba(184, 145, 47, 0.05) 0px, transparent 55%),
+    radial-gradient(at 80% 85%, rgba(14, 124, 134, 0.045) 0px, transparent 55%);
 }
 
 /* Toast — yuqori-o'ngdan yumshoq kirish */
